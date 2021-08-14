@@ -1,0 +1,28 @@
+{
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Team-Croissant/URLATE-frontend"
+  },
+  "name": "urlate-frontend",
+  "version": "1.0.0",
+  "description": "Avoid & Get on the tempo, URLATE",
+  "main": "src/",
+  "scripts": {
+    "auto-build": "tsc-watch",
+    "start": "supervisor dist/index.js"
+  },
+  "author": "Team Croissant",
+  "license": "MIT",
+  "dependencies": {
+    "cookie-parser": "^1.4.4",
+    "ejs": "^2.7.4",
+    "express": "^4.17.1",
+    "i18n": "^0.8.4",
+    "typescript": "^3.8.3"
+  },
+  "devDependencies": {
+    "supervisor": "^0.12.0",
+    "@types/node": "^13.7.7",
+    "signale": "^1.4.0"
+  }
+}
