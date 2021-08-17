@@ -1946,6 +1946,14 @@ const couponApply = () => {
   }
 };
 
+const rankToggle = () => {
+  if (isRankOpened) {
+    displayClose();
+  } else {
+    showRank();
+  }
+};
+
 const scrollEvent = (e) => {
   if (shiftDown) {
     e = window.event || e;
@@ -2051,11 +2059,7 @@ document.onkeydown = (e) => {
       songSelected(songSelection);
     } else if (key == "f2") {
       e.preventDefault();
-      if (isRankOpened) {
-        displayClose();
-      } else {
-        showRank();
-      }
+      rankToggle();
     }
   } else if (display == 7) {
     offsetInput = true;
