@@ -147,8 +147,6 @@ const initialize = (isFirstCalled) => {
   if (isFirstCalled) {
     pattern = JSON.parse(localStorage.pattern);
     patternLength = pattern.patterns.length;
-    document.getElementById("title").textContent = pattern.information.track;
-    document.getElementById("scoreTitle").textContent = pattern.information.track;
     document.getElementById("artist").textContent = pattern.information.producer;
     document.getElementById("scoreArtist").textContent = pattern.information.producer;
     document.getElementById("authorNamespace").textContent = pattern.information.author;
@@ -235,6 +233,8 @@ const settingApply = () => {
   for (let i = 0; i < tracks.length; i++) {
     if (tracks[i].name == pattern.information.track) {
       fileName = tracks[i].fileName;
+      document.getElementById("scoreTitle").textContent = settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name;
+      document.getElementById("title").textContent = settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name;
       document.getElementById("album").src = `${cdn}/albums/${settings.display.albumRes}/${fileName} (Custom).png`;
       document.getElementById("canvasBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${fileName} (Custom).png")`;
       document.getElementById("scoreBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${fileName} (Custom).png")`;
