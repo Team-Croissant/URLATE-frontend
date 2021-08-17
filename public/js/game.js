@@ -172,7 +172,7 @@ const settingApply = () => {
   inputSelector.getElementsByTagName("option")[Number(settings.input.keys)].selected = true;
   for (let i = 0; i <= 1; i++) {
     document.getElementsByClassName("volumeMaster")[i].value = settings.sound.volume.master * 100;
-    document.getElementsByClassName("volumeMasterValue")[i].textContent = settings.sound.volume.master * 100 + "%";
+    document.getElementsByClassName("volumeMasterValue")[i].textContent = Math.round(settings.sound.volume.music * 100) + "%";
   }
   volumeSong.value = settings.sound.volume.music * 100;
   volumeHit.value = settings.sound.volume.hitSound * 100;
@@ -191,9 +191,9 @@ const settingApply = () => {
   ignoreEditorCheck.checked = settings.editor.denySkin;
   ignoreTestCheck.checked = settings.editor.denyAtTest;
   comboAlertCheck.checked = settings.game.comboAlert;
-  volumeSongValue.textContent = settings.sound.volume.music * 100 + "%";
-  volumeHitValue.textContent = settings.sound.volume.hitSound * 100 + "%";
-  volumeEftValue.textContent = settings.sound.volume.effect * 100 + "%";
+  volumeSongValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
+  volumeHitValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
+  volumeEftValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
   offsetButton.textContent = settings.sound.offset + "ms";
   sensitiveValue.textContent = settings.input.sens + "x";
   inputSizeValue.textContent = settings.game.size + "x";
@@ -1599,7 +1599,7 @@ const settingChanged = (e, v) => {
   } else if (v == "volumeMaster") {
     settings.sound.volume.master = e.value / 100;
     for (let i = 0; i <= 1; i++) {
-      document.getElementsByClassName("volumeMasterValue")[i].textContent = e.value + "%";
+      document.getElementsByClassName("volumeMasterValue")[i].textContent = Math.round(e.value) + "%";
     }
     overlayTime = new Date().getTime();
     setTimeout(() => {
@@ -1609,14 +1609,14 @@ const settingChanged = (e, v) => {
     intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
   } else if (v == "volumeSong") {
     settings.sound.volume.music = e.value / 100;
-    volumeSongValue.textContent = e.value + "%";
+    volumeSongValue.textContent = Math.round(e.value) + "%";
     Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
   } else if (v == "volumeHitsound") {
     settings.sound.volume.hitSound = e.value / 100;
-    volumeHitValue.textContent = e.value + "%";
+    volumeHitValue.textContent = Math.round(e.value) + "%";
   } else if (v == "volumeEffect") {
     settings.sound.volume.effect = e.value / 100;
-    volumeEftValue.textContent = e.value + "%";
+    volumeEftValue.textContent = Math.round(e.value) + "%";
   } else if (v == "soundRes") {
     settings.sound.res = e.value;
   } else if (v == "sensitive") {
