@@ -184,9 +184,10 @@
                         <span id="selectRank">-</span>
                     </div>
                 </div>
-                <div class="selectInfo">
+                <div class="selectInfo clickable" onclick="medalDescription()">
                     <div class="selectInfoTitleContainer">
                         <span class="selectInfoTitle">MEDAL</span>
+                        <span class="key">?</span>
                     </div>
                     <div class="selectInfoContentsContainer">
                         <img src="/images/parts/icons/GOLD_MEDAL.png" class="medals" id="goldMedal">
@@ -809,6 +810,7 @@
         const alreadySubscribed1 = "<%= __('already_subscribed1') %>";
         const alreadySubscribed2 = "<%= __('already_subscribed2') %>";
         const confirmExit = "<%= __('confirm_exit_tutorial') %>";
+        const medalDesc = "<%= __('medal_description') %>";
         const lang = "<%= __('lang') %>";
         if(lang == "en") document.body.style.letterSpacing = "-0.3px";
     </script>

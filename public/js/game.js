@@ -773,6 +773,10 @@ const updateRanks = () => {
     });
 };
 
+const medalDescription = () => {
+  alert(medalDesc);
+};
+
 const numberWithCommas = (x) => {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
@@ -2060,6 +2064,9 @@ document.onkeydown = (e) => {
     } else if (key == "f2") {
       e.preventDefault();
       rankToggle();
+    } else if (key == "/" || key == "?") {
+      e.preventDefault();
+      medalDescription();
     }
   } else if (display == 7) {
     offsetInput = true;
