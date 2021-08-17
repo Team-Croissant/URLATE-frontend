@@ -752,13 +752,21 @@ const updateRanks = () => {
       }
       data = data.results;
       let innerContent = "";
+      let prevScore = -1;
+      let rankMinus = 0;
       for (let i = 0; i < data.length; i++) {
+        if(data[i].record == prevScore) {
+          rankMinus++;
+        } else {
+          rankMinus = 0;
+        }
         innerContent += `<br>
                         <div class="selectRank">
-                          <div class="selectRankNumber">${i + 1}</div>
+                          <div class="selectRankNumber">${i + 1 - rankMinus}</div>
                           <div class="selectRankName">${data[i].nickname}</div>
                           <div class="selectRankScore">${numberWithCommas(Number(data[i].record))}</div>
                       </div>`;
+        prevScore = data[i].record;
       }
       loadingHide();
       selectRankScoreContainer.innerHTML = innerContent;
