@@ -532,7 +532,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                         continue;
                       }
                       songs[i] = new Howl({
-                        src: [`https://cdn.rhyga.me/tracks/preview/${tracks[i].fileName}.mp3`],
+                        src: [`${cdn}/tracks/preview/${tracks[i].fileName}.mp3`],
                         format: ["mp3"],
                         autoplay: false,
                         loop: true,
