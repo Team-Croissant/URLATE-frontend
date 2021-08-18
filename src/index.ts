@@ -8,7 +8,6 @@ const config = require(__dirname + "/../config/config.json");
 
 const app = express();
 app.locals.pretty = true;
-const port = 8080;
 
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/../views");
@@ -162,6 +161,6 @@ app.get("/storeDenied", (req, res) => {
   });
 });
 
-http.createServer(app).listen(port, () => {
-  signale.success(`HTTP Server running at port ${port}.`);
+http.createServer(app).listen(config.project.port, () => {
+  signale.success(`HTTP Server running at port ${config.project.port}.`);
 });

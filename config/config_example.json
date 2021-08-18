@@ -5,6 +5,7 @@
     "cdn": "https://cdn.example.com",
     "game": "https://game.example.com",
     "communityUrl": "https://community.example.com",
-    "miraiUrl": "https://mirai.example.com"
+    "miraiUrl": "https://mirai.example.com",
+    "port": 8080
   }
 }
