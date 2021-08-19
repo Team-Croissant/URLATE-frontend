@@ -1905,6 +1905,7 @@ p {
 }
 
 .DLCinfoSongAlbum {
+  object-fit: cover;
   border-radius: 5px;
   height: 7vh;
   width: 7vh;
