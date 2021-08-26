@@ -8,5 +8,3 @@ resources/
 *.swp
 
 dist/
-
-package-lock.json
