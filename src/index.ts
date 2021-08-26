@@ -1,7 +1,6 @@
-import signale = require("signale");
-import cookieParser = require("cookie-parser");
-import http = require("http");
-import express = require("express");
+import signale from "signale";
+import cookieParser from "cookie-parser";
+import express from "express";
 import i18n from "./i18n";
 
 const config = require(__dirname + "/../config/config.json");
@@ -161,6 +160,6 @@ app.get("/storeDenied", (req, res) => {
   });
 });
 
-http.createServer(app).listen(config.project.port, () => {
+app.listen(config.project.port, () => {
   signale.success(`HTTP Server running at port ${config.project.port}.`);
 });
