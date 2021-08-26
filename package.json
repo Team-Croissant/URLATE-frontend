@@ -8,6 +8,7 @@
   "description": "Avoid & Get on the tempo, URLATE",
   "main": "src/",
   "scripts": {
+    "build": "tsc",
     "auto-build": "tsc-watch",
     "start": "supervisor dist/index.js"
   },
