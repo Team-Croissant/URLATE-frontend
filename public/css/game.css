@@ -804,7 +804,11 @@ p {
 
 #subtitleHighlight {
   background: rgb(255, 255, 255);
-  background: linear-gradient(180deg, rgb(255, 255, 255) 49%, rgb(235, 235, 235) 50%);
+  background: linear-gradient(
+    180deg,
+    rgb(255, 255, 255) 49%,
+    rgb(235, 235, 235) 50%
+  );
 }
 
 #registerBtn {
@@ -814,7 +818,11 @@ p {
   height: 7vh;
   border-radius: 15px;
   border: none;
-  background: linear-gradient(135deg, rgba(59, 137, 236, 1) 0%, rgba(187, 62, 254, 1) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(59, 137, 236, 1) 0%,
+    rgba(187, 62, 254, 1) 100%
+  );
   font-size: 3vh;
   color: white;
   box-shadow: 0 0 20px rgba(50, 50, 50, 0.3);
@@ -1187,7 +1195,7 @@ p {
 .difficulty {
   font-size: 3.5vh;
   cursor: pointer;
-  margin-right: 2vw;
+  margin-right: 1vw;
   opacity: 0.3;
   font-weight: 300;
 }
@@ -1371,7 +1379,11 @@ p {
   padding-bottom: 1.5vh;
   --artist-display: none;
   --title-weight: 800;
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5));
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 30%,
+    rgba(255, 255, 255, 0.5)
+  );
 }
 
 #selectRankContainer {
@@ -1955,7 +1967,11 @@ p {
   font-size: 3vh;
   color: black;
   border: solid 3px transparent;
-  background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0)), linear-gradient(101deg, #62c7fc, #ac67fe);
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0)
+    ),
+    linear-gradient(101deg, #62c7fc, #ac67fe);
   background-origin: border-box;
   background-clip: content-box, border-box;
   box-shadow: 2px 1000px 1px #fff inset;
