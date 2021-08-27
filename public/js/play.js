@@ -76,6 +76,7 @@ let socket;
 let startDate = 0;
 let pauseDate = 0;
 let isPaused = false;
+let rate = 1;
 
 const socketInitialize = () => {
   socket = io("https://game.rhyga.me", {
@@ -212,6 +213,7 @@ const initialize = (isFirstCalled) => {
     (window.innerHeight * pixelRatio * settings.display.canvasRes) / 100;
   missCanvas.width = window.innerWidth * 0.2 * pixelRatio;
   missCanvas.height = window.innerHeight * 0.05 * pixelRatio;
+  rate = localStorage.rate;
   if (isFirstCalled) {
     fetch(
       `${cdn}/patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`,
@@ -300,6 +302,7 @@ const initialize = (isFirstCalled) => {
           onload: () => {
             Howler.volume(settings.sound.volume.master);
             song.volume(settings.sound.volume.music);
+            song.rate(localStorage.rate);
             if (load == 1) {
               doneLoading();
             }
@@ -755,7 +758,7 @@ const cntRender = () => {
     if (isPaused || startDate == 0) {
       seek = song.seek() * 1000 - (offset + sync);
     } else {
-      seek = date - startDate - (offset + sync);
+      seek = (date - startDate) * rate - (offset + sync);
     }
     if (song.playing()) {
       socketUpdate(date);
@@ -1092,7 +1095,7 @@ const compClicked = (isTyped, key) => {
     ) {
       drawParticle(1, mouseX, mouseY);
       let date = d;
-      const seek = date - startDate - (offset + sync);
+      const seek = (date - startDate) * rate - (offset + sync);
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
       let perfectJudge = 60000 / bpm / 8;
       let greatJudge = 60000 / bpm / 5;
