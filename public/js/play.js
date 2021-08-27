@@ -87,7 +87,8 @@ const socketInitialize = () => {
     socket.emit(
       "game init",
       localStorage.songName,
-      localStorage.difficultySelection
+      localStorage.difficultySelection,
+      localStorage.rate
     );
 
     socket.on(
