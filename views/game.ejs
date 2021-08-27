@@ -160,6 +160,19 @@
                         <span id="speed">0</span>
                     </div>
                     <div class="trackStatLineContainer"><div class="trackStatLine" id="speedValue"></div></div>
+                    <div id="modsTitleContainer">
+                        <div class="modsTitleLine"></div>
+                        <div id="modsTitle">MODS</div>
+                        <div class="modsTitleLine"></div>
+                    </div>
+                    <div class="trackStatContainer">
+                        <span class="trackModsTitle">Playback Rate</span>
+                        <input type="number" id="trackModsRate" class="trackModsValue metropolis" value="1.0" onchange="rateChanged(this)">
+                    </div>
+                    <div class="trackStatContainer">
+                        <span class="trackModsTitle">Disable Text</span>
+                        <div class="trackModsValue" id="trackModsText" onclick="textDisabled()">No</div>
+                    </div>
                 </div>
             </div>
             <div id="selectContainerInfo">

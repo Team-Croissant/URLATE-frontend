@@ -31,6 +31,9 @@ let songData = [];
 let loading = false;
 let tutorial = false;
 
+let rate = 1;
+let disableText = false;
+
 let lottieAnim;
 
 let intro1skipped = 0;
@@ -704,6 +707,8 @@ const songSelected = (n) => {
     ) {
       alert("NOT ALLOWED TO PLAY"); //TODO
     } else {
+      localStorage.rate = rate;
+      localStorage.disableText = disableText;
       localStorage.songNum = songSelection;
       localStorage.difficultySelection = difficultySelection;
       localStorage.difficulty = JSON.parse(tracks[0].difficulty)[
@@ -714,6 +719,11 @@ const songSelected = (n) => {
     }
     return;
   }
+  disableText = false;
+  rate = 1;
+  trackModsRate.value = "1.0";
+  trackModsText.textContent = "No";
+  trackModsText.classList.remove("enabled");
   if (!(songSelection == -1 && tracks[n].name == "URLATE Theme")) {
     songNameText.textContent =
       settings.general.detailLang == "original"
@@ -822,6 +832,22 @@ const songSelected = (n) => {
     });
   songSelection = n;
   updateRanks();
+};
+
+const textDisabled = () => {
+  disableText = !disableText;
+  if (disableText) {
+    trackModsText.textContent = "Yes";
+    trackModsText.classList.add("enabled");
+  } else {
+    trackModsText.textContent = "No";
+    trackModsText.classList.remove("enabled");
+  }
+};
+
+const rateChanged = (e) => {
+  e.value = Number(e.value).toFixed(1);
+  rate = Number(e.value);
 };
 
 const updateRanks = () => {

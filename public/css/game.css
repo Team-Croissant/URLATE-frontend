@@ -1118,12 +1118,61 @@ p {
 }
 
 #trackStats {
-  border: 5px solid white;
+  padding: 2px 0px;
+  color: black;
+  background-color: white;
   line-height: 3.2vh;
   width: 90%;
   height: 3vh;
   font-weight: 700;
   font-size: 2vh;
+}
+
+#modsTitleContainer {
+  margin-top: 5vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 90%;
+  height: 3vh;
+  font-weight: 700;
+  font-size: 2vh;
+}
+
+.modsTitleLine {
+  height: 2px;
+  width: 33%;
+  background-color: white;
+}
+
+#modsTitle {
+  width: 34%;
+}
+
+.trackModsValue {
+  transition-duration: 0.3s;
+  font-size: 2vh;
+  text-align: center;
+  width: 20%;
+  background: none;
+  cursor: pointer;
+  color: white;
+  font-weight: 700;
+  border: 2px solid white;
+  border-radius: 100px;
+  padding: 1% 5%;
+}
+
+.trackModsValue.enabled {
+  background-color: white;
+  color: black;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .trackStatContainer {
