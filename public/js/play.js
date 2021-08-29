@@ -79,7 +79,7 @@ let isPaused = false;
 let rate = 1;
 
 const socketInitialize = () => {
-  socket = io("https://game.rhyga.me", {
+  socket = io(game, {
     query: `id=${userid}&name=${userName}`,
   });
 
