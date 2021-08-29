@@ -77,6 +77,7 @@ let startDate = 0;
 let pauseDate = 0;
 let isPaused = false;
 let rate = 1;
+let disableText = false;
 
 const socketInitialize = () => {
   socket = io(game, {
@@ -215,6 +216,7 @@ const initialize = (isFirstCalled) => {
   missCanvas.width = window.innerWidth * 0.2 * pixelRatio;
   missCanvas.height = window.innerHeight * 0.05 * pixelRatio;
   rate = localStorage.rate;
+  disableText = localStorage.disableText;
   if (isFirstCalled) {
     fetch(
       `${cdn}/patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`,
@@ -789,7 +791,8 @@ const cntRender = () => {
       } else if (renderTriggers[i].value == 5) {
         if (
           renderTriggers[i].ms - 1 <= seek &&
-          renderTriggers[i].ms + renderTriggers[i].time > seek
+          renderTriggers[i].ms + renderTriggers[i].time > seek &&
+          !disableText
         ) {
           ctx.beginPath();
           ctx.fillStyle = "#111";
