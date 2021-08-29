@@ -1101,10 +1101,10 @@ const compClicked = (isTyped, key) => {
       let date = d;
       const seek = (date - startDate) * rate - (offset + sync);
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
-      let perfectJudge = 60000 / bpm / 8;
-      let greatJudge = 60000 / bpm / 5;
-      let goodJudge = 60000 / bpm / 3;
-      let badJudge = 60000 / bpm / 2;
+      let perfectJudge = (60000 / bpm / 8) * rate;
+      let greatJudge = (60000 / bpm / 5) * rate;
+      let goodJudge = (60000 / bpm / 3) * rate;
+      let badJudge = (60000 / bpm / 2) * rate;
       let x = pattern.patterns[pointingCntElement[i].i].x;
       let y = pattern.patterns[pointingCntElement[i].i].y;
       if (seek < ms + perfectJudge && seek > ms - perfectJudge) {
