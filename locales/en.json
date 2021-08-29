@@ -205,5 +205,6 @@
 	"shutdowned_alert": "Minors under the age of 16 are restricted from using the game from 0:00 to 6:00.",
 	"adult_alert": "Minors must have the consent of their legal representative to play the game. Please proceed with the authentication using the mobile phone of the legal representative.",
 	"person_alert": "You already have another account. URLATE sets the usage rule to use one account per person.",
-	"adult_retry_alert": "Authorization of legal representative is required. Please try again with an adult mobile phone number."
+	"adult_retry_alert": "Authorization of legal representative is required. Please try again with an adult mobile phone number.",
+	"medal_description": "Medals earned through gameplay. In turn, you can obtain high accuracy (less than 10 perfect or great), PERFECT play (0 miss or bullet), and clearing."
 }
