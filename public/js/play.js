@@ -1156,15 +1156,16 @@ const calculateScore = (judge, i, isMissed) => {
     maxCombo = combo;
   }
   let basicScore = 100000000 / patternLength;
+  const rateCalc = rate * 0.5 + 0.5;
   if (judge == "perfect") {
-    score += Math.round((basicScore + combo * 5) * rate);
+    score += Math.round((basicScore + combo * 5) * rateCalc);
   } else if (judge == "great") {
-    score += Math.round((basicScore * 0.5 + combo * 5) * rate);
+    score += Math.round((basicScore * 0.5 + combo * 5) * rateCalc);
   } else if (judge == "good") {
-    score += Math.round((basicScore * 0.2 + combo * 3) * rate);
+    score += Math.round((basicScore * 0.2 + combo * 3) * rateCalc);
   } else {
     combo = 0;
-    score += Math.round(basicScore * 0.05 * rate);
+    score += Math.round(basicScore * 0.05 * rateCalc);
   }
   if (combo % comboCount == 0 && combo != 0) {
     comboAlertMs = Date.now();
