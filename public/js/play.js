@@ -792,7 +792,7 @@ const cntRender = () => {
         if (
           renderTriggers[i].ms - 1 <= seek &&
           renderTriggers[i].ms + renderTriggers[i].time > seek &&
-          !disableText
+          disableText == "false"
         ) {
           ctx.beginPath();
           ctx.fillStyle = "#111";
