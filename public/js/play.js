@@ -668,7 +668,7 @@ const drawBullet = (n, x, y, a) => {
 
 const callBulletDestroy = (j) => {
   let date = new Date().getTime();
-  const seek = date - startDate - (offset + sync);
+  const seek = (date - startDate) * rate - (offset + sync);
   const p =
     ((seek - pattern.bullets[j].ms) /
       ((bpm * 40) / speed / pattern.bullets[j].speed)) *
