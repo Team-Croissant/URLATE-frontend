@@ -847,6 +847,11 @@ const textDisabled = () => {
 
 const rateChanged = (e) => {
   e.value = Number(e.value).toFixed(1);
+  if (e.value > 2) {
+    e.value = 2;
+  } else if (e.value < 0.5) {
+    e.value = 0.5;
+  }
   rate = Number(e.value);
 };
 
