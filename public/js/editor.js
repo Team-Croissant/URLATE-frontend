@@ -349,10 +349,11 @@ const drawCursor = () => {
   cntCtx.fill();
 };
 
-const drawNote = (p, x, y, s) => {
+const drawNote = (p, x, y, s, n, d) => {
   p = Math.max(p, 0);
   x = (cntCanvas.width / 200) * (x + 100);
   y = (cntCanvas.height / 200) * (y + 100);
+  n = n == undefined ? 0 : n;
   let w = cntCanvas.width / 40;
   let opacity = "FF";
   if (p > 100) {
@@ -363,20 +364,20 @@ const drawNote = (p, x, y, s) => {
     cntCtx.strokeStyle = `#ebd534${opacity.toString(16)}`;
   } else {
     if (!denySkin) {
-      if (skin.note.type == "gradient") {
+      if (skin.note[n].type == "gradient") {
         let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
-        for (let i = 0; i < skin.note.stops.length; i++) {
-          grd.addColorStop(skin.note.stops[i].percentage / 100, `#${skin.note.stops[i].color}${opacity.toString(16)}`);
+        for (let i = 0; i < skin.note[n].stops.length; i++) {
+          grd.addColorStop(skin.note[n].stops[i].percentage / 100, `#${skin.note[n].stops[i].color}${opacity.toString(16)}`);
         }
         cntCtx.fillStyle = grd;
         cntCtx.strokeStyle = grd;
-      } else if (skin.note.type == "color") {
-        cntCtx.fillStyle = `#${skin.note.color}${opacity.toString(16)}`;
+      } else if (skin.note[n].type == "color") {
+        cntCtx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
       }
     } else {
       let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
-      grd.addColorStop(0, `#fb4934${opacity}`);
-      grd.addColorStop(1, `#ebd934${opacity}`);
+      grd.addColorStop(0, `${["#fb4934", "#53cddb"][n]}${opacity}`);
+      grd.addColorStop(1, `${["#ebd934", "#0669ff"][n]}${opacity}`);
       cntCtx.fillStyle = grd;
       cntCtx.strokeStyle = grd;
     }
@@ -388,6 +389,20 @@ const drawNote = (p, x, y, s) => {
   cntCtx.beginPath();
   cntCtx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
   cntCtx.fill();
+  if (n == 0) return;
+  cntCtx.beginPath();
+  if (opacity != "FF") {
+    cntCtx.strokeStyle = `#${skin.note[n].arrow}${opacity.toString(16)}`;
+  } else {
+    let arrowOpacity = (p * 5 > 255 ? 255 : Math.round(p) * 5).toString(16).padStart(2, "0");
+    cntCtx.strokeStyle = `#${skin.note[n].arrow}${arrowOpacity}`;
+  }
+  cntCtx.lineWidth = Math.round(cntCanvas.width / 400);
+  let add = ((w / 2) * (-1 * d)) / 2;
+  cntCtx.moveTo(x - add, y - add / 2);
+  cntCtx.lineTo(x, y + add / 2);
+  cntCtx.lineTo(x + add, y - add / 2);
+  cntCtx.stroke();
 };
 
 const drawBullet = (n, x, y, a, s) => {
@@ -985,7 +1000,7 @@ const cntRender = () => {
         p[1] = (mouseX - 80) / 20;
       }
       if (p[0] == 0 && p[1] == 0) {
-        drawNote(100, mouseX, mouseY, true);
+        drawNote(100, mouseX, mouseY, true, selectedValue, 1);
       } else {
         if (p[1] == 0) {
           drawBullet(selectedValue, -100, mouseY, 0, true);
@@ -997,7 +1012,7 @@ const cntRender = () => {
     for (let i = 0; i < renderNotes.length; i++) {
       const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
       if (mouseMode == 0) trackMouseSelection(start + i, 0, renderNotes[i].value, renderNotes[i].x, renderNotes[i].y);
-      drawNote(p, renderNotes[i].x, renderNotes[i].y, selectedCheck(0, start + i));
+      drawNote(p, renderNotes[i].x, renderNotes[i].y, selectedCheck(0, start + i), renderNotes[i].value, renderNotes[i].direction);
     }
     start = lowerBound(pattern.bullets, seek * 1000 - bpm * 100);
     end = upperBound(pattern.bullets, seek * 1000);
@@ -1150,6 +1165,22 @@ const settingsInput = (v, e) => {
         alert("Input value is too high.");
       } else if (Number(e.value) < -100) {
         alert("Input value is too low.");
+      } else {
+        pattern.patterns[selectedCntElement.i][v] = Number(e.value);
+        patternChanged();
+        return;
+      }
+      if (e.value != "-") {
+        e.value = pattern.patterns[selectedCntElement.i][v];
+      }
+      break;
+    case "direction":
+      if (isNaN(Number(e.value))) {
+        if (e.value != "-") {
+          alert("Input value is not number.");
+        }
+      } else if (Number(e.value) != 1 && Number(e.value) != -1) {
+        alert("Input value should be 1 or -1.");
       } else {
         pattern.patterns[selectedCntElement.i][v] = Number(e.value);
         patternChanged();
@@ -1597,13 +1628,13 @@ const timelineAddElement = () => {
   let mousePosY = mouseY - timelineYLoc;
   if (mouseX > tmlCanvas.width / 10 && mouseX < tmlCanvas.width / 1.01 && mouseY > startY && mouseY < tmlCanvas.height / 1.1) {
     if (mousePosY >= startY && mousePosY <= startY + height) {
-      let newElement = { ms: parseInt(calculatedMs), value: 0, x: 0, y: 0 };
+      let newElement = { ms: parseInt(calculatedMs), value: selectedValue, direction: 1, x: 0, y: 0 };
       pattern.patterns.push(newElement);
       pattern.patterns.sort(sortAsTiming);
       patternChanged();
       for (let i = 0; i < pattern.patterns.length; i++) {
         if (JSON.stringify(pattern.patterns[i]) == JSON.stringify(newElement)) {
-          selectedCntElement = { v1: 0, v2: 0, i: i };
+          selectedCntElement = { v1: 0, v2: selectedValue, i: i };
         }
       }
     } else if (mousePosY >= startY + height && mousePosY <= startY + height * (bulletsOverlapNum + 1)) {
@@ -1703,7 +1734,8 @@ const compClicked = () => {
       } else {
         let newElement = {
           ms: parseInt(seek * 1000) + 1,
-          value: 0,
+          value: selectedValue,
+          direction: 1,
           x: parseInt(mouseX),
           y: parseInt(mouseY),
         };
@@ -1712,7 +1744,7 @@ const compClicked = () => {
         patternChanged();
         for (let i = 0; i < pattern.patterns.length; i++) {
           if (JSON.stringify(pattern.patterns[i]) == JSON.stringify(newElement)) {
-            selectedCntElement = { v1: 0, v2: 0, i: i };
+            selectedCntElement = { v1: 0, v2: selectedValue, i: i };
           }
         }
       }
@@ -1767,7 +1799,6 @@ const changeSettingsMode = (v1, v2, i) => {
       document.getElementById("elementsSettings").style.display = "none";
       break;
     case 0:
-      document.getElementById("dot").style.color = "#f59b42";
       document.getElementById("settingsNameSpace").innerText = `Note_${i}`;
       document.getElementById("trackSettings").style.display = "none";
       document.getElementById("elementsSettings").style.display = "block";
@@ -1777,7 +1808,20 @@ const changeSettingsMode = (v1, v2, i) => {
       document.getElementById("triggerInitializeContainer").style.display = "none";
       noteSettingsContainer.getElementsByClassName("settingsPropertiesTextbox")[0].value = pattern.patterns[i].x;
       noteSettingsContainer.getElementsByClassName("settingsPropertiesTextbox")[1].value = pattern.patterns[i].y;
-      noteSettingsContainer.getElementsByClassName("settingsPropertiesTextbox")[2].value = pattern.patterns[i].ms.toFixed();
+      noteSettingsContainer.getElementsByClassName("settingsPropertiesTextbox")[2].value = pattern.patterns[i].direction;
+      noteSettingsContainer.getElementsByClassName("settingsPropertiesTextbox")[3].value = pattern.patterns[i].ms.toFixed();
+      switch (v2) {
+        case 0:
+          document.getElementById("dot").style.color = "#f59b42";
+          noteSettingsContainer.getElementsByClassName("settingsPropertiesIndividual")[2].style.display = "none";
+          break;
+        case 1:
+          document.getElementById("dot").style.color = "#f54e42";
+          noteSettingsContainer.getElementsByClassName("settingsPropertiesIndividual")[2].style.display = "flex";
+          break;
+        default:
+          alert("changeSettingsMode:Error");
+      }
       break;
     case 1:
       document.getElementById("noteSettingsContainer").style.display = "none";
