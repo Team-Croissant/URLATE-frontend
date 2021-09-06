@@ -1,6 +1,8 @@
+/* global api, projectUrl, lottie, bodymovin, shutdownAlert, auth2, loginFailed, loginError*/
+const animContainer = document.getElementById("animContainer");
 let lottieAnim;
 
-document.addEventListener("DOMContentLoaded", (event) => {
+document.addEventListener("DOMContentLoaded", () => {
   let UserAgent = navigator.userAgent;
   console.log(UserAgent);
   if (
@@ -8,7 +10,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     UserAgent.match(/LG|SAMSUNG|Samsung/) != null ||
     (UserAgent.match(/Safari/i) != null && UserAgent.match(/Chrome/i) == null)
   ) {
-    fullscreenRequired.style.display = "none";
+    document.getElementById("fullscreenRequired").style.display = "none";
   }
   let widthWidth = window.innerWidth;
   let heightWidth = (window.innerHeight / 9) * 16;
@@ -111,7 +113,7 @@ window.onload = () => {
 };
 
 const fullscreenDisable = () => {
-  fullscreenRequired.style.display = "none";
+  document.getElementById("fullscreenRequired").style.display = "none";
 };
 
 const loginTrigger = () => {

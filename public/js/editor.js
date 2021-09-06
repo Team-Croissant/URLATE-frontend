@@ -1,3 +1,25 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* global api, url, Howl, cdn, bodymovin, getTan, calcAngleDegrees, lowerBound, upperBound, Howler, rusure, syncAlert, zoomAlert, copiedText, timeAlert, deleteSure, moveToAlert, need2Save */
+const songSelectBox = document.getElementById("songSelectBox");
+const trackSettings = document.getElementById("trackSettings");
+const lottieInitBox = document.getElementById("lottieInitBox");
+const volumeMaster = document.getElementById("volumeMaster");
+const volumeMasterValue = document.getElementById("volumeMasterValue");
+const songName = document.getElementById("songName");
+const settingsBGAContainer = document.getElementById("settingsBGAContainer");
+const canvasContainer = document.getElementById("canvasContainer");
+const timelineContainer = document.getElementById("timelineContainer");
+const componentView = document.getElementById("componentView");
+const menuContainer = document.getElementById("menuContainer");
+const elementsSettings = document.getElementById("elementsSettings");
+const noteSettingsContainer = document.getElementById("noteSettingsContainer");
+const bulletSettingsContainer = document.getElementById("bulletSettingsContainer");
+const triggerSelectBox = document.getElementById("triggerSelectBox");
+const triggerInitBox = document.getElementById("triggerInitBox");
+const volumeOverlay = document.getElementById("volumeOverlay");
+const canvasBackground = document.getElementById("canvasBackground");
+const controlBtn = document.getElementById("controlBtn");
+const settingsPropertiesTextbox = trackSettings.getElementsByClassName("settingsPropertiesTextbox");
 const cntCanvas = document.getElementById("componentCanvas");
 const cntCtx = cntCanvas.getContext("2d");
 const tmlCanvas = document.getElementById("timelineCanvas");
@@ -18,7 +40,6 @@ let song = new Howl({
 let mouseX = 0,
   mouseY = 0,
   mouseMode = 0;
-let userid;
 let mode = 0; //0: move tool, 1: edit tool, 2: add tool
 let zoom = 1;
 let timelineYLoc = 0,
@@ -114,8 +135,8 @@ const settingApply = () => {
     });
   if (localStorage.pattern) {
     pattern = JSON.parse(localStorage.pattern);
-    for (let i = 0; document.getElementById("songSelectBox").options.length > i; i++) {
-      if (document.getElementById("songSelectBox").options[i].value == pattern.information.track) songSelectBox.selectedIndex = i;
+    for (let i = 0; songSelectBox.options.length > i; i++) {
+      if (songSelectBox.options[i].value == pattern.information.track) songSelectBox.selectedIndex = i;
     }
     songSelected(true);
   }
@@ -151,7 +172,6 @@ document.addEventListener("DOMContentLoaded", () => {
               data = data.user;
               userName = data.nickname;
               settings = JSON.parse(data.settings);
-              userid = data.userid;
               settingApply();
               initialize();
             } else {
@@ -181,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
           let option = document.createElement("option");
           option.innerHTML = tracks[i].name;
           if (tracks[i].type == 3) option.disabled = true;
-          document.getElementById("songSelectBox").options.add(option);
+          songSelectBox.options.add(option);
         }
       } else {
         alert("Failed to load song list.");
@@ -212,8 +232,8 @@ const dataLoaded = (event) => {
   let reader = new FileReader();
   reader.onload = (e) => {
     pattern = JSON.parse(e.target.result);
-    for (let i = 0; document.getElementById("songSelectBox").options.length > i; i++) {
-      if (document.getElementById("songSelectBox").options[i].value == pattern.information.track) songSelectBox.selectedIndex = i;
+    for (let i = 0; songSelectBox.options.length > i; i++) {
+      if (songSelectBox.options[i].value == pattern.information.track) songSelectBox.selectedIndex = i;
     }
     songSelected(true);
   };
@@ -248,19 +268,19 @@ const songSelected = (isLoaded, withoutSong) => {
       offset: 0,
     };
   }
-  document.getElementById("controlBtn").classList.add("timeline-play");
-  document.getElementById("controlBtn").classList.remove("timeline-pause");
+  controlBtn.classList.add("timeline-play");
+  controlBtn.classList.remove("timeline-pause");
   fetch(`${api}/trackCount/${pattern.information.track}`);
   songName.innerText = pattern.information.track;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[0].value = pattern.information.track;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[1].value = pattern.information.producer;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[2].value = pattern.information.author;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[3].value = pattern.information.bpm;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[4].value = pattern.information.speed;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[5].value = pattern.information.offset;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[6].value = pattern.background.boxColor;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[7].value = pattern.background.grayscale;
-  trackSettings.getElementsByClassName("settingsPropertiesTextbox")[8].value = pattern.background.opacity;
+  settingsPropertiesTextbox[0].value = pattern.information.track;
+  settingsPropertiesTextbox[1].value = pattern.information.producer;
+  settingsPropertiesTextbox[2].value = pattern.information.author;
+  settingsPropertiesTextbox[3].value = pattern.information.bpm;
+  settingsPropertiesTextbox[4].value = pattern.information.speed;
+  settingsPropertiesTextbox[5].value = pattern.information.offset;
+  settingsPropertiesTextbox[6].value = pattern.background.boxColor;
+  settingsPropertiesTextbox[7].value = pattern.background.grayscale;
+  settingsPropertiesTextbox[8].value = pattern.background.opacity;
   lottieInitBox.value = pattern.background.type;
   canvasBackground.style.filter = `grayscale(${pattern.background.grayscale}%) opacity(${pattern.background.opacity}%)`;
   bpm = pattern.information.bpm;
@@ -268,7 +288,7 @@ const songSelected = (isLoaded, withoutSong) => {
   speed = pattern.information.speed;
   document.getElementById("percentage").innerText = "100%";
   rate = 1;
-  document.getElementById("canvasBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[songSelectBox.selectedIndex].fileName} (Custom).png")`;
+  canvasBackground.style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[songSelectBox.selectedIndex].fileName} (Custom).png")`;
   document.getElementById("songSelectionContainer").style.display = "none";
   document.getElementById("initialScreenContainer").style.display = "none";
   document.getElementById("editorMainContainer").style.display = "initial";
@@ -307,8 +327,8 @@ const changeMode = (n) => {
 const drawCursor = () => {
   cntCtx.beginPath();
   let w = cntCanvas.width / 70;
-  x = (cntCanvas.width / 200) * (mouseX + 100);
-  y = (cntCanvas.height / 200) * (mouseY + 100);
+  let x = (cntCanvas.width / 200) * (mouseX + 100);
+  let y = (cntCanvas.height / 200) * (mouseY + 100);
   if (!denySkin) {
     if (skin.cursor.type == "gradient") {
       let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
@@ -516,9 +536,9 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
       const seek = song.seek() - (offset + sync) / 1000;
       const powX = ((((mouseX - x) * canvasContainer.offsetWidth) / 200) * pixelRatio * settings.display.canvasRes) / 100;
       const powY = ((((mouseY - y) * canvasContainer.offsetHeight) / 200) * pixelRatio * settings.display.canvasRes) / 100;
+      const p = (((bpm * 14) / speed - (pattern.patterns[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
       switch (v1) {
         case 0:
-          const p = (((bpm * 14) / speed - (pattern.patterns[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
           if (Math.sqrt(Math.pow(powX, 2) + Math.pow(powY, 2)) <= cntCanvas.width / 40 && p <= 100) {
             pointingCntElement = { v1: v1, v2: v2, i: i };
           }
@@ -954,7 +974,7 @@ const cntRender = () => {
     for (let i of destroyedSeeks) {
       prevDestroyedSeeks.add(i);
     }
-    start = lowerBound(pattern.patterns, seek * 1000 - (bpm * 4) / speed);
+    let start = lowerBound(pattern.patterns, seek * 1000 - (bpm * 4) / speed);
     end = upperBound(pattern.patterns, seek * 1000 + (bpm * 14) / speed);
     const renderNotes = pattern.patterns.slice(start, end);
     if (mode == 2 && mouseMode == 0) {
@@ -1049,13 +1069,13 @@ const songPlayPause = () => {
     prevDestroyedSeeks.clear();
     destroyedSeeks.clear();
     if (song.playing()) {
-      document.getElementById("controlBtn").classList.add("timeline-play");
-      document.getElementById("controlBtn").classList.remove("timeline-pause");
+      controlBtn.classList.add("timeline-play");
+      controlBtn.classList.remove("timeline-pause");
       song.pause();
       lottieAnim.pause();
     } else {
-      document.getElementById("controlBtn").classList.add("timeline-pause");
-      document.getElementById("controlBtn").classList.remove("timeline-play");
+      controlBtn.classList.add("timeline-pause");
+      controlBtn.classList.remove("timeline-play");
       circleBulletAngles = [];
       song.play();
       lottieAnim.play();
@@ -1064,7 +1084,7 @@ const songPlayPause = () => {
 };
 
 const save = () => {
-  let trackSettingsForm = trackSettings.getElementsByClassName("settingsPropertiesTextbox");
+  let trackSettingsForm = settingsPropertiesTextbox;
   pattern.information = {
     version: "1.0",
     track: trackSettingsForm[0].value,
@@ -1118,6 +1138,7 @@ const deleteAll = () => {
 };
 
 const settingsInput = (v, e) => {
+  let element;
   switch (v) {
     case "x":
     case "y":
@@ -1240,7 +1261,6 @@ const settingsInput = (v, e) => {
       }
       break;
     case "Speed":
-      let element;
       if (selectedCntElement.v1 == 0) {
         element = pattern.patterns[selectedCntElement.i];
       } else if (selectedCntElement.v1 == 1) {
@@ -1419,7 +1439,7 @@ const changeOffset = (e) => {
 
 const trackMousePos = () => {
   const width = parseInt((componentView.offsetWidth - canvasContainer.offsetWidth) / 2 + menuContainer.offsetWidth);
-  const height = navbar.offsetHeight;
+  const height = document.getElementById("navbar").offsetHeight;
   const x = ((event.clientX - width) / canvasContainer.offsetWidth) * 200 - 100;
   const y = ((event.clientY - height) / canvasContainer.offsetHeight) * 200 - 100;
   if (!(x < -100 || y < -100 || x > 100 || y > 100)) {
@@ -1487,8 +1507,10 @@ const elementFollowMouse = (v1, v2, i) => {
         case 0:
           pattern.patterns[i].x = parseInt(pattern.patterns[i].x);
           pattern.patterns[i].y = parseInt(pattern.patterns[i].y);
+          break;
         case 1:
           pattern.bullets[i].location = parseInt(pattern.bullets[i].location);
+          break;
       }
       dragMouseX = undefined;
       dragMouseY = undefined;
@@ -1796,7 +1818,7 @@ const changeSettingsMode = (v1, v2, i) => {
         document.getElementById("triggerInitializeContainer").style.display = "block";
         triggerInitBox.selectedIndex = 0;
       } else {
-        let properties = triggerSettingsContainer.getElementsByClassName("settingsPropertiesContainer");
+        let properties = document.getElementById("triggerSettingsContainer").getElementsByClassName("settingsPropertiesContainer");
         let start = 1;
         for (let j = start; properties.length - start > j; j++) {
           properties[j].style.display = "none";
@@ -1869,8 +1891,8 @@ const playPauseBtn = () => {
 };
 
 const stopBtn = () => {
-  document.getElementById("controlBtn").classList.add("timeline-play");
-  document.getElementById("controlBtn").classList.remove("timeline-pause");
+  controlBtn.classList.add("timeline-play");
+  controlBtn.classList.remove("timeline-pause");
   song.stop();
   lottieAnim.stop();
 };
@@ -1888,7 +1910,7 @@ const changeRate = () => {
 const test = () => {
   alert(need2Save);
   save();
-  let trackSettingsForm = trackSettings.getElementsByClassName("settingsPropertiesTextbox");
+  let trackSettingsForm = settingsPropertiesTextbox;
   pattern.information = {
     version: "1.0",
     track: trackSettingsForm[0].value,
@@ -2202,7 +2224,7 @@ const lottieSet = () => {
     case "2": //BGA
       canvasBackground.getElementsByTagName("svg")[0].style.display = "initial";
       canvasBackground.style.backgroundImage = "none";
-      canvasBackground.style.backgroundColor = `#${trackSettings.getElementsByClassName("settingsPropertiesTextbox")[6].value}`;
+      canvasBackground.style.backgroundColor = `#${settingsPropertiesTextbox[6].value}`;
       break;
   }
   pattern.background.type = Number(lottieInitBox.value);
@@ -2224,7 +2246,7 @@ const changeGrayscale = (e) => {
     alert("Input value is not number.");
     e.value = "30";
   } else {
-    canvasBackground.style.filter = `grayscale(${e.value}%) opacity(${trackSettings.getElementsByClassName("settingsPropertiesTextbox")[8].value}%)`;
+    canvasBackground.style.filter = `grayscale(${e.value}%) opacity(${settingsPropertiesTextbox[8].value}%)`;
   }
   pattern.background.grayscale = Number(e.value);
 };
@@ -2234,7 +2256,7 @@ const changeOpacity = (e) => {
     alert("Input value is not number.");
     e.value = "20";
   } else {
-    canvasBackground.style.filter = `grayscale(${trackSettings.getElementsByClassName("settingsPropertiesTextbox")[7].value}%) opacity(${e.value}%)`;
+    canvasBackground.style.filter = `grayscale(${settingsPropertiesTextbox[7].value}%) opacity(${e.value}%)`;
   }
   pattern.background.opacity = Number(e.value);
 };

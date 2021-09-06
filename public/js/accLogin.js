@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", (event) => {
+/* global api, projectUrl */
+document.addEventListener("DOMContentLoaded", () => {
   fetch(`${api}/auth/status`, {
     method: "GET",
     credentials: "include",

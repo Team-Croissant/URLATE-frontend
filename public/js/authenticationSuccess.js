@@ -1,6 +1,8 @@
+/* global api, url, bodymovin, adultAlert, personAlert */
+const infoSecondText = document.getElementById("infoSecondText");
 let lottieAnim;
 
-document.addEventListener("DOMContentLoaded", async (event) => {
+document.addEventListener("DOMContentLoaded", async () => {
   await fetch(`${api}/danal/final`, {
     method: "POST",
     credentials: "include",
@@ -19,7 +21,7 @@ document.addEventListener("DOMContentLoaded", async (event) => {
         window.location.href = `${url}/authentication/failed`;
       }
       lottieAnim = bodymovin.loadAnimation({
-        wrapper: animContainer,
+        wrapper: document.getElementById("animContainer"),
         animType: "canvas",
         loop: false,
         path: "/lottie/check.json",

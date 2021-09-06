@@ -1,5 +1,7 @@
+/* global bodymovin, api, url, adultAlert */
+const infoSecondText = document.getElementById("infoSecondText");
 let lottieAnim = bodymovin.loadAnimation({
-  wrapper: animContainer,
+  wrapper: document.getElementById("animContainer"),
   animType: "canvas",
   loop: false,
   path: "/lottie/keep.json",
@@ -26,8 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       alert(`Error occured.\n${error}`);
       console.error(`Error occured.\n${error}`);
     });
-  if (Number(new URLSearchParams(window.location.search).get("adult")))
-    alert(adultAlert);
+  if (Number(new URLSearchParams(window.location.search).get("adult"))) alert(adultAlert);
   setInterval(async () => {
     infoSecondText.textContent = infoSecondText.textContent - 1;
     if (infoSecondText.textContent == 0) {

@@ -1,11 +1,23 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* global api, url, Howl, cdn, bodymovin, getTan, calcAngleDegrees, lowerBound, upperBound, numberWithCommas, Pace, Howler, patternError, returnToEditor */
+const menuContainer = document.getElementById("menuContainer");
+const canvasBackground = document.getElementById("canvasBackground");
+const canvasContainer = document.getElementById("canvasContainer");
+const rankImg = document.getElementById("rankImg");
+const floatingArrowContainer = document.getElementById("floatingArrowContainer");
+const floatingResultContainer = document.getElementById("floatingResultContainer");
+const scoreContainer = document.getElementById("scoreContainer");
+const colorOverlayContainer = document.getElementById("colorOverlayaContainer");
+const floatingResumeContainer = document.getElementById("floatingResumeContainer");
+const volumeMasterValue = document.getElementById("volumeMasterValue");
+const volumeOverlay = document.getElementById("volumeOverlay");
 const canvas = document.getElementById("componentCanvas");
 const ctx = canvas.getContext("2d");
 const missCanvas = document.getElementById("missPointCanvas");
 const missCtx = missCanvas.getContext("2d");
 let pattern = {};
 let patternLength = 0;
-let userName = "";
-let settings, sync, song, tracks, pixelRatio, offset, bpm, speed, userid;
+let settings, sync, song, tracks, pixelRatio, offset, bpm, speed;
 let pointingCntElement = [{ v1: "", v2: "", i: "" }];
 let circleBulletAngles = [];
 let destroyParticles = [];
@@ -60,6 +72,7 @@ let lottieAnim = {
   goToAndStop: () => {},
   setSpeed: () => {},
 };
+let overlayTime = 0;
 
 let tick = new Howl({
   src: [`/sounds/tick.mp3`],
@@ -118,12 +131,10 @@ document.addEventListener("DOMContentLoaded", () => {
           .then((data) => {
             if (data.result == "success") {
               data = data.user;
-              userName = data.nickname;
-              userid = data.userid;
               settings = JSON.parse(data.settings);
               initialize(true);
               if (data.advanced) {
-                urlate.innerHTML = "<strong>URLATE</strong> Advanced";
+                document.getElementById("urlate").innerHTML = "<strong>URLATE</strong> Advanced";
               }
               settingApply();
             } else {
@@ -131,7 +142,7 @@ document.addEventListener("DOMContentLoaded", () => {
               console.error(`Error occured.\n${data.description}`);
             }
           })
-          .catch((error) => {
+          .catch(() => {
             alert(patternError);
             window.location.href = `${url}/game?initialize=0`;
           });
@@ -472,8 +483,8 @@ const drawCursor = () => {
       w = w + ((canvas.width / 400) * (mouseClickedMs + 100 - Date.now())) / 100;
     }
   }
-  x = (canvas.width / 200) * (mouseX + 100);
-  y = (canvas.height / 200) * (mouseY + 100);
+  let x = (canvas.width / 200) * (mouseX + 100);
+  let y = (canvas.height / 200) * (mouseY + 100);
   if (!denySkin) {
     if (skin.cursor.type == "gradient") {
       let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
@@ -649,7 +660,6 @@ const cntRender = () => {
         destroyParticles[i].n++;
       }
     }
-    prevDestroyedBullets = new Set(destroyedBullets);
     start = lowerBound(pattern.patterns, seek * 1000 - (bpm * 4) / speed);
     end = upperBound(pattern.patterns, seek * 1000 + (bpm * 14) / speed);
     const renderNotes = pattern.patterns.slice(start, end);
@@ -756,16 +766,16 @@ const calculateResult = () => {
   document.getElementById("wallLeft").style.left = "-10vw";
   document.getElementById("wallRight").style.right = "-10vw";
   resultEffect.play();
-  perfectResult.textContent = perfect;
-  greatResult.textContent = great;
-  goodResult.textContent = good;
-  badResult.textContent = bad;
-  missResult.textContent = miss;
-  bulletResult.textContent = bullet;
-  scoreText.textContent = numberWithCommas(`${score}`);
-  comboText.textContent = `${maxCombo}x`;
+  document.getElementById("perfectResult").textContent = perfect;
+  document.getElementById("greatResult").textContent = great;
+  document.getElementById("goodResult").textContent = good;
+  document.getElementById("badResult").textContent = bad;
+  document.getElementById("missResult").textContent = miss;
+  document.getElementById("bulletResult").textContent = bullet;
+  document.getElementById("scoreText").textContent = numberWithCommas(`${score}`);
+  document.getElementById("comboText").textContent = `${maxCombo}x`;
   let accuracy = (((perfect + (great / 10) * 7 + good / 2 + (bad / 10) * 3) / (perfect + great + good + bad + miss + bullet)) * 100).toFixed(1);
-  accuracyText.textContent = `${accuracy}%`;
+  document.getElementById("accuracyText").textContent = `${accuracy}%`;
   let rank = "";
   if (accuracy >= 98 && bad == 0 && miss == 0 && bullet == 0) {
     rankImg.style.animationName = "rainbow";
@@ -782,7 +792,7 @@ const calculateResult = () => {
     rank = "F";
   }
   rankImg.src = `/images/parts/elements/${rank}.png`;
-  scoreInfoRank.style.setProperty("--background", `url('/images/parts/elements/${rank}back.png')`);
+  document.getElementById("scoreInfoRank").style.setProperty("--background", `url('/images/parts/elements/${rank}back.png')`);
   setTimeout(() => {
     document.getElementById("componentCanvas").style.opacity = "0";
   }, 500);

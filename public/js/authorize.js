@@ -1,4 +1,5 @@
-document.addEventListener("DOMContentLoaded", (event) => {
+/* global api, projectUrl */
+document.addEventListener("DOMContentLoaded", () => {
   fetch(`${api}/auth/status`, {
     method: "GET",
     credentials: "include",
@@ -28,7 +29,7 @@ const passReg = /^[0-9]{4,6}$/;
 
 document.getElementById("password").addEventListener(
   "blur",
-  (e) => {
+  () => {
     if (!passReg.test(document.getElementById("password").value)) {
       if (!document.getElementById("pw").classList[0]) {
         document.getElementById("pw").classList.toggle("show");

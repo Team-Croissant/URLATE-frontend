@@ -1,9 +1,61 @@
-/* eslint-disable */
+/* global api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2 */
+const animContainer = document.getElementById("animContainer");
+const langDetailSelector = document.getElementById("langDetailSelector");
+const canvasResSelector = document.getElementById("canvasResSelector");
+const albumResSelector = document.getElementById("albumResSelector");
+const soundResSelector = document.getElementById("soundResSelector");
+const comboSelector = document.getElementById("comboSelector");
+const skinSelector = document.getElementById("skinSelector");
+const volumeSongValue = document.getElementById("volumeSongValue");
+const volumeHitValue = document.getElementById("volumeHitValue");
+const volumeEftValue = document.getElementById("volumeEftValue");
+const offsetButton = document.getElementById("offsetButton");
+const sensitiveValue = document.getElementById("sensitiveValue");
+const inputSizeValue = document.getElementById("inputSizeValue");
+const offsetButtonText = document.getElementById("offsetButtonText");
+const intro1video = document.getElementById("intro1video");
+const warningContainer = document.getElementById("warningContainer");
+const intro1container = document.getElementById("intro1container");
+const intro2container = document.getElementById("intro2container");
+const warningInner = document.getElementById("warningInner");
+const langSelector = document.getElementById("langSelector");
+const registerBtn = document.getElementById("registerBtn");
+const selectSongContainer = document.getElementById("selectSongContainer");
+const trackModsText = document.getElementById("trackModsText");
+const selectTitle = document.getElementById("selectTitle");
+const overlayPaymentContainer = document.getElementById("overlayPaymentContainer");
+const overlayCodeContainer = document.getElementById("overlayCodeContainer");
+const overlayLoadingContainer = document.getElementById("overlayLoadingContainer");
+const loadingCircle = document.getElementById("loadingCircle");
+const DLCinfoDLCName = document.getElementById("DLCinfoDLCName");
+const DLCinfoArtistName = document.getElementById("DLCinfoArtistName");
+const DLCbasketButton = document.getElementById("DLCbasketButton");
+const DLCinfoSongsContainer = document.getElementById("DLCinfoSongsContainer");
+const SkinInfoSkinName = document.getElementById("SkinInfoSkinName");
+const skinInfoPreview = document.getElementById("skinInfoPreview");
+const skinBasketButton = document.getElementById("skinBasketButton");
+const basketsButtonContainer = document.getElementById("basketsButtonContainer");
+const storeBasketsContainer = document.getElementById("storeBasketsContainer");
+const purchasingContainer = document.getElementById("purchasingContainer");
+const goldMedal = document.getElementById("goldMedal");
+const silverMedal = document.getElementById("silverMedal");
+const checkMedal = document.getElementById("checkMedal");
+const offsetNextCircle = document.getElementById("offsetNextCircle");
+const offsetPrevCircle = document.getElementById("offsetPrevCircle");
+const offsetTimingCircle = document.getElementById("offsetTimingCircle");
+const offsetInputCircle = document.getElementById("offsetInputCircle");
+const offsetOffsetCircle = document.getElementById("offsetOffsetCircle");
+const offsetSpeedText = document.getElementById("offsetSpeedText");
+const volumeOverlay = document.getElementById("volumeOverlay");
+const codeInput = document.getElementById("codeInput");
+
 const clientKey = "test_ck_dP9BRQmyarY9pb7Ejy7rJ07KzLNk";
 const billingKey = "test_ck_OAQ92ymxN34k59e5E0p8ajRKXvdk";
 const tossPayments = TossPayments(clientKey);
 const tossBilling = TossPayments(billingKey);
 
+let settings = [];
+let storeSong;
 let display = -1;
 let userid;
 let username = "";
@@ -35,11 +87,12 @@ let rate = 1;
 let disableText = false;
 
 let lottieAnim;
+let arrowAnim;
 
+let intro1load = 0;
 let intro1skipped = 0;
 
 let intro2anim;
-let intro2song;
 let intro2skipped = 0;
 
 let overlayTime = 0;
@@ -53,6 +106,7 @@ let offsetAverage = [];
 
 let iniMode = -1;
 
+let tracks;
 let trackRecords = [];
 
 let themeSong;
@@ -96,9 +150,7 @@ const lottieResize = () => {
   if (songSelection != -1) {
     arrowAnim.destroy();
     arrowAnim = bodymovin.loadAnimation({
-      wrapper: document.getElementsByClassName("songSelectionLottie")[
-        songSelection
-      ],
+      wrapper: document.getElementsByClassName("songSelectionLottie")[songSelection],
       animType: "canvas",
       loop: true,
       path: "lottie/arrow.json",
@@ -110,25 +162,6 @@ const initialize = () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   lottieResize();
-};
-
-const convertWordArrayToUint8Array = (wordArray) => {
-  let arrayOfWords = wordArray.hasOwnProperty("words") ? wordArray.words : [];
-  let length = wordArray.hasOwnProperty("sigBytes")
-    ? wordArray.sigBytes
-    : arrayOfWords.length * 4;
-  let uInt8Array = new Uint8Array(length),
-    index = 0,
-    word,
-    i;
-  for (i = 0; i < length; i++) {
-    word = arrayOfWords[i];
-    uInt8Array[index++] = word >> 24;
-    uInt8Array[index++] = (word >> 16) & 0xff;
-    uInt8Array[index++] = (word >> 8) & 0xff;
-    uInt8Array[index++] = word & 0xff;
-  }
-  return uInt8Array;
 };
 
 const settingApply = () => {
@@ -172,45 +205,36 @@ const settingApply = () => {
     comboSelector.getElementsByTagName("option")[4].selected = true;
   }
   for (let i = 0; i < skinSelector.getElementsByTagName("option").length; i++) {
-    if (
-      skinSelector.getElementsByTagName("option")[i].value == settings.game.skin
-    ) {
+    if (skinSelector.getElementsByTagName("option")[i].value == settings.game.skin) {
       skinSelector.getElementsByTagName("option")[i].selected = true;
       break;
     }
   }
-  inputSelector.getElementsByTagName("option")[
-    Number(settings.input.keys)
-  ].selected = true;
+  document.getElementById("inputSelector").getElementsByTagName("option")[Number(settings.input.keys)].selected = true;
   for (let i = 0; i <= 1; i++) {
-    document.getElementsByClassName("volumeMaster")[i].value =
-      settings.sound.volume.master * 100;
-    document.getElementsByClassName("volumeMasterValue")[i].textContent =
-      Math.round(settings.sound.volume.music * 100) + "%";
+    document.getElementsByClassName("volumeMaster")[i].value = settings.sound.volume.master * 100;
+    document.getElementsByClassName("volumeMasterValue")[i].textContent = Math.round(settings.sound.volume.music * 100) + "%";
   }
-  volumeSong.value = settings.sound.volume.music * 100;
-  volumeHit.value = settings.sound.volume.hitSound * 100;
-  inputSensitive.value = settings.input.sens * 100;
-  inputSize.value = settings.game.size * 10;
-  mouseCheck.checked = settings.input.mouse;
-  judgeSkin.checked = settings.game.judgeSkin;
-  judgePerfect.checked = settings.game.applyJudge.Perfect;
-  judgeGreat.checked = settings.game.applyJudge.Great;
-  judgeGood.checked = settings.game.applyJudge.Good;
-  judgeBad.checked = settings.game.applyJudge.Bad;
-  judgeMiss.checked = settings.game.applyJudge.Miss;
+  document.getElementById("volumeSong").value = settings.sound.volume.music * 100;
+  document.getElementById("volumeHit").value = settings.sound.volume.hitSound * 100;
+  document.getElementById("inputSensitive").value = settings.input.sens * 100;
+  document.getElementById("inputSize").value = settings.game.size * 10;
+  document.getElementById("mouseCheck").checked = settings.input.mouse;
+  document.getElementById("judgeSkin").checked = settings.game.judgeSkin;
+  document.getElementById("judgePerfect").checked = settings.game.applyJudge.Perfect;
+  document.getElementById("judgeGreat").checked = settings.game.applyJudge.Great;
+  document.getElementById("judgeGood").checked = settings.game.applyJudge.Good;
+  document.getElementById("judgeBad").checked = settings.game.applyJudge.Bad;
+  document.getElementById("judgeMiss").checked = settings.game.applyJudge.Miss;
   // judgeBullet.checked = settings.game.applyJudge.Bullet;
-  frameCheck.checked = settings.game.counter;
-  ignoreCursorCheck.checked = settings.editor.denyCursor;
-  ignoreEditorCheck.checked = settings.editor.denySkin;
-  ignoreTestCheck.checked = settings.editor.denyAtTest;
-  comboAlertCheck.checked = settings.game.comboAlert;
-  volumeSongValue.textContent =
-    Math.round(settings.sound.volume.music * 100) + "%";
-  volumeHitValue.textContent =
-    Math.round(settings.sound.volume.music * 100) + "%";
-  volumeEftValue.textContent =
-    Math.round(settings.sound.volume.music * 100) + "%";
+  document.getElementById("frameCheck").checked = settings.game.counter;
+  document.getElementById("ignoreCursorCheck").checked = settings.editor.denyCursor;
+  document.getElementById("ignoreEditorCheck").checked = settings.editor.denySkin;
+  document.getElementById("ignoreTestCheck").checked = settings.editor.denyAtTest;
+  document.getElementById("comboAlertCheck").checked = settings.game.comboAlert;
+  volumeSongValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
+  volumeHitValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
+  volumeEftValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
   offsetButton.textContent = settings.sound.offset + "ms";
   sensitiveValue.textContent = settings.input.sens + "x";
   inputSizeValue.textContent = settings.game.size + "x";
@@ -233,8 +257,7 @@ const settingApply = () => {
         gameLoaded();
       }
       Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
-      intro1video.volume =
-        settings.sound.volume.master * settings.sound.volume.music;
+      intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
     },
   });
   themeSong = new Howl({
@@ -249,14 +272,13 @@ const settingApply = () => {
         gameLoaded();
       }
       Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
-      intro1video.volume =
-        settings.sound.volume.master * settings.sound.volume.music;
+      intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
     },
   });
 };
 
 const drawBar = (x1, y1, x2, y2, width) => {
-  lineColor = "rgb(0, 0, 0)";
+  let lineColor = "rgb(0, 0, 0)";
   ctx.strokeStyle = lineColor;
   ctx.lineWidth = width;
   ctx.beginPath();
@@ -294,9 +316,7 @@ const tutorialSkip = () => {
     document.getElementById("tutorialInformation").classList.remove("fadeIn");
     document.getElementById("tutorialInformation").classList.add("fadeOut");
     setTimeout(() => {
-      document
-        .getElementById("tutorialInformation")
-        .classList.remove("fadeOut");
+      document.getElementById("tutorialInformation").classList.remove("fadeOut");
       document.getElementById("tutorialInformation").style.display = "none";
     }, 500);
     fetch(`${api}/tutorial`, {
@@ -386,10 +406,8 @@ const intro2play = () => {
   }, 5000);
 };
 
-document.addEventListener("DOMContentLoaded", (event) => {
-  let initialize = new URLSearchParams(window.location.search).get(
-    "initialize"
-  );
+document.addEventListener("DOMContentLoaded", () => {
+  let initialize = new URLSearchParams(window.location.search).get("initialize");
   iniMode = initialize == null ? -1 : Number(initialize);
   history.pushState("someAwesomeState", null, null);
   let widthWidth = window.innerWidth;
@@ -423,7 +441,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     intro2container.style.display = "flex";
 
     intro2anim = bodymovin.loadAnimation({
-      wrapper: intro2,
+      wrapper: document.getElementById("intro2"),
       animType: "canvas",
       autoplay: false,
       loop: false,
@@ -482,7 +500,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
               if (data.advanced) {
                 isAdvanced = true;
                 document.getElementById("optionAdvanced").textContent = enabled;
-                urlateText.innerHTML = "<strong>URLATE</strong> Advanced";
+                document.getElementById("urlateText").innerHTML = "<strong>URLATE</strong> Advanced";
                 if (data.advancedType == "c") {
                   registerBtn.value = registered;
                   registerBtn.style.background = "#444";
@@ -493,7 +511,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
                   registerBtn.style.background = "#444";
                   registerBtn.classList.add("cancel");
                 }
-                headerLeft.style.backgroundImage = `url('/images/parts/elements/namespace_advanced.png')`;
+                document.getElementById("headerLeft").style.backgroundImage = `url('/images/parts/elements/namespace_advanced.png')`;
                 let elements = document.getElementsByClassName("advancedOnly");
                 for (let i = 0; i < elements.length; i++) {
                   elements[i].style.display = "flex";
@@ -555,30 +573,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
                         continue;
                       }
                       songs[i] = new Howl({
-                        src: [
-                          `${cdn}/tracks/preview/${tracks[i].fileName}.mp3`,
-                        ],
+                        src: [`${cdn}/tracks/preview/${tracks[i].fileName}.mp3`],
                         format: ["mp3"],
                         autoplay: false,
                         loop: true,
                       });
                       songList += `<div class="songSelectionContainer${
-                        tracks[i].type == 1 && !isAdvanced
-                          ? " advancedSelection"
-                          : tracks[i].type == 2
-                          ? " dlcSelection"
-                          : ""
+                        tracks[i].type == 1 && !isAdvanced ? " advancedSelection" : tracks[i].type == 2 ? " dlcSelection" : ""
                       }" onclick="songSelected(${i})">
                                 <div class="songSelectionLottie"></div>
                                 <div class="songSelectionInfo">
-                                    <span class="songSelectionTitle">${
-                                      settings.general.detailLang == "original"
-                                        ? tracks[i].originalName
-                                        : tracks[i].name
-                                    }</span>
-                                    <span class="songSelectionArtist">${
-                                      tracks[i].producer
-                                    }</span>
+                                    <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
+                                    <span class="songSelectionArtist">${tracks[i].producer}</span>
                                 </div>
                                 <div class="songSelectionRank">
                                     <span class="ranks rankQ"></span>
@@ -593,21 +599,17 @@ document.addEventListener("DOMContentLoaded", (event) => {
                           trackRecords[i] = [];
                           if (data.result == "success") {
                             for (let j = 0; j < 3; j++) {
-                              if (
-                                (tracks[i].type == 1 && !isAdvanced) ||
-                                (tracks[i].type == 2 &&
-                                  !(songData.indexOf(tracks[i].name) != -1))
-                              ) {
+                              if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
                                 trackRecords[i][j] = {
                                   rank: "rankL",
-                                  record: 000000000,
+                                  record: 0,
                                   medal: 0,
                                   maxcombo: 0,
                                 };
                               } else {
                                 trackRecords[i][j] = {
                                   rank: "rankQ",
-                                  record: 000000000,
+                                  record: 0,
                                   medal: 0,
                                   maxcombo: 0,
                                 };
@@ -616,12 +618,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
                             for (let j = 0; j < 3; j++) {
                               if (data.results[j] != undefined) {
                                 let value = data.results[j];
-                                document.getElementsByClassName("ranks")[
-                                  i
-                                ].className = "ranks";
-                                document
-                                  .getElementsByClassName("ranks")
-                                  [i].classList.add(`rank${value.rank}`);
+                                document.getElementsByClassName("ranks")[i].className = "ranks";
+                                document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
                                 trackRecords[i][value.difficulty - 1] = {
                                   rank: `rank${value.rank}`,
                                   record: value.record,
@@ -632,27 +630,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
                             }
                           } else {
                             for (let j = 0; j < 3; j++) {
-                              if (
-                                (tracks[i].type == 1 && !isAdvanced) ||
-                                (tracks[i].type == 2 &&
-                                  !(songData.indexOf(tracks[i].name) != -1))
-                              ) {
-                                document.getElementsByClassName("ranks")[
-                                  i
-                                ].className = "ranks";
-                                document
-                                  .getElementsByClassName("ranks")
-                                  [i].classList.add("rankL");
+                              if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
+                                document.getElementsByClassName("ranks")[i].className = "ranks";
+                                document.getElementsByClassName("ranks")[i].classList.add("rankL");
                                 trackRecords[i][j] = {
                                   rank: "rankL",
-                                  record: 000000000,
+                                  record: 0,
                                   medal: 0,
                                   maxcombo: 0,
                                 };
                               } else {
                                 trackRecords[i][j] = {
                                   rank: "rankQ",
-                                  record: 000000000,
+                                  record: 0,
                                   medal: 0,
                                   maxcombo: 0,
                                 };
@@ -665,12 +655,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
                           console.error(`Error occured.\n${error}`);
                         });
                     }
-                    Howler.volume(
-                      settings.sound.volume.master * settings.sound.volume.music
-                    );
-                    intro1video.volume =
-                      settings.sound.volume.master *
-                      settings.sound.volume.music;
+                    Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
+                    intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
                     selectSongContainer.innerHTML = songList;
                   } else {
                     alert("Failed to load song list.");
@@ -701,19 +687,14 @@ const songSelected = (n) => {
   loadingShow();
   if (songSelection == n) {
     //play
-    if (
-      (tracks[n].type == 1 && !isAdvanced) ||
-      (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1))
-    ) {
+    if ((tracks[n].type == 1 && !isAdvanced) || (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1))) {
       alert("NOT ALLOWED TO PLAY"); //TODO
     } else {
       localStorage.rate = rate;
       localStorage.disableText = disableText;
       localStorage.songNum = songSelection;
       localStorage.difficultySelection = difficultySelection;
-      localStorage.difficulty = JSON.parse(tracks[0].difficulty)[
-        difficultySelection
-      ];
+      localStorage.difficulty = JSON.parse(tracks[0].difficulty)[difficultySelection];
       localStorage.songName = tracks[songSelection].fileName;
       window.location.href = `${url}/play`;
     }
@@ -721,14 +702,11 @@ const songSelected = (n) => {
   }
   disableText = false;
   rate = 1;
-  trackModsRate.value = "1.0";
+  document.getElementById("trackModsRate").value = "1.0";
   trackModsText.textContent = "No";
   trackModsText.classList.remove("enabled");
   if (!(songSelection == -1 && tracks[n].name == "URLATE Theme")) {
-    songNameText.textContent =
-      settings.general.detailLang == "original"
-        ? tracks[n].originalName
-        : tracks[n].name;
+    document.getElementById("songNameText").textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
     songs[n].volume(1);
     if (songSelection != -1) {
       let i = songSelection;
@@ -750,52 +728,32 @@ const songSelected = (n) => {
   }
   if (document.getElementsByClassName("songSelected")[0]) {
     arrowAnim.destroy();
-    document
-      .getElementsByClassName("songSelected")[0]
-      .classList.remove("songSelected");
+    document.getElementsByClassName("songSelected")[0].classList.remove("songSelected");
   }
   arrowAnim = bodymovin.loadAnimation({
-    wrapper: document
-      .getElementsByClassName("songSelectionContainer")
-      [n].getElementsByClassName("songSelectionLottie")[0],
+    wrapper: document.getElementsByClassName("songSelectionContainer")[n].getElementsByClassName("songSelectionLottie")[0],
     animType: "canvas",
     loop: true,
     path: "lottie/arrow.json",
   });
-  document
-    .getElementsByClassName("songSelectionContainer")
-    [n].classList.add("songSelected");
-  selectTitle.textContent =
-    settings.general.detailLang == "original"
-      ? tracks[n].originalName
-      : tracks[n].name;
+  document.getElementsByClassName("songSelectionContainer")[n].classList.add("songSelected");
+  selectTitle.textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
   if (selectTitle.offsetWidth > window.innerWidth / 4) {
     selectTitle.style.fontSize = "4vh";
   } else {
     selectTitle.style.fontSize = "5vh";
   }
-  selectArtist.textContent = tracks[n].producer;
-  selectAlbum.src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
-  selectBackground.style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png")`;
+  document.getElementById("selectArtist").textContent = tracks[n].producer;
+  document.getElementById("selectAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
+  document.getElementById("selectBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png")`;
   setTimeout(
     () => {
-      let underLimit =
-        window.innerHeight * 0.08 * n + window.innerHeight * 0.09;
+      let underLimit = window.innerHeight * 0.08 * n + window.innerHeight * 0.09;
       underLimit = parseInt(underLimit);
-      if (
-        selectSongContainer.offsetHeight + selectSongContainer.scrollTop <
-        underLimit
-      ) {
-        selectSongContainer.scrollTop =
-          underLimit - selectSongContainer.offsetHeight;
-      } else if (
-        underLimit - window.innerHeight * 0.09 <
-        selectSongContainer.scrollTop
-      ) {
-        selectSongContainer.scrollTop =
-          selectSongContainer.scrollTop -
-          (selectSongContainer.scrollTop - underLimit) -
-          window.innerHeight * 0.09;
+      if (selectSongContainer.offsetHeight + selectSongContainer.scrollTop < underLimit) {
+        selectSongContainer.scrollTop = underLimit - selectSongContainer.offsetHeight;
+      } else if (underLimit - window.innerHeight * 0.09 < selectSongContainer.scrollTop) {
+        selectSongContainer.scrollTop = selectSongContainer.scrollTop - (selectSongContainer.scrollTop - underLimit) - window.innerHeight * 0.09;
       }
     },
     songSelection != -1 ? 0 : 200
@@ -803,17 +761,11 @@ const songSelected = (n) => {
   if (songSelection != -1) {
     document.getElementsByClassName("ranks")[songSelection].className = "ranks";
     if (trackRecords[songSelection][2].rank != "rankQ") {
-      document
-        .getElementsByClassName("ranks")
-        [songSelection].classList.add(trackRecords[songSelection][2].rank);
+      document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][2].rank);
     } else if (trackRecords[songSelection][1].rank != "rankQ") {
-      document
-        .getElementsByClassName("ranks")
-        [songSelection].classList.add(trackRecords[songSelection][1].rank);
+      document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][1].rank);
     } else {
-      document
-        .getElementsByClassName("ranks")
-        [songSelection].classList.add(trackRecords[songSelection][0].rank);
+      document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][0].rank);
     }
   }
   fetch(`${api}/trackInfo/${tracks[n].name}`, {
@@ -856,21 +808,16 @@ const rateChanged = (e) => {
 };
 
 const updateRanks = () => {
-  fetch(
-    `${api}/records/${tracks[songSelection].name}/${
-      difficultySelection + 1
-    }/record/DESC/${username}`,
-    {
-      method: "GET",
-      credentials: "include",
-    }
-  )
+  fetch(`${api}/records/${tracks[songSelection].name}/${difficultySelection + 1}/record/DESC/${username}`, {
+    method: "GET",
+    credentials: "include",
+  })
     .then((res) => res.json())
     .then((data) => {
       if (data.rank != 0) {
-        selectRank.textContent = `#${data.rank}`;
+        document.getElementById("selectRank").textContent = `#${data.rank}`;
       } else {
-        selectRank.textContent = `-`;
+        document.getElementById("selectRank").textContent = "-";
       }
       data = data.results;
       let innerContent = "";
@@ -884,18 +831,14 @@ const updateRanks = () => {
         }
         innerContent += `<br>
                         <div class="selectRank">
-                          <div class="selectRankNumber">${
-                            i + 1 - rankMinus
-                          }</div>
+                          <div class="selectRankNumber">${i + 1 - rankMinus}</div>
                           <div class="selectRankName">${data[i].nickname}</div>
-                          <div class="selectRankScore">${numberWithCommas(
-                            Number(data[i].record)
-                          )}</div>
+                          <div class="selectRankScore">${numberWithCommas(Number(data[i].record))}</div>
                       </div>`;
         prevScore = data[i].record;
       }
       loadingHide();
-      selectRankScoreContainer.innerHTML = innerContent;
+      document.getElementById("selectRankScoreContainer").innerHTML = innerContent;
     });
 };
 
@@ -954,10 +897,7 @@ const gameLoaded = () => {
 };
 
 Pace.on("done", () => {
-  const nameStyle = window.getComputedStyle(
-    document.getElementById("name"),
-    null
-  );
+  const nameStyle = window.getComputedStyle(document.getElementById("name"), null);
   const nameWidth = parseFloat(nameStyle.getPropertyValue("width"));
   if (nameWidth > 265) {
     document.getElementById("name").style.fontSize = "2.2vh";
@@ -1016,8 +956,7 @@ const displayClose = () => {
             if (
               settings.sound.res == "192kbps" ||
               !settings.game.judgeSkin ||
-              JSON.stringify(settings.game.applyJudge) !=
-                `{"Perfect":false,"Great":false,"Good":false,"Bad":false,"Miss":false,"Bullet":false}`
+              JSON.stringify(settings.game.applyJudge) != `{"Perfect":false,"Great":false,"Good":false,"Bad":false,"Miss":false,"Bullet":false}`
             ) {
               settings.sound.res = "128kbps";
               settings.game.judgeSkin = true;
@@ -1065,9 +1004,7 @@ const displayClose = () => {
       document.getElementById("advancedContainer").classList.remove("fadeIn");
       document.getElementById("advancedContainer").classList.add("fadeOut");
       setTimeout(() => {
-        document
-          .getElementById("advancedContainer")
-          .classList.remove("fadeOut");
+        document.getElementById("advancedContainer").classList.remove("fadeOut");
         document.getElementById("advancedContainer").style.display = "none";
       }, 500);
     } else if (display == 4) {
@@ -1080,14 +1017,10 @@ const displayClose = () => {
       }, 500);
     } else if (display == 5) {
       //Info Profile
-      document
-        .getElementById("infoProfileContainer")
-        .classList.remove("fadeIn");
+      document.getElementById("infoProfileContainer").classList.remove("fadeIn");
       document.getElementById("infoProfileContainer").classList.add("fadeOut");
       setTimeout(() => {
-        document
-          .getElementById("infoProfileContainer")
-          .classList.remove("fadeOut");
+        document.getElementById("infoProfileContainer").classList.remove("fadeOut");
         document.getElementById("infoProfileContainer").style.display = "none";
       }, 500);
       display = 4;
@@ -1095,11 +1028,8 @@ const displayClose = () => {
     } else if (display == 6) {
       //PLAY Rank
       document.getElementById("selectRankContainer").style.opacity = "0";
-      document.getElementById("selectRankContainer").style.pointerEvents =
-        "none";
-      document
-        .getElementById("selectRankInnerContainer")
-        .classList.remove("visible");
+      document.getElementById("selectRankContainer").style.pointerEvents = "none";
+      document.getElementById("selectRankInnerContainer").classList.remove("visible");
       display = 1;
       isRankOpened = false;
       return;
@@ -1129,13 +1059,7 @@ const displayClose = () => {
       document.getElementById("storeContainer").classList.add("fadeOut");
       if (songSelection != -1) {
         songs[songSelection].fade(0, 1, 300);
-        fadeRate(
-          songs[songSelection],
-          0.632183908,
-          1,
-          300,
-          new Date().getTime()
-        );
+        fadeRate(songs[songSelection], 0.632183908, 1, 300, new Date().getTime());
       } else {
         themeSong.fade(0, 1, 300);
         fadeRate(themeSong, 0.632183908, 1, 300, new Date().getTime());
@@ -1182,18 +1106,11 @@ const displayClose = () => {
     } else if (display == 13) {
       //store tutorial
       tutorial--;
-      document
-        .getElementById("storeTutorialContainer")
-        .classList.remove("fadeIn");
-      document
-        .getElementById("storeTutorialContainer")
-        .classList.add("fadeOut");
+      document.getElementById("storeTutorialContainer").classList.remove("fadeIn");
+      document.getElementById("storeTutorialContainer").classList.add("fadeOut");
       setTimeout(() => {
-        document
-          .getElementById("storeTutorialContainer")
-          .classList.remove("fadeOut");
-        document.getElementById("storeTutorialContainer").style.display =
-          "none";
+        document.getElementById("storeTutorialContainer").classList.remove("fadeOut");
+        document.getElementById("storeTutorialContainer").style.display = "none";
       }, 500);
       display = 8;
       fetch(`${api}/storeTutorial`, {
@@ -1241,16 +1158,14 @@ const loadingHide = () => {
 
 const showDLCinfo = async (n) => {
   loadingOverlayShow();
-  DLCInfoDLCName.textContent =
-    document.getElementsByClassName("storeName")[n].textContent;
-  DLCinfoArtistName.textContent =
-    document.getElementsByClassName("storeSongArtist")[n].textContent;
-  DLCInfoAlbum.src = document.getElementsByClassName("storeSongsAlbum")[n].src;
-  if (DLCs.indexOf(DLCInfoDLCName.textContent) != -1) {
+  DLCinfoDLCName.textContent = document.getElementsByClassName("storeName")[n].textContent;
+  DLCinfoArtistName.textContent = document.getElementsByClassName("storeSongArtist")[n].textContent;
+  document.getElementById("DLCInfoAlbum").src = document.getElementsByClassName("storeSongsAlbum")[n].src;
+  if (DLCs.indexOf(DLCinfoDLCName.textContent) != -1) {
     DLCbasketButton.classList.add("storeButtonDisabled");
     DLCbasketButton.disabled = true;
     DLCbasketButton.textContent = purchased;
-  } else if (carts.has(DLCInfoDLCName.textContent)) {
+  } else if (carts.has(DLCinfoDLCName.textContent)) {
     DLCbasketButton.classList.add("storeButtonDisabled");
     DLCbasketButton.disabled = true;
     DLCbasketButton.textContent = addedToBag;
@@ -1269,15 +1184,9 @@ const showDLCinfo = async (n) => {
       .then((data) => {
         data = data.track[0];
         elements += `<div class="DLCinfoSongContainer">
-                      <img src="${cdn}/albums/50/${
-          data.fileName
-        } (Custom).png" class="DLCinfoSongAlbum">
+                      <img src="${cdn}/albums/50/${data.fileName} (Custom).png" class="DLCinfoSongAlbum">
                       <div class="DLCinfoSongAbout">
-                          <span class="DLCinfoSongName">${
-                            settings.general.detailLang == "original"
-                              ? data.originalName
-                              : data.name
-                          }</span>
+                          <span class="DLCinfoSongName">${settings.general.detailLang == "original" ? data.originalName : data.name}</span>
                           <span class="DLCinfoSongProd">${data.producer}</span>
                       </div>
                   </div>`;
@@ -1296,8 +1205,7 @@ const showDLCinfo = async (n) => {
 
 const showSkinInfo = (n) => {
   loadingOverlayShow();
-  SkinInfoSkinName.textContent =
-    document.getElementsByClassName("storeSkinName")[n].textContent;
+  SkinInfoSkinName.textContent = document.getElementsByClassName("storeSkinName")[n].textContent;
   skinInfoPreview.src = `${cdn}/skins/preview/${skinData[n]}.png`;
   if (skins.indexOf(SkinInfoSkinName.textContent) != -1) {
     skinBasketButton.classList.add("storeButtonDisabled");
@@ -1334,7 +1242,7 @@ const cartDelete = async (type, item) => {
     .then((res) => res.json())
     .then((data) => {
       if (data.result == "success") {
-        cart = data.bag;
+        let cart = data.bag;
         updateCart(cart);
       } else {
         alert(`Error occured.\n${data.error}`);
@@ -1395,23 +1303,17 @@ const updateCart = async (cart) => {
         .then((data) => {
           if (data.result == "success") {
             data = data.data;
-            elements += `<img class="storeBasketsAlbum" src="${cdn}/dlc/${
-              data.previewFile
-            }.png">
+            elements += `<img class="storeBasketsAlbum" src="${cdn}/dlc/${data.previewFile}.png">
                         <div class="storeBasketsInfo">
                             <span class="storeName">${data.name}</span>
-                            <span class="storeSongArtist">${
-                              data.composer
-                            }</span>
+                            <span class="storeSongArtist">${data.composer}</span>
                         </div>
                       </div>
                       <div class="storeBasketsRight">
                         <span class="storePrice">
                           ${getPriceText([], true, data, langCode)}
                         </span>
-                        <img src="https://img.icons8.com/material-rounded/24/000000/delete-sign.png" class="storeDelete" onclick="cartDelete('DLC', '${
-                          data.name
-                        }')">`;
+                        <img src="https://img.icons8.com/material-rounded/24/000000/delete-sign.png" class="storeDelete" onclick="cartDelete('DLC', '${data.name}')">`;
           } else {
             alert(`Error occured.\n${data.error}`);
           }
@@ -1432,9 +1334,7 @@ const updateCart = async (cart) => {
         .then((data) => {
           if (data.result == "success") {
             data = data.data;
-            elements += `<img src="${cdn}/skins/${
-              data.previewFile
-            }.png" class="storeBasketsSkin">
+            elements += `<img src="${cdn}/skins/${data.previewFile}.png" class="storeBasketsSkin">
                         <div class="storeBasketsInfo">
                             <span class="storeName">${data.name}</span>
                         </div>
@@ -1443,9 +1343,7 @@ const updateCart = async (cart) => {
                         <span class="storePrice">
                           ${getPriceText([], true, data, langCode)}
                         </span>
-                        <img src="https://img.icons8.com/material-rounded/50/000000/delete-sign.png" class="storeDelete" onclick="cartDelete('Skin', '${
-                          data.name
-                        }')">`;
+                        <img src="https://img.icons8.com/material-rounded/50/000000/delete-sign.png" class="storeDelete" onclick="cartDelete('Skin', '${data.name}')">`;
           } else {
             alert(`Error occured.\n${data.error}`);
           }
@@ -1459,13 +1357,9 @@ const updateCart = async (cart) => {
   storeBasketsContainer.innerHTML = elements;
   if (cart.length == 0) {
     basketsButtonContainer.style.display = "none";
-    storeBasketsContainer.innerHTML = `<div id="nothingHere"><span>${
-      nothingHere.split("/")[0]
-    }</span><span>${nothingHere.split("/")[1]}<strong>DLC</strong>${
-      nothingHere.split("/")[2]
-    }<strong>${nothingHere.split("/")[3]}</strong>${
-      nothingHere.split("/")[4]
-    }</span></div>`;
+    storeBasketsContainer.innerHTML = `<div id="nothingHere"><span>${nothingHere.split("/")[0]}</span><span>${nothingHere.split("/")[1]}<strong>DLC</strong>${nothingHere.split("/")[2]}<strong>${
+      nothingHere.split("/")[3]
+    }</strong>${nothingHere.split("/")[4]}</span></div>`;
   }
   updateStore();
 };
@@ -1523,26 +1417,16 @@ const getPriceText = (array, ignoreCart, data, langCode) => {
     priceData = addedToBag;
   } else if (isAdvanced) {
     let originalPrice = numberWithCommas(JSON.parse(data.price)[0]) + "₩";
-    let saledPrice =
-      numberWithCommas(
-        Math.round(JSON.parse(data.price)[0] * 0.8 * data.sale) / 100
-      ) + "₩";
+    let saledPrice = numberWithCommas(Math.round(JSON.parse(data.price)[0] * 0.8 * data.sale) / 100) + "₩";
     if (langCode) {
-      saledPrice += `(${
-        numberWithCommas(
-          Math.round(JSON.parse(data.price)[langCode] * 0.8 * data.sale) / 100
-        ) + currency
-      })`;
+      saledPrice += `(${numberWithCommas(Math.round(JSON.parse(data.price)[langCode] * 0.8 * data.sale) / 100) + currency})`;
     }
     priceData = `<span class="storePriceSale">${originalPrice}</span>${saledPrice}`;
   } else {
     let originalPrice = numberWithCommas(JSON.parse(data.price)[0]) + "₩";
     let saledPrice = "";
     if (data.sale != "100") {
-      saledPrice =
-        numberWithCommas(
-          Math.round(JSON.parse(data.price)[0] * data.sale) / 100
-        ) + "₩";
+      saledPrice = numberWithCommas(Math.round(JSON.parse(data.price)[0] * data.sale) / 100) + "₩";
     }
     if (saledPrice == "") {
       priceData = originalPrice;
@@ -1550,11 +1434,7 @@ const getPriceText = (array, ignoreCart, data, langCode) => {
       priceData = `<span class="storePriceSale">${originalPrice}</span>${saledPrice}`;
     }
     if (langCode) {
-      priceData += `(${
-        numberWithCommas(
-          Math.round(JSON.parse(data.price)[langCode] * data.sale) / 100
-        ) + currency
-      })`;
+      priceData += `(${numberWithCommas(Math.round(JSON.parse(data.price)[langCode] * data.sale) / 100) + currency})`;
     }
   }
   return priceData;
@@ -1583,30 +1463,17 @@ const updateStore = () => {
         for (let j = 0; j < 2; j++) {
           if (data[i * 2 + j]) {
             DLCdata[i * 2 + j] = JSON.parse(data[i * 2 + j].songs);
-            elements += `<div class="storeSongsContainer" onclick="showDLCinfo(${
-              i * 2 + j
-            })">
+            elements += `<div class="storeSongsContainer" onclick="showDLCinfo(${i * 2 + j})">
                         <div class="storeSongsLeft">
-                          <img class="storeSongsAlbum" src="${cdn}/dlc/${
-              data[i * 2 + j].previewFile
-            }.png">
+                          <img class="storeSongsAlbum" src="${cdn}/dlc/${data[i * 2 + j].previewFile}.png">
                         </div>
                         <div class="storeSongsRight">
                           <div class="storeSongsTop">
-                            <span class="storeName">${
-                              data[i * 2 + j].name
-                            }</span>
-                            <span class="storeSongArtist">${
-                              data[i * 2 + j].composer
-                            }</span>
+                            <span class="storeName">${data[i * 2 + j].name}</span>
+                            <span class="storeSongArtist">${data[i * 2 + j].composer}</span>
                           </div>
                           <div class="storeSongsBottom">
-                            <span class="storePrice">${getPriceText(
-                              DLCs,
-                              false,
-                              data[i * 2 + j],
-                              langCode
-                            )}</span>
+                            <span class="storePrice">${getPriceText(DLCs, false, data[i * 2 + j], langCode)}</span>
                           </div>
                         </div>
                       </div>`;
@@ -1616,8 +1483,7 @@ const updateStore = () => {
         }
         elements += "</div>";
       }
-      document.getElementsByClassName("storeContentsContainer")[0].innerHTML =
-        elements;
+      document.getElementsByClassName("storeContentsContainer")[0].innerHTML = elements;
       loadingOverlayHide();
     })
     .catch((error) => {
@@ -1638,26 +1504,15 @@ const updateStore = () => {
         for (let j = 0; j < 2; j++) {
           if (data[i * 2 + j]) {
             skinData[i * 2 + j] = JSON.parse(data[i * 2 + j].previewFile);
-            elements += `<div class="storeSkinsContainer" onclick="showSkinInfo(${
-              i * 2 + j
-            })">
+            elements += `<div class="storeSkinsContainer" onclick="showSkinInfo(${i * 2 + j})">
                         <div class="storeSkinTitleContainer">
-                          <span class="storeSkinName">${
-                            data[i * 2 + j].name
-                          }</span>
+                          <span class="storeSkinName">${data[i * 2 + j].name}</span>
                         </div>
                         <div class="storeSkinContentContainer">
-                          <img src="${cdn}/skins/${
-              data[i * 2 + j].previewFile
-            }.png" class="storeSkin">
+                          <img src="${cdn}/skins/${data[i * 2 + j].previewFile}.png" class="storeSkin">
                         </div>
                         <div class="storeSkinPriceContainer">
-                        <span class="storePrice">${getPriceText(
-                          skins,
-                          false,
-                          data[i * 2 + j],
-                          langCode
-                        )}</span>
+                        <span class="storePrice">${getPriceText(skins, false, data[i * 2 + j], langCode)}</span>
                         </div>
                       </div>`;
           } else {
@@ -1666,8 +1521,7 @@ const updateStore = () => {
         }
         elements += "</div>";
       }
-      document.getElementsByClassName("storeContentsContainer")[1].innerHTML =
-        elements;
+      document.getElementsByClassName("storeContentsContainer")[1].innerHTML = elements;
     })
     .catch((error) => {
       alert(`Error occured.\n${error}`);
@@ -1795,31 +1649,17 @@ const getAdvanced = () => {
 };
 
 const optionSelect = (n) => {
-  document
-    .getElementsByClassName("optionSelected")[0]
-    .classList.remove("optionSelected");
-  document
-    .getElementsByClassName("optionSelectors")
-    [n].classList.add("optionSelected");
-  document
-    .getElementsByClassName("optionShow")[0]
-    .classList.remove("optionShow");
-  document
-    .getElementsByClassName("optionContentsContainer")
-    [n].classList.add("optionShow");
+  document.getElementsByClassName("optionSelected")[0].classList.remove("optionSelected");
+  document.getElementsByClassName("optionSelectors")[n].classList.add("optionSelected");
+  document.getElementsByClassName("optionShow")[0].classList.remove("optionShow");
+  document.getElementsByClassName("optionContentsContainer")[n].classList.add("optionShow");
 };
 
 const storeSelect = (n) => {
-  document
-    .getElementsByClassName("storeSelected")[0]
-    .classList.remove("storeSelected");
-  document
-    .getElementsByClassName("storeSelectors")
-    [n].classList.add("storeSelected");
+  document.getElementsByClassName("storeSelected")[0].classList.remove("storeSelected");
+  document.getElementsByClassName("storeSelectors")[n].classList.add("storeSelected");
   document.getElementsByClassName("storeShow")[0].classList.remove("storeShow");
-  document
-    .getElementsByClassName("storeContentsContainer")
-    [n].classList.add("storeShow");
+  document.getElementsByClassName("storeContentsContainer")[n].classList.add("storeShow");
 };
 
 const langChanged = (e) => {
@@ -1840,16 +1680,14 @@ const settingChanged = (e, v) => {
   } else if (v == "volumeMaster") {
     settings.sound.volume.master = e.value / 100;
     for (let i = 0; i <= 1; i++) {
-      document.getElementsByClassName("volumeMasterValue")[i].textContent =
-        Math.round(e.value) + "%";
+      document.getElementsByClassName("volumeMasterValue")[i].textContent = Math.round(e.value) + "%";
     }
     overlayTime = new Date().getTime();
     setTimeout(() => {
       overlayClose("volume");
     }, 1500);
     Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
-    intro1video.volume =
-      settings.sound.volume.master * settings.sound.volume.music;
+    intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
   } else if (v == "volumeSong") {
     settings.sound.volume.music = e.value / 100;
     volumeSongValue.textContent = Math.round(e.value) + "%";
@@ -1876,14 +1714,7 @@ const settingChanged = (e, v) => {
   } else if (v == "inputSize") {
     settings.game.size = e.value / 10;
     inputSizeValue.textContent = e.value / 10 + "x";
-  } else if (
-    v == "Perfect" ||
-    v == "Great" ||
-    v == "Good" ||
-    v == "Bad" ||
-    v == "Miss" ||
-    v == "Bullet"
-  ) {
+  } else if (v == "Perfect" || v == "Great" || v == "Good" || v == "Bad" || v == "Miss" || v == "Bullet") {
     settings.game.applyJudge[v] = e.checked;
   } else if (v == "frameCounter") {
     settings.game.counter = e.checked;
@@ -1911,9 +1742,9 @@ const showProfile = (name) => {
     .then((res) => res.json())
     .then((data) => {
       let info = JSON.parse(data.data);
-      infoProfileName.textContent = info[0].name;
-      infoProfilePosition.textContent = info[0].position;
-      infoProfileImg.src = `images/credits/${info[0].profile}`;
+      document.getElementById("infoProfileName").textContent = info[0].name;
+      document.getElementById("infoProfilePosition").textContent = info[0].position;
+      document.getElementById("infoProfileImg").src = `images/credits/${info[0].profile}`;
       let innerHTML = `<div class="infoProfilePart">
                           <img src="https://img.icons8.com/small/64/333333/comma.png" class="infoIcon">
                           <span id="quote">${info[0].quote}</span>
@@ -1941,19 +1772,11 @@ const showProfile = (name) => {
         }
         innerHTML += `
                     <div class="infoProfilePart">
-                        <img src="https://img.icons8.com/${
-                          info[i].icon.split("/")[0]
-                        }/64/333333/${
-          info[i].icon.split("/")[1]
-        }.png" class="infoIcon">
-                        ${
-                          link == ""
-                            ? `<span>`
-                            : `<a class="blackLink" href="${link}" target="_blank">`
-                        }${info[i].content}${link == "" ? `</span>` : `</a>`}
+                        <img src="https://img.icons8.com/${info[i].icon.split("/")[0]}/64/333333/${info[i].icon.split("/")[1]}.png" class="infoIcon">
+                        ${link == "" ? `<span>` : `<a class="blackLink" href="${link}" target="_blank">`}${info[i].content}${link == "" ? `</span>` : `</a>`}
                     </div>`;
       }
-      infoProfileBottom.innerHTML = innerHTML;
+      document.getElementById("infoProfileBottom").innerHTML = innerHTML;
       loadingHide();
       display = 5;
     })
@@ -1964,14 +1787,14 @@ const showProfile = (name) => {
 };
 
 const updateDetails = (n) => {
-  bulletDensity.textContent = bulletDensities[difficultySelection];
-  bulletDensityValue.style.width = `${bulletDensities[difficultySelection]}%`;
-  noteDensity.textContent = noteDensities[difficultySelection];
-  noteDensityValue.style.width = `${noteDensities[difficultySelection]}%`;
-  bpmText.textContent = bpm;
-  bpmValue.style.width = `${bpm / 3}%`;
-  speed.textContent = speeds[difficultySelection];
-  speedValue.style.width = `${(speeds[difficultySelection] / 5) * 100}%`;
+  document.getElementById("bulletDensity").textContent = bulletDensities[difficultySelection];
+  document.getElementById("bulletDensityValue").style.width = `${bulletDensities[difficultySelection]}%`;
+  document.getElementById("noteDensity").textContent = noteDensities[difficultySelection];
+  document.getElementById("noteDensityValue").style.width = `${noteDensities[difficultySelection]}%`;
+  document.getElementById("bpmText").textContent = bpm;
+  document.getElementById("bpmValue").style.width = `${bpm / 3}%`;
+  document.getElementById("speed").textContent = speeds[difficultySelection];
+  document.getElementById("speedValue").style.width = `${(speeds[difficultySelection] / 5) * 100}%`;
   let starText = "";
   for (let i = 0; i < difficulties[difficultySelection]; i++) {
     starText += "★";
@@ -1979,14 +1802,10 @@ const updateDetails = (n) => {
   for (let i = difficulties[difficultySelection]; i < 10; i++) {
     starText += "☆";
   }
-  selectStars.textContent = starText;
-  selectScoreValue.textContent = numberWithCommas(
-    `${trackRecords[n][difficultySelection].record}`.padStart(9, "0")
-  );
+  document.getElementById("selectStars").textContent = starText;
+  document.getElementById("selectScoreValue").textContent = numberWithCommas(`${trackRecords[n][difficultySelection].record}`.padStart(9, "0"));
   document.getElementsByClassName("ranks")[n].className = "ranks";
-  document
-    .getElementsByClassName("ranks")
-    [n].classList.add(trackRecords[n][difficultySelection].rank);
+  document.getElementsByClassName("ranks")[n].classList.add(trackRecords[n][difficultySelection].rank);
   let recordMedal = trackRecords[n][difficultySelection].medal;
   goldMedal.style.opacity = "0.1";
   silverMedal.style.opacity = "0.1";
@@ -2006,12 +1825,8 @@ const updateDetails = (n) => {
 
 const difficultySelected = (n) => {
   difficultySelection = n;
-  document
-    .getElementsByClassName("difficultySelected")[0]
-    .classList.remove("difficultySelected");
-  document
-    .getElementsByClassName("difficulty")
-    [n].classList.add("difficultySelected");
+  document.getElementsByClassName("difficultySelected")[0].classList.remove("difficultySelected");
+  document.getElementsByClassName("difficulty")[n].classList.add("difficultySelected");
   updateDetails(songSelection);
   updateRanks();
 };
@@ -2020,8 +1835,7 @@ const showRank = () => {
   isRankOpened = true;
   display = 6;
   document.getElementById("selectRankContainer").style.opacity = "1";
-  document.getElementById("selectRankContainer").style.pointerEvents =
-    "visible";
+  document.getElementById("selectRankContainer").style.pointerEvents = "visible";
   document.getElementById("selectRankInnerContainer").classList.add("visible");
 };
 
@@ -2047,12 +1861,7 @@ const offsetSetting = () => {
 
 const offsetUpdate = () => {
   let beat = 60 / 110;
-  let remain =
-    ((offsetSong.seek() % beat <= beat / 1.5
-      ? offsetSong.seek() % beat
-      : (offsetSong.seek() % beat) - beat) *
-      1000) /
-    offsetRate;
+  let remain = ((offsetSong.seek() % beat <= beat / 1.5 ? offsetSong.seek() % beat : (offsetSong.seek() % beat) - beat) * 1000) / offsetRate;
   let fillColor = "#373737";
   if (offsetSong.seek() <= beat + 0.005) fillColor = "#e56464";
   if (-50 <= remain && remain <= 0) {
@@ -2072,19 +1881,12 @@ const offsetUpdate = () => {
   if (offsetInput) {
     offsetInputCircle.style.backgroundColor = fillColor;
     if (!offsetPrevInput) {
-      if (
-        offsetAverage[offsetAverage.length - 1] - remain >= 50 ||
-        offsetAverage[offsetAverage.length - 1] + remain <= -50
-      ) {
+      if (offsetAverage[offsetAverage.length - 1] - remain >= 50 || offsetAverage[offsetAverage.length - 1] + remain <= -50) {
         offsetAverage = [];
       }
       offsetAverage.push(parseInt(remain));
       let avr = 0;
-      for (
-        let i = offsetAverage.length - 1;
-        i >= (offsetAverage.length - 10 < 0 ? 0 : offsetAverage.length - 10);
-        i--
-      ) {
+      for (let i = offsetAverage.length - 1; i >= (offsetAverage.length - 10 < 0 ? 0 : offsetAverage.length - 10); i--) {
         avr += offsetAverage[i];
       }
       avr = avr / (offsetAverage.length >= 10 ? 10 : offsetAverage.length);
@@ -2232,31 +2034,24 @@ const scrollEvent = (e) => {
     if (delta == 1) {
       //UP
       if (settings.sound.volume.master <= 0.95) {
-        settings.sound.volume.master =
-          Math.round((settings.sound.volume.master + 0.05) * 100) / 100;
+        settings.sound.volume.master = Math.round((settings.sound.volume.master + 0.05) * 100) / 100;
       } else {
         settings.sound.volume.master = 1;
       }
     } else {
       //DOWN
       if (settings.sound.volume.master >= 0.05) {
-        settings.sound.volume.master =
-          Math.round((settings.sound.volume.master - 0.05) * 100) / 100;
+        settings.sound.volume.master = Math.round((settings.sound.volume.master - 0.05) * 100) / 100;
       } else {
         settings.sound.volume.master = 0;
       }
     }
     for (let i = 0; i <= 1; i++) {
-      document.getElementsByClassName("volumeMaster")[i].value = Math.round(
-        settings.sound.volume.master * 100
-      );
-      document.getElementsByClassName("volumeMasterValue")[
-        i
-      ].textContent = `${Math.round(settings.sound.volume.master * 100)}%`;
+      document.getElementsByClassName("volumeMaster")[i].value = Math.round(settings.sound.volume.master * 100);
+      document.getElementsByClassName("volumeMasterValue")[i].textContent = `${Math.round(settings.sound.volume.master * 100)}%`;
     }
     Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
-    intro1video.volume =
-      settings.sound.volume.master * settings.sound.volume.music;
+    intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
     volumeOverlay.classList.add("overlayOpen");
     overlayTime = new Date().getTime();
     setTimeout(() => {
@@ -2331,9 +2126,7 @@ document.onkeydown = (e) => {
       }
     } else if (key == "tab") {
       e.preventDefault();
-      difficultySelected(
-        difficultySelection + 1 == 3 ? 0 : difficultySelection + 1
-      );
+      difficultySelected(difficultySelection + 1 == 3 ? 0 : difficultySelection + 1);
     } else if (key == "enter") {
       e.preventDefault();
       songSelected(songSelection);
