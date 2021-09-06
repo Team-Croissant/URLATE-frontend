@@ -233,8 +233,8 @@ const settingApply = () => {
   document.getElementById("ignoreTestCheck").checked = settings.editor.denyAtTest;
   document.getElementById("comboAlertCheck").checked = settings.game.comboAlert;
   volumeSongValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
-  volumeHitValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
-  volumeEftValue.textContent = Math.round(settings.sound.volume.music * 100) + "%";
+  volumeHitValue.textContent = Math.round(settings.sound.volume.hitSound * 100) + "%";
+  volumeEftValue.textContent = Math.round(settings.sound.volume.effect * 100) + "%";
   offsetButton.textContent = settings.sound.offset + "ms";
   sensitiveValue.textContent = settings.input.sens + "x";
   inputSizeValue.textContent = settings.game.size + "x";
