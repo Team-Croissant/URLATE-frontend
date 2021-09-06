@@ -405,6 +405,21 @@ const drawNote = (p, x, y, s, n, d) => {
   cntCtx.stroke();
 };
 
+const changeNote = () => {
+  pattern.patterns[selectedCntElement.i].value = Number(!pattern.patterns[selectedCntElement.i].value);
+  pattern.patterns[selectedCntElement.i].direction = 1;
+  patternChanged();
+  selectedCntElement.v2 = pattern.patterns[selectedCntElement.i].value;
+  changeSettingsMode(selectedCntElement.v1, selectedCntElement.v2, selectedCntElement.i);
+};
+
+const changeBullet = () => {
+  pattern.bullets[selectedCntElement.i].value = Number(!pattern.bullets[selectedCntElement.i].value);
+  patternChanged();
+  selectedCntElement.v2 = pattern.bullets[selectedCntElement.i].value;
+  changeSettingsMode(selectedCntElement.v1, selectedCntElement.v2, selectedCntElement.i);
+};
+
 const drawBullet = (n, x, y, a, s) => {
   x = (cntCanvas.width / 200) * (x + 100);
   y = (cntCanvas.height / 200) * (y + 100);
