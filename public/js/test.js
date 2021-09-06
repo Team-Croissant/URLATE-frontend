@@ -429,10 +429,11 @@ const drawParticle = (n, x, y, j) => {
   }
 };
 
-const drawNote = (p, x, y) => {
+const drawNote = (p, x, y, n, d) => {
   p = Math.max(p, 0);
   x = (canvas.width / 200) * (x + 100);
   y = (canvas.height / 200) * (y + 100);
+  n = n == undefined ? 0 : n;
   let w = canvas.width / 40;
   let opacity = "FF";
   if (p > 100) {
@@ -440,20 +441,20 @@ const drawNote = (p, x, y) => {
   }
   if (opacity <= 0) opacity = "00";
   if (!denySkin) {
-    if (skin.note.type == "gradient") {
+    if (skin.note[n].type == "gradient") {
       let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
-      for (let i = 0; i < skin.note.stops.length; i++) {
-        grd.addColorStop(skin.note.stops[i].percentage / 100, `#${skin.note.stops[i].color}${opacity.toString(16)}`);
+      for (let i = 0; i < skin.note[n].stops.length; i++) {
+        grd.addColorStop(skin.note[n].stops[i].percentage / 100, `#${skin.note[n].stops[i].color}${opacity.toString(16)}`);
       }
       ctx.fillStyle = grd;
       ctx.strokeStyle = grd;
-    } else if (skin.note.type == "color") {
-      ctx.fillStyle = `#${skin.note.color}${opacity.toString(16)}`;
+    } else if (skin.note[n].type == "color") {
+      ctx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
     }
   } else {
     let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
-    grd.addColorStop(0, `#fb4934${opacity}`);
-    grd.addColorStop(1, `#ebd934${opacity}`);
+    grd.addColorStop(0, `${["#fb4934", "#53cddb"][n]}${opacity}`);
+    grd.addColorStop(1, `${["#ebd934", "#0669ff"][n]}${opacity}`);
     ctx.fillStyle = grd;
     ctx.strokeStyle = grd;
   }
@@ -464,6 +465,20 @@ const drawNote = (p, x, y) => {
   ctx.beginPath();
   ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
   ctx.fill();
+  if (n == 0) return;
+  ctx.beginPath();
+  if (opacity != "FF") {
+    ctx.strokeStyle = `#${skin.note[n].arrow}${opacity.toString(16)}`;
+  } else {
+    let arrowOpacity = (p * 5 > 255 ? 255 : Math.round(p) * 5).toString(16).padStart(2, "0");
+    ctx.strokeStyle = `#${skin.note[n].arrow}${arrowOpacity}`;
+  }
+  ctx.lineWidth = Math.round(canvas.width / 400);
+  let add = ((w / 2) * (-1 * d)) / 2;
+  ctx.moveTo(x - add, y - add / 2);
+  ctx.lineTo(x, y + add / 2);
+  ctx.lineTo(x + add, y - add / 2);
+  ctx.stroke();
 };
 
 const drawCursor = () => {
@@ -666,7 +681,7 @@ const cntRender = () => {
     for (let i = 0; i < renderNotes.length; i++) {
       const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
       trackMouseSelection(start + i, 0, renderNotes[i].value, renderNotes[i].x, renderNotes[i].y);
-      drawNote(p, renderNotes[i].x, renderNotes[i].y);
+      drawNote(p, renderNotes[i].x, renderNotes[i].y, renderNotes[i].value, renderNotes[i].direction);
       if (p >= 120 && !destroyedNotes.has(start + i)) {
         calculateScore("miss", start + i, true);
         missParticles.push({
@@ -869,7 +884,7 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
   }
 };
 
-const compClicked = (isTyped, key) => {
+const compClicked = (isTyped, key, isWheel) => {
   if ((!isTyped && !settings.input.mouse) || isMenuOpened || !menuAllowed || mouseClicked == key) {
     return;
   }
@@ -881,11 +896,11 @@ const compClicked = (isTyped, key) => {
     song.play();
     lottieAnim.play();
   }
-  if (key) mouseClicked = key;
-  else mouseClicked = true;
+  if (key && !isWheel) mouseClicked = key;
+  else if (!isWheel) mouseClicked = true;
   mouseClickedMs = Date.now();
   for (let i = 0; i < pointingCntElement.length; i++) {
-    if (pointingCntElement[i].v1 === 0 && !destroyedNotes.has(pointingCntElement[i].i)) {
+    if (pointingCntElement[i].v1 === 0 && !destroyedNotes.has(pointingCntElement[i].i) && (pointingCntElement[i].v2 === 1) == isWheel && (pointingCntElement[i].v2 === 0) == !isWheel) {
       drawParticle(1, mouseX, mouseY);
       let seek = song.seek() * 1000 - (offset + sync);
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
@@ -1105,6 +1120,16 @@ const globalScrollEvent = (e) => {
         alert(`Error occured.\n${error}`);
         console.error(`Error occured.\n${error}`);
       });
+  } else {
+    e = window.event || e;
+    let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+    if (delta == 1) {
+      //UP
+      compClicked(false, "UP", true);
+    } else {
+      //DOWN
+      compClicked(false, "DOWN", true);
+    }
   }
 };
 
@@ -1141,7 +1166,7 @@ document.onkeydown = (e) => {
     } else if (inputMode == 2 && !/^[zx]{1}$/i.test(e.key)) {
       return;
     }
-    compClicked(true, e.key);
+    compClicked(true, e.key, false);
   }
 };
 
