@@ -466,6 +466,10 @@
                     <p class="optionSemiTitle"><%= __('coupon_code_enter') %></p>
                     <a class="optionButton" onclick="couponEnter()"><%= __('apply') %></a>
                 </div>
+                <div class="optionValueContainer">
+                    <p class="optionSemiTitle"><%= __('retry_tutorial') %></p>
+                    <a class="optionButton" onclick="window.location.href = '<%= url %>/tutorial';"><%= __('move') %></a>
+                </div>
             </div>
             <div class="optionContentsContainer" id="optionDisplay">
                 <p class="optionTitle"><%= __('resolution') %></p>
