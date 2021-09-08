@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const initialize = (isFirstCalled) => {
   if (isFirstCalled) {
-    fetch(`${cdn}/patterns/tutorial/0_${lang}.json`, {
+    fetch(`${cdn}/URLATE-patterns/tutorial/0_${lang}.json`, {
       method: "GET",
       credentials: "include",
     })

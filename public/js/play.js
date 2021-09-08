@@ -217,7 +217,7 @@ const initialize = (isFirstCalled) => {
   rate = localStorage.rate;
   disableText = localStorage.disableText;
   if (isFirstCalled) {
-    fetch(`${cdn}/patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`, {
+    fetch(`${cdn}/URLATE-patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`, {
       method: "GET",
       credentials: "include",
     })
