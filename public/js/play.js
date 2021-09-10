@@ -7,7 +7,7 @@ const rankImg = document.getElementById("rankImg");
 const floatingArrowContainer = document.getElementById("floatingArrowContainer");
 const floatingResultContainer = document.getElementById("floatingResultContainer");
 const scoreContainer = document.getElementById("scoreContainer");
-const colorOverlayContainer = document.getElementById("colorOverlayaContainer");
+const colorOverlayContainer = document.getElementById("colorOverlayContainer");
 const floatingResumeContainer = document.getElementById("floatingResumeContainer");
 const volumeMasterValue = document.getElementById("volumeMasterValue");
 const volumeOverlay = document.getElementById("volumeOverlay");
@@ -217,7 +217,7 @@ const initialize = (isFirstCalled) => {
   rate = localStorage.rate;
   disableText = localStorage.disableText;
   if (isFirstCalled) {
-    fetch(`${cdn}/patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`, {
+    fetch(`${cdn}/URLATE-patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`, {
       method: "GET",
       credentials: "include",
     })
@@ -417,7 +417,7 @@ const getJudgeStyle = (j, p, x, y) => {
   }
 };
 
-const drawParticle = (n, x, y, j) => {
+const drawParticle = (n, x, y, j, d) => {
   let cx = (canvas.width / 200) * (x + 100);
   let cy = (canvas.height / 200) * (y + 100);
   if (n == 0) {
@@ -425,7 +425,17 @@ const drawParticle = (n, x, y, j) => {
     const raf = (n, w) => {
       for (let i = 0; i < 3; i++) {
         ctx.beginPath();
-        ctx.fillStyle = "#222";
+        if (skin.bullet.type == "gradient") {
+          let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
+          for (let i = 0; i < skin.bullet.stops.length; i++) {
+            grd.addColorStop(skin.bullet.stops[i].percentage / 100, `#${skin.bullet.stops[i].color}`);
+          }
+          ctx.fillStyle = grd;
+          ctx.strokeStyle = grd;
+        } else if (skin.bullet.type == "color") {
+          ctx.fillStyle = `#${skin.bullet.color}`;
+          ctx.strokeStyle = `#${skin.bullet.color}`;
+        }
         ctx.arc(cx + n * destroyParticles[j].d[i][0], cy + n * destroyParticles[j].d[i][1], w, 0, 2 * Math.PI);
         ctx.fill();
       }
@@ -433,24 +443,33 @@ const drawParticle = (n, x, y, j) => {
     raf(destroyParticles[j].n, destroyParticles[j].w);
   } else if (n == 1) {
     //Click Note
-    const raf = (w, s) => {
+    const raf = (w, s, n) => {
       ctx.beginPath();
       let width = canvas.width / 50;
       let p = 100 - (s + 500 - Date.now()) / 5;
-      let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
-      grd.addColorStop(0, `rgba(251, 73, 52, ${0.5 - p / 200})`);
-      grd.addColorStop(1, `rgba(235, 217, 52, ${0.5 - p / 200})`);
-      ctx.strokeStyle = grd;
+      let opacity = parseInt(125 - p * 1.25);
+      if (opacity <= 0) opacity = "00";
+      if (skin.note[n].type == "gradient") {
+        let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
+        for (let i = 0; i < skin.note[n].stops.length; i++) {
+          grd.addColorStop(skin.note[n].stops[i].percentage / 100, `#${skin.note[n].stops[i].color}${opacity.toString(16).padStart(2, "0")}`);
+        }
+        ctx.fillStyle = grd;
+        ctx.strokeStyle = grd;
+      } else if (skin.note[n].type == "color") {
+        ctx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
+        ctx.strokeStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
+      }
       ctx.arc(cx, cy, w, 0, 2 * Math.PI);
       ctx.stroke();
       w = canvas.width / 70 + canvas.width / 400 + width * (p / 100);
       if (p < 100) {
         requestAnimationFrame(() => {
-          raf(w, s);
+          raf(w, s, n);
         });
       }
     };
-    raf(canvas.width / 70 + canvas.width / 400, Date.now());
+    raf(canvas.width / 70 + canvas.width / 400, Date.now(), d);
   } else if (n == 2) {
     //Click Default
     const raf = (w, s) => {
@@ -532,6 +551,7 @@ const drawNote = (p, x, y, n, d) => {
     ctx.strokeStyle = grd;
   } else if (skin.note[n].type == "color") {
     ctx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
+    ctx.strokeStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
   }
   ctx.lineWidth = Math.round(canvas.width / 500);
   ctx.beginPath();
@@ -945,7 +965,7 @@ const compClicked = (isTyped, key, isWheel) => {
   for (let i = 0; i < pointingCntElement.length; i++) {
     if (pointingCntElement[i].v1 === 0 && !destroyedNotes.has(pointingCntElement[i].i) && (pointingCntElement[i].v2 === 0) == !isWheel) {
       if (pointingCntElement[i].v2 == 1 && pattern.patterns[pointingCntElement[i].i].direction != key) return;
-      drawParticle(1, mouseX, mouseY);
+      drawParticle(1, mouseX, mouseY, 0, pointingCntElement[i].v2);
       let date = d;
       const seek = (date - startDate) * rate - (offset + sync);
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
