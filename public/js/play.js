@@ -770,9 +770,11 @@ const cntRender = () => {
     start = lowerBound(pattern.patterns, seek - (bpm * 4) / speed);
     end = upperBound(pattern.patterns, seek + (bpm * 14) / speed);
     const renderNotes = pattern.patterns.slice(start, end);
-    for (let i = 0; i < renderNotes.length; i++) {
-      const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek)) / ((bpm * 14) / speed)) * 100;
+    for (let i = 0; renderNotes.length > i; i++) {
       trackMouseSelection(start + i, 0, renderNotes[i].value, renderNotes[i].x, renderNotes[i].y);
+    }
+    for (let i = renderNotes.length - 1; i >= 0; i--) {
+      const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek)) / ((bpm * 14) / speed)) * 100;
       drawNote(p, renderNotes[i].x, renderNotes[i].y, renderNotes[i].value, renderNotes[i].direction);
       if (p >= 120 && !destroyedNotes.has(start + i)) {
         calculateScore("miss", start + i, true);

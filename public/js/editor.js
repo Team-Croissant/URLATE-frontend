@@ -1024,9 +1024,11 @@ const cntRender = () => {
         }
       }
     }
-    for (let i = 0; i < renderNotes.length; i++) {
-      const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
+    for (let i = 0; renderNotes.length > i; i++) {
       if (mouseMode == 0) trackMouseSelection(start + i, 0, renderNotes[i].value, renderNotes[i].x, renderNotes[i].y);
+    }
+    for (let i = renderNotes.length - 1; i >= 0; i--) {
+      const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
       drawNote(p, renderNotes[i].x, renderNotes[i].y, selectedCheck(0, start + i), renderNotes[i].value, renderNotes[i].direction);
     }
     start = lowerBound(pattern.bullets, seek * 1000 - bpm * 100);
