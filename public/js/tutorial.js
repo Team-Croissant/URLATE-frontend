@@ -408,7 +408,7 @@ const drawParticle = (n, x, y, j, d) => {
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.lineWidth = 2;
-      ctx.strokeText(j, cx, newY);
+      ctx.strokeText("Miss", cx, newY);
       ctx.fillText("Miss", cx, newY);
     }
   }
