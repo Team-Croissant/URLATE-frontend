@@ -319,6 +319,18 @@ const sortAsName = (a, b) => {
   return a.name > b.name ? 1 : -1;
 };
 
+const sortAsProducer = (a, b) => {
+  if (a.producer == b.producer) return 0;
+  return a.producer > b.producer ? 1 : -1;
+};
+
+const sortAsDifficulty = (a, b) => {
+  a = JSON.parse(a.difficulty)[difficultySelection];
+  b = JSON.parse(b.difficulty)[difficultySelection];
+  if (a == b) return 0;
+  return a > b ? 1 : -1;
+};
+
 const tutorialSkip = () => {
   if (confirm(confirmExit)) {
     document.getElementById("tutorialInformation").classList.remove("fadeIn");
@@ -565,107 +577,9 @@ document.addEventListener("DOMContentLoaded", () => {
                   if (data.result == "success") {
                     tracks = data.tracks;
                     tracks.sort(sortAsName);
-                    let songList = "";
-                    for (let i = 0; i < tracks.length; i++) {
-                      if (tracks[i].type == 3) {
-                        songList += `<div class="songSelectionContainer songSelectionDisable">
-                          <div class="songSelectionLottie"></div>
-                          <div class="songSelectionInfo">
-                              <span class="songSelectionTitle"></span>
-                              <span class="songSelectionArtist"></span>
-                          </div>
-                          <div class="songSelectionRank">
-                              <span class="ranks rankQ"></span>
-                          </div>
-                        </div>`;
-                        continue;
-                      }
-                      songs[i] = new Howl({
-                        src: [`${cdn}/tracks/preview/${tracks[i].fileName}.mp3`],
-                        format: ["mp3"],
-                        autoplay: false,
-                        loop: true,
-                      });
-                      songList += `<div class="songSelectionContainer${
-                        tracks[i].type == 1 && !isAdvanced ? " advancedSelection" : tracks[i].type == 2 ? " dlcSelection" : ""
-                      }" onclick="songSelected(${i})">
-                                <div class="songSelectionLottie"></div>
-                                <div class="songSelectionInfo">
-                                    <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
-                                    <span class="songSelectionArtist">${tracks[i].producer}</span>
-                                </div>
-                                <div class="songSelectionRank">
-                                    <span class="ranks rankQ"></span>
-                                </div>
-                            </div>`;
-                      fetch(`${api}/record/${tracks[i].name}/${username}`, {
-                        method: "GET",
-                        credentials: "include",
-                      })
-                        .then((res) => res.json())
-                        .then((data) => {
-                          trackRecords[i] = [];
-                          if (data.result == "success") {
-                            for (let j = 0; j < 3; j++) {
-                              if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
-                                trackRecords[i][j] = {
-                                  rank: "rankL",
-                                  record: 0,
-                                  medal: 0,
-                                  maxcombo: 0,
-                                };
-                              } else {
-                                trackRecords[i][j] = {
-                                  rank: "rankQ",
-                                  record: 0,
-                                  medal: 0,
-                                  maxcombo: 0,
-                                };
-                              }
-                            }
-                            for (let j = 0; j < 3; j++) {
-                              if (data.results[j] != undefined) {
-                                let value = data.results[j];
-                                document.getElementsByClassName("ranks")[i].className = "ranks";
-                                document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
-                                trackRecords[i][value.difficulty - 1] = {
-                                  rank: `rank${value.rank}`,
-                                  record: value.record,
-                                  medal: value.medal,
-                                  maxcombo: value.maxcombo,
-                                };
-                              }
-                            }
-                          } else {
-                            for (let j = 0; j < 3; j++) {
-                              if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
-                                document.getElementsByClassName("ranks")[i].className = "ranks";
-                                document.getElementsByClassName("ranks")[i].classList.add("rankL");
-                                trackRecords[i][j] = {
-                                  rank: "rankL",
-                                  record: 0,
-                                  medal: 0,
-                                  maxcombo: 0,
-                                };
-                              } else {
-                                trackRecords[i][j] = {
-                                  rank: "rankQ",
-                                  record: 0,
-                                  medal: 0,
-                                  maxcombo: 0,
-                                };
-                              }
-                            }
-                          }
-                        })
-                        .catch((error) => {
-                          alert(`Error occured.\n${error}`);
-                          console.error(`Error occured.\n${error}`);
-                        });
-                    }
+                    tracksUpdate();
                     Howler.volume(settings.sound.volume.master * settings.sound.volume.music);
                     intro1video.volume = settings.sound.volume.master * settings.sound.volume.music;
-                    selectSongContainer.innerHTML = songList;
                   } else {
                     alert("Failed to load song list.");
                     console.error("Failed to load song list.");
@@ -691,9 +605,121 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
-const songSelected = (n) => {
+const tracksUpdate = () => {
+  let songList = "";
+  for (let i = 0; i < tracks.length; i++) {
+    if (tracks[i].type == 3) {
+      songList += `<div class="songSelectionContainer songSelectionDisable">
+        <div class="songSelectionLottie"></div>
+        <div class="songSelectionInfo">
+            <span class="songSelectionTitle"></span>
+            <span class="songSelectionArtist"></span>
+        </div>
+        <div class="songSelectionRank">
+            <span class="ranks rankQ"></span>
+        </div>
+      </div>`;
+      continue;
+    }
+    songs[i] = new Howl({
+      src: [`${cdn}/tracks/preview/${tracks[i].fileName}.mp3`],
+      format: ["mp3"],
+      autoplay: false,
+      loop: true,
+    });
+    songList += `<div class="songSelectionContainer${tracks[i].type == 1 && !isAdvanced ? " advancedSelection" : tracks[i].type == 2 ? " dlcSelection" : ""}" onclick="songSelected(${i})">
+              <div class="songSelectionLottie"></div>
+              <div class="songSelectionInfo">
+                  <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
+                  <span class="songSelectionArtist">${tracks[i].producer}</span>
+              </div>
+              <div class="songSelectionRank">
+                  <span class="ranks rankQ"></span>
+              </div>
+          </div>`;
+    fetch(`${api}/record/${tracks[i].name}/${username}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        trackRecords[i] = [];
+        if (data.result == "success") {
+          for (let j = 0; j < 3; j++) {
+            if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
+              trackRecords[i][j] = {
+                rank: "rankL",
+                record: 0,
+                medal: 0,
+                maxcombo: 0,
+              };
+            } else {
+              trackRecords[i][j] = {
+                rank: "rankQ",
+                record: 0,
+                medal: 0,
+                maxcombo: 0,
+              };
+            }
+          }
+          for (let j = 0; j < 3; j++) {
+            if (data.results[j] != undefined) {
+              let value = data.results[j];
+              document.getElementsByClassName("ranks")[i].className = "ranks";
+              document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
+              trackRecords[i][value.difficulty - 1] = {
+                rank: `rank${value.rank}`,
+                record: value.record,
+                medal: value.medal,
+                maxcombo: value.maxcombo,
+              };
+            }
+          }
+        } else {
+          for (let j = 0; j < 3; j++) {
+            if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
+              document.getElementsByClassName("ranks")[i].className = "ranks";
+              document.getElementsByClassName("ranks")[i].classList.add("rankL");
+              trackRecords[i][j] = {
+                rank: "rankL",
+                record: 0,
+                medal: 0,
+                maxcombo: 0,
+              };
+            } else {
+              trackRecords[i][j] = {
+                rank: "rankQ",
+                record: 0,
+                medal: 0,
+                maxcombo: 0,
+              };
+            }
+          }
+        }
+      })
+      .catch((error) => {
+        alert(`Error occured.\n${error}`);
+        console.error(`Error occured.\n${error}`);
+      });
+  }
+  selectSongContainer.innerHTML = songList;
+};
+
+const sortSelected = (n) => {
+  document.getElementsByClassName("selected")[0].classList.remove("selected");
+  document.getElementsByClassName("sortText")[n].classList.add("selected");
+  const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty];
+  songs[songSelection].stop();
+  const prevName = tracks[songSelection].fileName;
+  tracks.sort(sortArray[n]);
+  tracksUpdate();
+  const index = tracks.findIndex((obj) => obj.fileName == prevName);
+  songSelected(index, true);
+};
+
+const songSelected = (n, refreshed) => {
   loadingShow();
-  if (songSelection == n) {
+  if (songSelection == n && !refreshed) {
     //play
     if ((tracks[n].type == 1 && !isAdvanced) || (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1))) {
       alert("NOT ALLOWED TO PLAY"); //TODO
@@ -716,7 +742,7 @@ const songSelected = (n) => {
   if (!(songSelection == -1 && tracks[n].name == "URLATE Theme")) {
     document.getElementById("songNameText").textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
     songs[n].volume(1);
-    if (songSelection != -1) {
+    if (songSelection != -1 && !refreshed) {
       let i = songSelection;
       songs[i].fade(1, 0, 200);
       setTimeout(() => {
