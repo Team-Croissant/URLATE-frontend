@@ -536,6 +536,11 @@ p {
   font-weight: 600;
 }
 
+.profileTextSmall {
+  font-size: 2vh;
+  font-weight: 600;
+}
+
 .tumblbug1 {
   height: 5vw;
   background-image: url("/images/credits/tumblbug_1.png");
