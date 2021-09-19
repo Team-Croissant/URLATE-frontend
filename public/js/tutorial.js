@@ -889,7 +889,8 @@ const compClicked = (isTyped, key, isWheel) => {
   else if (!isWheel) mouseClicked = true;
   mouseClickedMs = Date.now();
   for (let i = 0; i < pointingCntElement.length; i++) {
-    if (pointingCntElement[i].v1 === 0 && !destroyedNotes.has(pointingCntElement[i].i) && (pointingCntElement[i].v2 === 1) == isWheel && (pointingCntElement[i].v2 === 0) == !isWheel) {
+    if (pointingCntElement[i].v1 === 0 && !destroyedNotes.has(pointingCntElement[i].i) && (pointingCntElement[i].v2 === 0) == !isWheel) {
+      if (pointingCntElement[i].v2 == 1 && pattern.patterns[pointingCntElement[i].i].direction != key) return;
       drawParticle(1, mouseX, mouseY, 0, pointingCntElement[i].v2);
       let seek = song.seek() * 1000 - (offset + sync);
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
@@ -1127,10 +1128,10 @@ const globalScrollEvent = (e) => {
     let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
     if (delta == 1) {
       //UP
-      compClicked(false, "UP", true);
+      compClicked(false, 1, true);
     } else {
       //DOWN
-      compClicked(false, "DOWN", true);
+      compClicked(false, -1, true);
     }
   }
 };
