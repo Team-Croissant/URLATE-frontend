@@ -1569,7 +1569,7 @@ const addToCart = (s) => {
     credentials: "include",
     body: JSON.stringify({
       type: s,
-      item: document.getElementById(`${s}Info${s}Name`).textContent,
+      item: document.getElementById(`${s}info${s}Name`).textContent,
     }),
     headers: {
       "Content-Type": "application/json",
