@@ -1,4 +1,4 @@
-/* global api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2 */
+/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2 */
 const animContainer = document.getElementById("animContainer");
 const langDetailSelector = document.getElementById("langDetailSelector");
 const canvasResSelector = document.getElementById("canvasResSelector");
@@ -116,15 +116,6 @@ let offsetSong = new Howl({
   autoplay: false,
   loop: true,
 });
-let intro1load = 0;
-
-const intro1loaded = () => {
-  if (intro1load == 1) {
-    document.getElementById("pressAnywhere").textContent = pressAnywhere;
-    document.getElementById("warningContainer").onclick = warningSkip;
-  }
-  intro1load++;
-};
 
 const lottieResize = () => {
   let widthWidth = window.innerWidth;
@@ -716,7 +707,7 @@ const sortSelected = (n, isInitializing) => {
   tracks.sort(sortArray[n]);
   tracksUpdate();
   const index = tracks.findIndex((obj) => obj.fileName == prevName);
-  if(!isInitializing) songSelected(index, true);
+  if (!isInitializing) songSelected(index, true);
 };
 
 const songSelected = (n, refreshed) => {
