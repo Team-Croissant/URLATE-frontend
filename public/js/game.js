@@ -705,16 +705,18 @@ const tracksUpdate = () => {
   selectSongContainer.innerHTML = songList;
 };
 
-const sortSelected = (n) => {
+const sortSelected = (n, isInitializing) => {
+  localStorage.sort = n;
   document.getElementsByClassName("selected")[0].classList.remove("selected");
   document.getElementsByClassName("sortText")[n].classList.add("selected");
   const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty];
-  songs[songSelection].stop();
+  if (songs[songSelection]) songs[songSelection].stop();
   const prevName = tracks[songSelection].fileName;
+  tracks.sort(sortAsName);
   tracks.sort(sortArray[n]);
   tracksUpdate();
   const index = tracks.findIndex((obj) => obj.fileName == prevName);
-  songSelected(index, true);
+  if(!isInitializing) songSelected(index, true);
 };
 
 const songSelected = (n, refreshed) => {
@@ -888,7 +890,9 @@ const gameLoaded = () => {
   if (iniMode == 1) {
     if (localStorage.songNum) {
       let songNum = Number(localStorage.songNum);
-      songSelected(songNum);
+      songSelection = songNum;
+      sortSelected(Number(localStorage.sort ? localStorage.sort : 0), true);
+      songSelected(songNum, true);
     }
     menuSelected(0);
   } else if (display == 0 && songSelection == -1) {
