@@ -322,8 +322,7 @@ body {
 }
 
 #dot {
-  margin-bottom: -6px;
-  margin-right: 3px;
+  margin-bottom: 6px;
   font-size: 5em;
   color: #9d4ec2;
 }
