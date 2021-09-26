@@ -909,7 +909,7 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
 };
 
 const compClicked = (isTyped, key, isWheel) => {
-  if ((!isTyped && !settings.input.mouse) || isMenuOpened || !menuAllowed || mouseClicked == key) {
+  if ((!isTyped && !settings.input.mouse && !isWheel) || isMenuOpened || !menuAllowed || mouseClicked == key) {
     return;
   }
   if (!song.playing()) {
