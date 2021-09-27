@@ -416,7 +416,7 @@ const drawParticle = (n, x, y, j, d) => {
         let newY = cy - Math.round(p / 10);
         ctx.fillStyle = getJudgeStyle(j.toLowerCase(), p, cx, newY);
         ctx.strokeStyle = `rgba(255, 255, 255, ${1 - p / 100})`;
-        ctx.font = `600 ${(window.innerHeight / 25) * pixelRatio}px Metropolis`;
+        ctx.font = `600 ${(window.innerHeight / 25) * pixelRatio}px Metropolis, Pretendard Variable`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.lineWidth = 2;
@@ -438,7 +438,7 @@ const drawParticle = (n, x, y, j, d) => {
       let newY = cy - Math.round(p / 10);
       ctx.fillStyle = getJudgeStyle("miss", p);
       ctx.strokeStyle = `rgba(255, 255, 255, ${1 - p / 100})`;
-      ctx.font = `600 ${(window.innerHeight / 25) * pixelRatio}px Metropolis`;
+      ctx.font = `600 ${(window.innerHeight / 25) * pixelRatio}px Metropolis, Pretendard Variable`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.lineWidth = 2;
@@ -576,7 +576,7 @@ const drawBullet = (n, x, y, a) => {
       ctx.fill();
       break;
     default:
-      ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis`;
+      ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
       ctx.fillStyle = "#F55";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
@@ -646,7 +646,7 @@ const cntRender = () => {
       }
       fontSize = (window.innerHeight / 100) * (30 - (comboAlertMs + 900 - Date.now()) / 90) * pixelRatio;
       ctx.beginPath();
-      ctx.font = `700 ${fontSize}px Metropolis`;
+      ctx.font = `700 ${fontSize}px Metropolis, Pretendard Variable`;
       ctx.fillStyle = `rgba(200,200,200,${comboOpacity})`;
       ctx.textBaseline = "middle";
       ctx.textAlign = "center";
@@ -752,7 +752,7 @@ const cntRender = () => {
     }
   } catch (e) {
     if (e) {
-      ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis`;
+      ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
       ctx.fillStyle = "#F55";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
@@ -766,12 +766,12 @@ const cntRender = () => {
   } else {
     displayScore = score;
   }
-  ctx.font = `700 ${(window.innerHeight / 30) * pixelRatio}px Metropolis`;
+  ctx.font = `700 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
   ctx.fillStyle = "#333";
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
   ctx.fillText(numberWithCommas(`${Math.round(displayScore)}`.padStart(9, 0)), canvas.width / 2, canvas.height / 80);
-  ctx.font = `${(window.innerHeight / 40) * pixelRatio}px Metropolis`;
+  ctx.font = `${(window.innerHeight / 40) * pixelRatio}px Metropolis, Pretendard Variable`;
   ctx.fillStyle = "#555";
   ctx.fillText(`${combo}x`, canvas.width / 2, canvas.height / 70 + canvas.height / 25);
   drawCursor();
@@ -866,7 +866,7 @@ const calculateResult = () => {
   }
   if (missPoint.length == 0) {
     missCtx.fillStyle = "#FFF";
-    missCtx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis`;
+    missCtx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
     missCtx.textAlign = "right";
     missCtx.textBaseline = "bottom";
     missCtx.fillText("Perfect!", missCanvas.width - 10, missCanvas.height * 0.8 - 10);
@@ -898,7 +898,7 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
         }
         break;
       default:
-        ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis`;
+        ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
         ctx.fillStyle = "#F55";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
