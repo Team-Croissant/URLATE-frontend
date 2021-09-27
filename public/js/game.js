@@ -882,6 +882,7 @@ const gameLoaded = () => {
     if (localStorage.songNum) {
       let songNum = Number(localStorage.songNum);
       songSelection = songNum;
+      difficultySelected(Number(localStorage.difficultySelection ? localStorage.difficultySelection : 0), true);
       sortSelected(Number(localStorage.sort ? localStorage.sort : 0), true);
       songSelected(songNum, true);
     }
@@ -1852,12 +1853,15 @@ const updateDetails = (n) => {
   }
 };
 
-const difficultySelected = (n) => {
+const difficultySelected = (n, isInitializing) => {
   difficultySelection = n;
   document.getElementsByClassName("difficultySelected")[0].classList.remove("difficultySelected");
   document.getElementsByClassName("difficulty")[n].classList.add("difficultySelected");
   updateDetails(songSelection);
   updateRanks();
+  if (localStorage.sort == "2" && !isInitializing) {
+    sortSelected(2);
+  }
 };
 
 const showRank = () => {
