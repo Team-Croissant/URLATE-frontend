@@ -1200,12 +1200,6 @@ const globalScrollEvent = (e) => {
   }
 };
 
-const finish = () => {
-  if (confirm(returnToGame)) {
-    window.location.href = `${url}/game?initialize=1`;
-  }
-};
-
 document.onkeydown = (e) => {
   e = e || window.event;
   if (e.key == "Shift") {

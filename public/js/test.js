@@ -1158,12 +1158,6 @@ const globalScrollEvent = (e) => {
   }
 };
 
-const finish = () => {
-  if (confirm(returnToEditor)) {
-    editor();
-  }
-};
-
 document.onkeydown = (e) => {
   e = e || window.event;
   if (e.key == "Shift") {

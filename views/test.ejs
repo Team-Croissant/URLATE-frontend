@@ -20,7 +20,7 @@
 </head>
 <body oncontextmenu='return false'>
   <div id="colorOverlayContainer"></div>
-  <div id="scoreContainer" onclick="finish()">
+  <div id="scoreContainer">
     <div id="scoreBackground"></div>
     <div id="scoreDecorations"></div>
     <div id="scoreAlbumInformations">
@@ -75,7 +75,15 @@
       </div>
     </div>
     <span id="urlate"><strong>URLATE</strong> Pure</span>
-    <span id="skip">CLICK to exit</span>
+    <div id="skip">
+      <div id="retryButton" onclick="retry()">
+        <img src="/images/parts/icons/retry.svg" id="retryIcon">
+      </div>
+      <div id="nextButton" onclick="editor()">
+        <span>Next</span>
+        <img src="/images/parts/icons/next.svg" id="nextIcon">
+      </div>
+    </div>
   </div>
   <div id="menuContainer">
     <div id="menuBox">
