@@ -322,6 +322,11 @@ const sortAsDifficulty = (a, b) => {
   return a > b ? 1 : -1;
 };
 
+const sortAsBPM = (a, b) => {
+  if (a.bpm == b.bpm) return 0;
+  return a.bpm > b.bpm ? 1 : -1;
+};
+
 const tutorialSkip = () => {
   if (confirm(confirmExit)) {
     document.getElementById("tutorialInformation").classList.remove("fadeIn");
@@ -700,7 +705,7 @@ const sortSelected = (n, isInitializing) => {
   localStorage.sort = n;
   document.getElementsByClassName("selected")[0].classList.remove("selected");
   document.getElementsByClassName("sortText")[n].classList.add("selected");
-  const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty];
+  const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty, sortAsBPM];
   if (songs[songSelection]) songs[songSelection].stop();
   const prevName = tracks[songSelection].fileName;
   tracks.sort(sortAsName);
