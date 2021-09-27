@@ -461,7 +461,7 @@ const drawBullet = (n, x, y, a, s) => {
       cntCtx.fill();
       break;
     default:
-      cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis`;
+      cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis, Pretendard Variable`;
       cntCtx.fillStyle = "#F55";
       cntCtx.textAlign = "left";
       cntCtx.textBaseline = "top";
@@ -579,7 +579,7 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
           }
           break;
         default:
-          cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis`;
+          cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis, Pretendard Variable`;
           cntCtx.fillStyle = "#F55";
           cntCtx.textAlign = "left";
           cntCtx.textBaseline = "top";
@@ -730,7 +730,7 @@ const tmlRender = () => {
     tmlCtx.fillStyle = "#111";
     tmlCtx.textAlign = "left";
     tmlCtx.textBaseline = "middle";
-    tmlCtx.font = `${tmlCanvas.height / 14}px Metropolis`;
+    tmlCtx.font = `${tmlCanvas.height / 14}px Metropolis, Pretendard Variable`;
     tmlCtx.fillText("Note", startX * 1.2 + height / 6, startY + timelineYLoc + height / 1.8);
     let i = 1;
     for (i; i <= bulletsOverlapNum; i++) {
@@ -753,7 +753,7 @@ const tmlRender = () => {
     tmlCtx.fillStyle = "#FFF";
     tmlCtx.fillRect(0, endY, endX, tmlCanvas.height - endY);
     tmlCtx.fillRect(0, 0, endX, startY);
-    tmlCtx.font = `${tmlCanvas.height / 16}px Metropolis`;
+    tmlCtx.font = `${tmlCanvas.height / 16}px Metropolis, Pretendard Variable`;
     tmlCtx.textAlign = "center";
     tmlCtx.textBaseline = "bottom";
     tmlCtx.fillStyle = "#777";
@@ -802,7 +802,7 @@ const tmlRender = () => {
     tmlCtx.lineTo(lineX, startY);
     tmlCtx.stroke();
   } catch (e) {
-    tmlCtx.font = `500 ${tmlCanvas.height / 15}px Metropolis`;
+    tmlCtx.font = `500 ${tmlCanvas.height / 15}px Metropolis, Pretendard Variable`;
     tmlCtx.fillStyle = "#F55";
     tmlCtx.textAlign = "left";
     tmlCtx.textBaseline = "top";
@@ -841,7 +841,7 @@ const tmlRender = () => {
       tmlCtx.fill();
     }
   }
-  tmlCtx.font = `500 ${tmlCanvas.height / 15}px Metropolis`;
+  tmlCtx.font = `500 ${tmlCanvas.height / 15}px Metropolis, Pretendard Variable`;
   tmlCtx.fillStyle = "#555";
   tmlCtx.textAlign = "right";
   tmlCtx.textBaseline = "top";
@@ -1074,7 +1074,7 @@ const cntRender = () => {
       cntCtx.moveTo(cntCanvas.width / 2 - 15, cntCanvas.height / 2 - 15);
       cntCtx.lineTo(cntCanvas.width / 2 + 15, cntCanvas.height / 2 - 15);
       cntCtx.stroke();
-      cntCtx.font = `500 ${cntCanvas.height / 25}px Metropolis`;
+      cntCtx.font = `500 ${cntCanvas.height / 25}px Metropolis, Pretendard Variable`;
       cntCtx.textAlign = "center";
       cntCtx.textBaseline = "top";
       cntCtx.fillText("Click to add Trigger", cntCanvas.width / 2, cntCanvas.height / 2 + 10);
@@ -1086,7 +1086,7 @@ const cntRender = () => {
     }
   } catch (e) {
     if (e) {
-      cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis`;
+      cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis, Pretendard Variable`;
       cntCtx.fillStyle = "#F55";
       cntCtx.textAlign = "left";
       cntCtx.textBaseline = "top";
