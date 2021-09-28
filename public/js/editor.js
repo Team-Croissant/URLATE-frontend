@@ -846,7 +846,7 @@ const tmlRender = () => {
   tmlCtx.textAlign = "right";
   tmlCtx.textBaseline = "top";
   if (sync >= 50 || sync <= -50) {
-    tmlCtx.fillText(syncAlert, endX, endY);
+    tmlCtx.fillText(syncAlert, endX, endY + 5);
   } else if (pixelRatio != 1) {
     tmlCtx.fillText(`${zoomAlert} ${(100 * pixelRatio).toFixed()}%`, endX, endY + 5);
   }
