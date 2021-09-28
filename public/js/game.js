@@ -322,6 +322,11 @@ const sortAsDifficulty = (a, b) => {
   return a > b ? 1 : -1;
 };
 
+const sortAsBPM = (a, b) => {
+  if (a.bpm == b.bpm) return 0;
+  return a.bpm > b.bpm ? 1 : -1;
+};
+
 const tutorialSkip = () => {
   if (confirm(confirmExit)) {
     document.getElementById("tutorialInformation").classList.remove("fadeIn");
@@ -700,7 +705,7 @@ const sortSelected = (n, isInitializing) => {
   localStorage.sort = n;
   document.getElementsByClassName("selected")[0].classList.remove("selected");
   document.getElementsByClassName("sortText")[n].classList.add("selected");
-  const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty];
+  const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty, sortAsBPM];
   if (songs[songSelection]) songs[songSelection].stop();
   const prevName = tracks[songSelection].fileName;
   tracks.sort(sortAsName);
@@ -882,6 +887,7 @@ const gameLoaded = () => {
     if (localStorage.songNum) {
       let songNum = Number(localStorage.songNum);
       songSelection = songNum;
+      difficultySelected(Number(localStorage.difficultySelection ? localStorage.difficultySelection : 0), true);
       sortSelected(Number(localStorage.sort ? localStorage.sort : 0), true);
       songSelected(songNum, true);
     }
@@ -1852,12 +1858,15 @@ const updateDetails = (n) => {
   }
 };
 
-const difficultySelected = (n) => {
+const difficultySelected = (n, isInitializing) => {
   difficultySelection = n;
   document.getElementsByClassName("difficultySelected")[0].classList.remove("difficultySelected");
   document.getElementsByClassName("difficulty")[n].classList.add("difficultySelected");
   updateDetails(songSelection);
   updateRanks();
+  if (localStorage.sort == "2" && !isInitializing) {
+    sortSelected(2);
+  }
 };
 
 const showRank = () => {
