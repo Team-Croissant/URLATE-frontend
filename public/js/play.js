@@ -650,7 +650,7 @@ const drawBullet = (n, x, y, a) => {
 
 const callBulletDestroy = (j) => {
   let date = new Date().getTime();
-  const seek = (date - startDate) * rate - (offset + sync);
+  const seek = (date - startDate - (offset + sync)) * rate;
   const p = ((seek - pattern.bullets[j].ms) / ((bpm * 40) / speed / pattern.bullets[j].speed)) * 100;
   const left = pattern.bullets[j].direction == "L";
   let x = (left ? -1 : 1) * (100 - p);
@@ -722,7 +722,7 @@ const cntRender = () => {
     if (isPaused || startDate == 0) {
       seek = song.seek() * 1000 - (offset + sync);
     } else {
-      seek = (date - startDate) * rate - (offset + sync);
+      seek = (date - startDate - (offset + sync)) * rate;
     }
     if (song.playing()) {
       socketUpdate(date);
@@ -971,7 +971,7 @@ const compClicked = (isTyped, key, isWheel) => {
       if (pointingCntElement[i].v2 == 1 && pattern.patterns[pointingCntElement[i].i].direction != key) return;
       drawParticle(1, mouseX, mouseY, 0, pointingCntElement[i].v2);
       let date = d;
-      const seek = (date - startDate) * rate - (offset + sync);
+      const seek = (date - startDate - (offset + sync)) * rate;
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
       let perfectJudge = (60000 / bpm / 8) * rate;
       let greatJudge = (60000 / bpm / 5) * rate;
