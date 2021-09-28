@@ -845,10 +845,12 @@ const tmlRender = () => {
   tmlCtx.fillStyle = "#555";
   tmlCtx.textAlign = "right";
   tmlCtx.textBaseline = "top";
-  if (sync >= 50 || sync <= -50) {
-    tmlCtx.fillText(syncAlert, endX, endY + 5);
-  } else if (pixelRatio != 1) {
-    tmlCtx.fillText(`${zoomAlert} ${(100 * pixelRatio).toFixed()}%`, endX, endY + 5);
+  if (tmlCanvas.width / tmlCanvas.height >= 4.9) {
+    if (sync >= 50 || sync <= -50) {
+      tmlCtx.fillText(syncAlert, endX, endY + 5);
+    } else if (pixelRatio != 1) {
+      tmlCtx.fillText(`${zoomAlert} ${(100 * pixelRatio).toFixed()}%`, endX, endY + 5);
+    }
   }
   tmlCtx.textAlign = "left";
   if (copied) {
