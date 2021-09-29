@@ -429,26 +429,36 @@ const drawNote = (p, x, y, s, n, d) => {
     }
   }
   cntCtx.lineWidth = Math.round(cntCanvas.width / 500);
-  cntCtx.beginPath();
-  cntCtx.arc(x, y, w, 0, (p / 50) * Math.PI);
-  cntCtx.stroke();
-  cntCtx.beginPath();
-  cntCtx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
-  cntCtx.fill();
-  if (n == 0) return;
-  cntCtx.beginPath();
-  if (opacity != "FF") {
-    cntCtx.strokeStyle = `#${skin.note[n].arrow}${opacity.toString(16)}`;
-  } else {
-    let arrowOpacity = (p * 5 > 255 ? 255 : Math.round(p) * 5).toString(16).padStart(2, "0");
-    cntCtx.strokeStyle = `#${skin.note[n].arrow}${arrowOpacity}`;
+  if (n == 0) {
+    cntCtx.beginPath();
+    cntCtx.arc(x, y, w, 0, (p / 50) * Math.PI);
+    cntCtx.stroke();
+    cntCtx.beginPath();
+    cntCtx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
+    cntCtx.fill();
+  } else if (n == 1) {
+    w = w * 0.9;
+    let parr = [p <= 20 ? p * 5 : 100, p >= 20 ? (p <= 80 ? (p - 20) * 1.66 : 100) : 0, p >= 80 ? (p <= 100 ? (p - 80) * 5 : 100) : 0];
+    cntCtx.beginPath();
+    let originalValue = [0, -1.5 * d * w];
+    let moveValue = [originalValue[0] - w * Math.cos(Math.PI / 5) * d, originalValue[1] + w * Math.sin(Math.PI / 5) * d];
+    cntCtx.moveTo(x + originalValue[0], y + originalValue[1]);
+    cntCtx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[0], y + originalValue[1] - (moveValue[1] / 100) * parr[0]);
+    cntCtx.moveTo(x + originalValue[0] - moveValue[0], y + originalValue[1] - moveValue[1]);
+    if (d == 1) cntCtx.arc(x, y, w, -Math.PI / 5, (((Math.PI / 5) * 7) / 100) * parr[1] - Math.PI / 5);
+    else cntCtx.arc(x, y, w, (-Math.PI / 5) * 6, (((Math.PI / 5) * 7) / 100) * parr[1] - (Math.PI / 5) * 6);
+    originalValue = [-w * Math.cos(Math.PI / 5) * d, -w * Math.sin(Math.PI / 5) * d];
+    moveValue = [originalValue[0], originalValue[1] - -1.5 * d * w];
+    cntCtx.moveTo(x + originalValue[0], y + originalValue[1]);
+    cntCtx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[2], y + originalValue[1] - (moveValue[1] / 100) * parr[2]);
+    cntCtx.stroke();
+    cntCtx.beginPath();
+    cntCtx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    if (d == 1) cntCtx.arc(x, y, (w / 100) * p, -Math.PI / 5, (Math.PI / 5) * 6);
+    else cntCtx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
+    cntCtx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    cntCtx.fill();
   }
-  cntCtx.lineWidth = Math.round(cntCanvas.width / 400);
-  let add = ((w / 2) * (-1 * d)) / 2;
-  cntCtx.moveTo(x - add, y - add / 2);
-  cntCtx.lineTo(x, y + add / 2);
-  cntCtx.lineTo(x + add, y - add / 2);
-  cntCtx.stroke();
 };
 
 const changeNote = () => {
