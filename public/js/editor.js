@@ -437,10 +437,14 @@ const drawNote = (p, x, y, s, n, d) => {
     cntCtx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
     cntCtx.fill();
   } else if (n == 1) {
+    let parr = [p <= 25 ? p * 4 : 100, p >= 25 ? (p <= 75 ? (p - 25) * 2 : 100) : 0, p >= 75 ? (p - 75) * 4 : 0];
     cntCtx.beginPath();
     cntCtx.moveTo(x, y - 1.5 * d * w);
+    cntCtx.lineTo(x + w * Math.cos(Math.PI / 5) * d, y - w * Math.sin(Math.PI / 5) * d);
+    cntCtx.moveTo(x + w * Math.cos(Math.PI / 5) * d, y - w * Math.sin(Math.PI / 5) * d);
     if (d == 1) cntCtx.arc(x, y, w, -Math.PI / 5, (Math.PI / 5) * 6);
     else cntCtx.arc(x, y, w, (-Math.PI / 5) * 6, Math.PI / 5);
+    cntCtx.moveTo(x - w * Math.cos(Math.PI / 5) * d, y - w * Math.sin(Math.PI / 5) * d);
     cntCtx.lineTo(x, y - 1.5 * d * w);
     cntCtx.stroke();
     cntCtx.beginPath();
