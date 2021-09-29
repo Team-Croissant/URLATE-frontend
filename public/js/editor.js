@@ -444,8 +444,8 @@ const drawNote = (p, x, y, s, n, d) => {
     cntCtx.moveTo(x + originalValue[0], y + originalValue[1]);
     cntCtx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[0], y + originalValue[1] - (moveValue[1] / 100) * parr[0]);
     cntCtx.moveTo(x + originalValue[0] - moveValue[0], y + originalValue[1] - moveValue[1]);
-    if (d == 1) cntCtx.arc(x, y, w, -Math.PI / 5, (Math.PI / 5) * 6);
-    else cntCtx.arc(x, y, w, (-Math.PI / 5) * 6, Math.PI / 5);
+    if (d == 1) cntCtx.arc(x, y, w, -Math.PI / 5, (((Math.PI / 5) * 7) / 100) * parr[1] - Math.PI / 5);
+    else cntCtx.arc(x, y, w, (-Math.PI / 5) * 6, (((Math.PI / 5) * 7) / 100) * parr[1] - (Math.PI / 5) * 6);
     originalValue = [-w * Math.cos(Math.PI / 5) * d, -w * Math.sin(Math.PI / 5) * d];
     moveValue = [originalValue[0], originalValue[1] - -1.5 * d * w];
     cntCtx.moveTo(x + originalValue[0], y + originalValue[1]);
