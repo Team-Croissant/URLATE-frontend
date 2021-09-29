@@ -479,26 +479,36 @@ const drawNote = (p, x, y, n, d) => {
     ctx.strokeStyle = grd;
   }
   ctx.lineWidth = Math.round(canvas.width / 500);
-  ctx.beginPath();
-  ctx.arc(x, y, w, 0, (p / 50) * Math.PI);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
-  ctx.fill();
-  if (n == 0) return;
-  ctx.beginPath();
-  if (opacity != "FF") {
-    ctx.strokeStyle = `#${skin.note[n].arrow}${opacity.toString(16)}`;
-  } else {
-    let arrowOpacity = (p * 5 > 255 ? 255 : Math.round(p) * 5).toString(16).padStart(2, "0");
-    ctx.strokeStyle = `#${skin.note[n].arrow}${arrowOpacity}`;
+  if (n == 0) {
+    ctx.beginPath();
+    ctx.arc(x, y, w, 0, (p / 50) * Math.PI);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
+    ctx.fill();
+  } else if (n == 1) {
+    w = w * 0.9;
+    let parr = [p <= 20 ? p * 5 : 100, p >= 20 ? (p <= 80 ? (p - 20) * 1.66 : 100) : 0, p >= 80 ? (p <= 100 ? (p - 80) * 5 : 100) : 0];
+    ctx.beginPath();
+    let originalValue = [0, -1.5 * d * w];
+    let moveValue = [originalValue[0] - w * Math.cos(Math.PI / 5) * d, originalValue[1] + w * Math.sin(Math.PI / 5) * d];
+    ctx.moveTo(x + originalValue[0], y + originalValue[1]);
+    ctx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[0], y + originalValue[1] - (moveValue[1] / 100) * parr[0]);
+    ctx.moveTo(x + originalValue[0] - moveValue[0], y + originalValue[1] - moveValue[1]);
+    if (d == 1) ctx.arc(x, y, w, -Math.PI / 5, (((Math.PI / 5) * 7) / 100) * parr[1] - Math.PI / 5);
+    else ctx.arc(x, y, w, (-Math.PI / 5) * 6, (((Math.PI / 5) * 7) / 100) * parr[1] - (Math.PI / 5) * 6);
+    originalValue = [-w * Math.cos(Math.PI / 5) * d, -w * Math.sin(Math.PI / 5) * d];
+    moveValue = [originalValue[0], originalValue[1] - -1.5 * d * w];
+    ctx.moveTo(x + originalValue[0], y + originalValue[1]);
+    ctx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[2], y + originalValue[1] - (moveValue[1] / 100) * parr[2]);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    if (d == 1) ctx.arc(x, y, (w / 100) * p, -Math.PI / 5, (Math.PI / 5) * 6);
+    else ctx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
+    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    ctx.fill();
   }
-  ctx.lineWidth = Math.round(canvas.width / 400);
-  let add = ((w / 2) * (-1 * d)) / 2;
-  ctx.moveTo(x - add, y - add / 2);
-  ctx.lineTo(x, y + add / 2);
-  ctx.lineTo(x + add, y - add / 2);
-  ctx.stroke();
 };
 
 const drawCursor = () => {

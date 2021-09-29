@@ -437,6 +437,7 @@ const drawNote = (p, x, y, s, n, d) => {
     cntCtx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
     cntCtx.fill();
   } else if (n == 1) {
+    w = w * 0.9;
     let parr = [p <= 20 ? p * 5 : 100, p >= 20 ? (p <= 80 ? (p - 20) * 1.66 : 100) : 0, p >= 80 ? (p <= 100 ? (p - 80) * 5 : 100) : 0];
     cntCtx.beginPath();
     let originalValue = [0, -1.5 * d * w];
