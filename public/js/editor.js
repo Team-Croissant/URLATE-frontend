@@ -64,6 +64,7 @@ let skin, denyCursor, denySkin;
 let dragMouseX, dragMouseY;
 let copied = false,
   copiedTime = 0;
+let gridToggle = false;
 
 let lottieAnim = {
   play: () => {},
@@ -994,6 +995,25 @@ const cntRender = () => {
     let bpmCount = 0,
       speedCount = 0,
       opacityCount = 0;
+    if (gridToggle) {
+      for (let i = -100; i <= 100; i += 10) {
+        const x1 = (cntCanvas.width / 200) * (i + 100);
+        const x2 = (cntCanvas.width / 200) * (i + 105);
+        const y = (cntCanvas.height / 200) * (i + 100);
+        cntCtx.strokeStyle = i == 0 ? "#ed3a2680" : "#88888850";
+        cntCtx.lineWidth = 2;
+        cntCtx.beginPath();
+        cntCtx.moveTo(x1, 0);
+        cntCtx.lineTo(x1, cntCanvas.height);
+        cntCtx.moveTo(0, y);
+        cntCtx.lineTo(cntCanvas.width, y);
+        cntCtx.stroke();
+        cntCtx.strokeStyle = "#bbbbbb50";
+        cntCtx.moveTo(x2, 0);
+        cntCtx.lineTo(x2, cntCanvas.height);
+        cntCtx.stroke();
+      }
+    }
     for (let i = 0; i < renderTriggers.length; i++) {
       if (renderTriggers[i].value == 0) {
         if (!destroyedBullets.has(renderTriggers[i].num)) {
@@ -2384,6 +2404,12 @@ const changeOpacity = (e) => {
   pattern.background.opacity = Number(e.value);
 };
 
+const toggleGrid = () => {
+  if (document.getElementsByClassName("menuIcon")[8].classList.contains("menuSelected")) document.getElementsByClassName("menuIcon")[8].classList.remove("menuSelected");
+  else document.getElementsByClassName("menuIcon")[8].classList.add("menuSelected");
+  gridToggle = !gridToggle;
+};
+
 document.getElementById("timelineContainer").addEventListener("mousewheel", scrollEvent);
 document.getElementById("timelineContainer").addEventListener("DOMMouseScroll", scrollEvent);
 window.addEventListener("mousewheel", globalScrollEvent);
@@ -2448,6 +2474,9 @@ document.onkeydown = (e) => {
   } else if (e.key == "F1") {
     e.preventDefault();
     showHelp();
+  } else if (e.key == "F2") {
+    e.preventDefault();
+    toggleGrid();
   }
   if (!isTextboxFocused) {
     if (e.code == "Space") {
