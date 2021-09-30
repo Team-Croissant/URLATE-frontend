@@ -45,6 +45,10 @@
         </div>
         <div class="helpBoxSpliter">
           <div class="helpKeyContainer">
+            <span class="helpKey"><kbd>F1</kbd></span>
+            <span class="helpDescription">Help</span>
+          </div>
+          <div class="helpKeyContainer">
             <span class="helpKey"><kbd>Ctrl</kbd> + <kbd>C</kbd></span>
             <span class="helpDescription">Copy</span>
           </div>
@@ -83,16 +87,16 @@
         </div>
         <div class="helpBoxSpliter">
           <div class="helpKeyContainer">
-            <span class="helpKey"><kbd>F1</kbd></span>
-            <span class="helpDescription">Help</span>
-          </div>
-          <div class="helpKeyContainer">
-            <span class="helpKey"><kbd>Esc</kbd></span>
-            <span class="helpDescription">Stop</span>
+            <span class="helpKey"><kbd>F2</kbd></span>
+            <span class="helpDescription">Toggle Grid</span>
           </div>
           <div class="helpKeyContainer">
             <span class="helpKey"><kbd>Space</kbd></span>
             <span class="helpDescription">Play/Pause</span>
+          </div>
+          <div class="helpKeyContainer">
+            <span class="helpKey"><kbd>Esc</kbd></span>
+            <span class="helpDescription">Stop</span>
           </div>
           <div class="helpKeyContainer">
             <span class="helpKey"><kbd class="noItalic">←</kbd> <kbd class="noItalic">→</kbd></span>
@@ -139,16 +143,18 @@
     <div id="workingSpaceContainer">
       <div id="workingContainer">
         <div id="menuContainer">
-          <img src="https://img.icons8.com/ios-filled/52/000000/resize-four-directions.png" class="menuIcon menuSelected" onclick="changeMode(0)">
+          <img src="https://img.icons8.com/ios-filled/48/000000/resize-four-directions.png" class="menuIcon menuSelected" onclick="changeMode(0)">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/edit.png" class="menuIcon biggerIcon clickable" onclick="changeMode(1)">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/add.png" class="menuIcon biggerIcon clickable" onclick="changeMode(2)">
-          <div id="horizontalLine" class="menuIcon"></div>
+          <div id="horizontalLine" class="menuIcon">&nbsp;</div>
           <img src="https://img.icons8.com/ios-glyphs/48/000000/play.png" class="menuIcon clickable" onclick="test()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/save.png" class="menuIcon clickable" onclick="save()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/delete.png" class="menuIcon clickable" onclick="deleteAll()">
-          <div id="horizontalLine" class="menuIcon"></div>
-          <img src="https://img.icons8.com/ios-glyphs/48/000000/question-mark.png" class="menuIcon clickable" onmouseover="showHelp()" onmouseout="hideHelp()">
+          <div id="horizontalLine" class="menuIcon">&nbsp;</div>
+          <img src="https://img.icons8.com/ios-glyphs/48/000000/grid.png" class="menuIcon clickable" onclick="toggleGrid()">
+          <img src="https://img.icons8.com/ios-glyphs/48/000000/magnet.png" class="menuIcon clickable menuSelected" onclick="toggleMagnet()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/arrow.png" class="menuIcon clickable" onclick="moveTo()">
+          <img src="https://img.icons8.com/ios-glyphs/48/000000/question-mark.png" class="menuIcon clickable" onmouseover="showHelp()" onmouseout="hideHelp()">
         </div>
         <div id="componentView" onmousemove="trackMousePos(event)" onmousedown="compClicked()">
           <div id="canvasContainer">
