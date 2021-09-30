@@ -1652,16 +1652,17 @@ const timelineFollowMouse = (v1, v2, i) => {
         let msToPx =
           (tmlCanvas.width / 1.01 - tmlCanvas.width / 10) / (parseInt(parseInt(song.seek() * 1000) - (60000 / bpm) * zoom + 5000 * zoom) - (parseInt(song.seek() * 1000) - (60000 / bpm) * zoom));
         let calculatedMs = (mouseX - tmlCanvas.width / 10) / msToPx - (60 / bpm) * 1000 + song.seek() * 1000;
+        const beat = Math.round(60000 / bpm / split);
         if (calculatedMs <= 0) calculatedMs = 0;
         switch (v1) {
           case 0:
-            pattern.patterns[i].ms = calculatedMs;
+            pattern.patterns[i].ms = magnetToggle ? calculatedMs - (calculatedMs % beat) : calculatedMs;
             break;
           case 1:
-            pattern.bullets[i].ms = calculatedMs;
+            pattern.bullets[i].ms = magnetToggle ? calculatedMs - (calculatedMs % beat) : calculatedMs;
             break;
           case 2:
-            pattern.triggers[i].ms = calculatedMs;
+            pattern.triggers[i].ms = magnetToggle ? calculatedMs - (calculatedMs % beat) : calculatedMs;
             break;
         }
         lastMovedMs = Date.now();
