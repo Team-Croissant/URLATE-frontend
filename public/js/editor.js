@@ -61,10 +61,11 @@ let bulletsOverlapNum = 1;
 let triggersOverlapNum = 2;
 let isTextboxFocused = false;
 let skin, denyCursor, denySkin;
-let dragMouseX, dragMouseY;
+let dragMouseX, dragMouseY, originX, originY;
 let copied = false,
   copiedTime = 0;
-let gridToggle = false;
+let gridToggle = false,
+  magnetToggle = true;
 
 let lottieAnim = {
   play: () => {},
@@ -1572,8 +1573,8 @@ const trackMousePos = () => {
   const y = ((event.clientY - height) / canvasContainer.offsetHeight) * 200 - 100;
   if (!(x < -100 || y < -100 || x > 100 || y > 100)) {
     mouseMode = 0;
-    mouseX = x;
-    mouseY = y;
+    mouseX = Math.round(x);
+    mouseY = Math.round(y);
   } else {
     mouseMode = -1;
   }
@@ -1596,21 +1597,23 @@ const elementFollowMouse = (v1, v2, i) => {
       if (dragMouseX == undefined) {
         dragMouseX = mouseX;
         dragMouseY = mouseY;
+        originX = pattern.patterns[i].x;
+        originY = v1 == 0 ? pattern.patterns[i].y : pattern.bullets[i].location;
       }
       let newX, newY;
       switch (v1) {
         case 0:
-          newX = pattern.patterns[i].x + mouseX - dragMouseX;
-          newY = pattern.patterns[i].y + mouseY - dragMouseY;
+          newX = originX + mouseX - dragMouseX;
+          newY = originY + mouseY - dragMouseY;
           if (newX <= 100 && newX >= -100 && newY <= 100 && newY >= -100 && mouseMode == 0) {
-            pattern.patterns[i].x = newX;
-            pattern.patterns[i].y = newY;
+            pattern.patterns[i].x = magnetToggle ? newX - (newX % 5) : newX;
+            pattern.patterns[i].y = magnetToggle ? newY - (newY % 5) : newY;
           }
           break;
         case 1:
-          newY = pattern.bullets[i].location + mouseY - dragMouseY;
+          newY = originY + mouseY - dragMouseY;
           if (newY <= 100 && newY >= -100 && mouseMode == 0) {
-            pattern.bullets[i].location = newY;
+            pattern.bullets[i].location = magnetToggle ? newY - (newY % 5) : newY;
           }
           break;
       }
@@ -1623,25 +1626,16 @@ const elementFollowMouse = (v1, v2, i) => {
       }, 100);
       elementFollowMouse(v1, v2, i);
       changeSettingsMode(v1, v2, i);
-      dragMouseX = mouseX;
-      dragMouseY = mouseY;
     } else {
       if (v1 == undefined) {
         v1 = pointingCntElement.v1;
         v2 = pointingCntElement.v2;
         i = pointingCntElement.i;
       }
-      switch (v1) {
-        case 0:
-          pattern.patterns[i].x = parseInt(pattern.patterns[i].x);
-          pattern.patterns[i].y = parseInt(pattern.patterns[i].y);
-          break;
-        case 1:
-          pattern.bullets[i].location = parseInt(pattern.bullets[i].location);
-          break;
-      }
       dragMouseX = undefined;
       dragMouseY = undefined;
+      originX = undefined;
+      originY = undefined;
     }
   });
 };
@@ -2167,12 +2161,12 @@ const elementPaste = () => {
 };
 
 const showHelp = () => {
-  document.getElementsByClassName("menuIcon")[10].classList.add("menuSelected");
+  document.getElementsByClassName("menuIcon")[11].classList.add("menuSelected");
   document.getElementById("helpContainer").style.display = "flex";
 };
 
 const hideHelp = () => {
-  document.getElementsByClassName("menuIcon")[10].classList.remove("menuSelected");
+  document.getElementsByClassName("menuIcon")[11].classList.remove("menuSelected");
   document.getElementById("helpContainer").style.display = "none";
 };
 
@@ -2405,9 +2399,15 @@ const changeOpacity = (e) => {
 };
 
 const toggleGrid = () => {
-  if (document.getElementsByClassName("menuIcon")[8].classList.contains("menuSelected")) document.getElementsByClassName("menuIcon")[8].classList.remove("menuSelected");
+  if (gridToggle) document.getElementsByClassName("menuIcon")[8].classList.remove("menuSelected");
   else document.getElementsByClassName("menuIcon")[8].classList.add("menuSelected");
   gridToggle = !gridToggle;
+};
+
+const toggleMagnet = () => {
+  if (magnetToggle) document.getElementsByClassName("menuIcon")[9].classList.remove("menuSelected");
+  else document.getElementsByClassName("menuIcon")[9].classList.add("menuSelected");
+  magnetToggle = !magnetToggle;
 };
 
 document.getElementById("timelineContainer").addEventListener("mousewheel", scrollEvent);
