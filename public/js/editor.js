@@ -2147,10 +2147,12 @@ const elementPaste = () => {
 };
 
 const showHelp = () => {
+  document.getElementsByClassName("menuIcon")[10].classList.add("menuSelected");
   document.getElementById("helpContainer").style.display = "flex";
 };
 
 const hideHelp = () => {
+  document.getElementsByClassName("menuIcon")[10].classList.remove("menuSelected");
   document.getElementById("helpContainer").style.display = "none";
 };
 
