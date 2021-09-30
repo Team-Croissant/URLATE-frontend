@@ -2477,6 +2477,9 @@ document.onkeydown = (e) => {
   } else if (e.key == "F2") {
     e.preventDefault();
     toggleGrid();
+  } else if (e.key == "F3") {
+    e.preventDefault();
+    toggleMagnet();
   }
   if (!isTextboxFocused) {
     if (e.code == "Space") {
