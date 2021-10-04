@@ -628,6 +628,18 @@ const cntRender = () => {
       ctx.textAlign = "center";
       ctx.fillText(comboAlertCount, canvas.width / 2, canvas.height / 2);
     }
+    ctx.beginPath();
+    ctx.lineJoin = "round";
+    const percentage = song.seek() / song.duration();
+    const rectX = canvas.width / 2 - canvas.width / 14;
+    const rectY = canvas.height - canvas.height / 80 - canvas.height / 200;
+    const rectWidth = canvas.width / 7;
+    const rectHeight = canvas.height / 200;
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = "#222";
+    ctx.fillStyle = "#222";
+    ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
+    ctx.fillRect(rectX, rectY, rectWidth * percentage, rectHeight);
     ctx.lineWidth = 5;
     pointingCntElement = [{ v1: "", v2: "", i: "" }];
     const seek = song.seek() - (offset + sync) / 1000;
