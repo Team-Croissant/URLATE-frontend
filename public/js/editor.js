@@ -1096,12 +1096,12 @@ const cntRender = () => {
         p[1] = (mouseX - 80) / 20;
       }
       if (p[0] == 0 && p[1] == 0) {
-        drawNote(100, mouseX, mouseY, true, selectedValue, 1);
+        drawNote(100, magnetToggle ? mouseX - (mouseX % 5) : mouseX, magnetToggle ? mouseY - (mouseY % 5) : mouseY, true, selectedValue, 1);
       } else {
         if (p[1] == 0) {
-          drawBullet(selectedValue, -100, mouseY, 0, true);
+          drawBullet(selectedValue, -100, magnetToggle ? mouseY - (mouseY % 5) : mouseY, 0, true);
         } else {
-          drawBullet(selectedValue, 100, mouseY, 180, true);
+          drawBullet(selectedValue, 100, magnetToggle ? mouseY - (mouseY % 5) : mouseY, 180, true);
         }
       }
     }
@@ -1811,7 +1811,7 @@ const compClicked = () => {
           ms: parseInt(seek * 1000),
           value: selectedValue,
           direction: mouseX < -80 ? "L" : "R",
-          location: parseInt(mouseY),
+          location: parseInt(magnetToggle ? mouseY - (mouseY % 5) : mouseY),
           angle: 0,
           speed: 2,
         };
@@ -1828,8 +1828,8 @@ const compClicked = () => {
           ms: parseInt(seek * 1000) + 1,
           value: selectedValue,
           direction: 1,
-          x: parseInt(mouseX),
-          y: parseInt(mouseY),
+          x: parseInt(magnetToggle ? mouseX - (mouseX % 5) : mouseX),
+          y: parseInt(magnetToggle ? mouseY - (mouseY % 5) : mouseY),
         };
         pattern.patterns.push(newElement);
         pattern.patterns.sort(sortAsTiming);
