@@ -1811,7 +1811,7 @@ const compClicked = () => {
           ms: parseInt(seek * 1000),
           value: selectedValue,
           direction: mouseX < -80 ? "L" : "R",
-          location: parseInt(mouseY),
+          location: parseInt(magnetToggle ? mouseY - (mouseY % 5) : mouseY),
           angle: 0,
           speed: 2,
         };
@@ -1828,8 +1828,8 @@ const compClicked = () => {
           ms: parseInt(seek * 1000) + 1,
           value: selectedValue,
           direction: 1,
-          x: parseInt(mouseX),
-          y: parseInt(mouseY),
+          x: parseInt(magnetToggle ? mouseX - (mouseX % 5) : mouseX),
+          y: parseInt(magnetToggle ? mouseY - (mouseY % 5) : mouseY),
         };
         pattern.patterns.push(newElement);
         pattern.patterns.sort(sortAsTiming);
