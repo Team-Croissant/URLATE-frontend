@@ -690,7 +690,7 @@ const cntRender = () => {
     end = upperBound(pattern.patterns, seek * 1000 + (bpm * 14) / speed);
     const renderNotes = pattern.patterns.slice(start, end);
     for (let i = 0; renderNotes.length > i; i++) {
-      const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek)) / ((bpm * 14) / speed)) * 100;
+      const p = (((bpm * 14) / speed - (renderNotes[i].ms - seek * 1000)) / ((bpm * 14) / speed)) * 100;
       if (p >= 50) {
         trackMouseSelection(start + i, 0, renderNotes[i].value, renderNotes[i].x, renderNotes[i].y);
       }
