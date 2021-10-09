@@ -499,7 +499,7 @@ const drawParticle = (n, x, y, j, d) => {
         let newY = cy - Math.round(p / 10);
         ctx.fillStyle = getJudgeStyle(j.toLowerCase(), p, cx, newY);
         ctx.strokeStyle = `rgba(255, 255, 255, ${1 - p / 100})`;
-        ctx.font = `600 ${(window.innerHeight / 25) * pixelRatio}px Metropolis, Pretendard Variable`;
+        ctx.font = `600 ${canvas.height / 25}px Metropolis, Pretendard Variable`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.lineWidth = 2;
@@ -521,7 +521,7 @@ const drawParticle = (n, x, y, j, d) => {
       let newY = cy - Math.round(p / 10);
       ctx.fillStyle = getJudgeStyle("miss", p);
       ctx.strokeStyle = `rgba(255, 255, 255, ${1 - p / 100})`;
-      ctx.font = `600 ${(window.innerHeight / 25) * pixelRatio}px Metropolis, Pretendard Variable`;
+      ctx.font = `600 ${canvas.height / 25}px Metropolis, Pretendard Variable`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.lineWidth = 2;
@@ -649,7 +649,7 @@ const drawBullet = (n, x, y, a) => {
       ctx.fill();
       break;
     default:
-      ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
+      ctx.font = `500 ${canvas.height / 30}px Metropolis, Pretendard Variable`;
       ctx.fillStyle = "#F55";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
@@ -718,7 +718,7 @@ const cntRender = () => {
       } else if (comboAlertMs + 600 <= Date.now() && comboAlertMs + 900 > Date.now()) {
         comboOpacity = (comboAlertMs + 900 - Date.now()) / 900;
       }
-      fontSize = (window.innerHeight / 100) * (30 - (comboAlertMs + 900 - Date.now()) / 90) * pixelRatio;
+      fontSize = (canvas.height / 100) * (30 - (comboAlertMs + 900 - Date.now()) / 90);
       ctx.beginPath();
       ctx.font = `700 ${fontSize}px Metropolis, Pretendard Variable`;
       ctx.fillStyle = `rgba(200,200,200,${comboOpacity})`;
@@ -777,7 +777,7 @@ const cntRender = () => {
           ctx.fillStyle = "#111";
           ctx.font = `${renderTriggers[i].weight} ${renderTriggers[i].size} Metropolis, Pretendard Variable`;
           if (renderTriggers[i].size.indexOf("vh") != -1)
-            ctx.font = `${renderTriggers[i].weight} ${(window.innerHeight / 100) * Number(renderTriggers[i].size.split("vh")[0]) * pixelRatio}px Metropolis, Pretendard Variable`;
+            ctx.font = `${renderTriggers[i].weight} ${(canvas.height / 100) * Number(renderTriggers[i].size.split("vh")[0])}px Metropolis, Pretendard Variable`;
           ctx.textAlign = renderTriggers[i].align;
           ctx.textBaseline = renderTriggers[i].valign;
           ctx.fillText(renderTriggers[i].text, (canvas.width / 200) * (renderTriggers[i].x + 100), (canvas.height / 200) * (renderTriggers[i].y + 100));
@@ -849,7 +849,7 @@ const cntRender = () => {
     }
   } catch (e) {
     if (e) {
-      ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
+      ctx.font = `500 ${canvas.height / 30}px Metropolis, Pretendard Variable`;
       ctx.fillStyle = "#F55";
       ctx.textAlign = "left";
       ctx.textBaseline = "top";
@@ -863,12 +863,12 @@ const cntRender = () => {
   } else {
     displayScore = score;
   }
-  ctx.font = `700 ${(window.innerHeight / 25) * pixelRatio}px Metropolis, Pretendard Variable`;
+  ctx.font = `700 ${canvas.height / 25}px Metropolis, Pretendard Variable`;
   ctx.fillStyle = "#333";
   ctx.textAlign = "center";
   ctx.textBaseline = "top";
   ctx.fillText(numberWithCommas(`${Math.round(displayScore)}`.padStart(9, 0)), canvas.width / 2, canvas.height / 80);
-  ctx.font = `${(window.innerHeight / 40) * pixelRatio}px Metropolis, Pretendard Variable`;
+  ctx.font = `${canvas.height / 40}px Metropolis, Pretendard Variable`;
   ctx.fillStyle = "#555";
   ctx.fillText(`${combo}x`, canvas.width / 2, canvas.height / 70 + canvas.height / 25);
   drawCursor();
@@ -898,8 +898,8 @@ const cntRender = () => {
 };
 
 const trackMousePos = () => {
-  let x = (event.clientX / canvasContainer.offsetWidth) * 200 - 100;
-  let y = (event.clientY / canvasContainer.offsetHeight) * 200 - 100;
+  let x = (event.clientX / canvas.offsetWidth) * 200 - 100;
+  let y = (event.clientY / canvas.offsetHeight) * 200 - 100;
   mouseX = x * sens >= 100 ? 100 : x * sens <= -100 ? -100 : x * sens;
   mouseY = y * sens >= 100 ? 100 : y * sens <= -100 ? -100 : y * sens;
 };
@@ -928,7 +928,7 @@ const calculateResult = () => {
   }
   if (missPoint.length == 0) {
     missCtx.fillStyle = "#FFF";
-    ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
+    missCtx.font = `500 ${canvas.height / 30}px Metropolis, Pretendard Variable`;
     missCtx.textAlign = "right";
     missCtx.textBaseline = "bottom";
     missCtx.fillText("Perfect!", missCanvas.width - 10, missCanvas.height * 0.8 - 10);
@@ -937,8 +937,8 @@ const calculateResult = () => {
 
 const trackMouseSelection = (i, v1, v2, x, y) => {
   if (song.playing()) {
-    const powX = ((((mouseX - x) * canvasContainer.offsetWidth) / 200) * pixelRatio * settings.display.canvasRes) / 100;
-    const powY = ((((mouseY - y) * canvasContainer.offsetHeight) / 200) * pixelRatio * settings.display.canvasRes) / 100;
+    const powX = ((((mouseX - x) * canvas.offsetWidth) / 200) * pixelRatio * settings.display.canvasRes) / 100;
+    const powY = ((((mouseY - y) * canvas.offsetHeight) / 200) * pixelRatio * settings.display.canvasRes) / 100;
     switch (v1) {
       case 0:
         if (Math.sqrt(Math.pow(powX, 2) + Math.pow(powY, 2)) <= canvas.width / 40 + canvas.width / 70) {
@@ -960,7 +960,7 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
         }
         break;
       default:
-        ctx.font = `500 ${(window.innerHeight / 30) * pixelRatio}px Metropolis, Pretendard Variable`;
+        ctx.font = `500 ${canvas.height / 30}px Metropolis, Pretendard Variable`;
         ctx.fillStyle = "#F55";
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
@@ -1099,8 +1099,8 @@ const doneLoading = () => {
         "game start",
         startDate,
         canvas.width,
-        ((canvasContainer.offsetWidth / 200) * pixelRatio * settings.display.canvasRes) / 100,
-        ((canvasContainer.offsetHeight / 200) * pixelRatio * settings.display.canvasRes) / 100
+        ((canvas.offsetWidth / 200) * pixelRatio * settings.display.canvasRes) / 100,
+        ((canvas.offsetHeight / 200) * pixelRatio * settings.display.canvasRes) / 100
       );
     }, 4000);
   }, 1000);
