@@ -2191,6 +2191,35 @@ document.onkeyup = (e) => {
   }
 };
 
+const trackScroll = (e) => {
+  e = window.event || e;
+  let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+  if (delta == 1) {
+    //UP
+    if (songSelection != 0) {
+      let i = songSelection - 1;
+      while (tracks[i].type == 3) {
+        i--;
+        if (i == 0) return;
+      }
+      songSelected(i);
+    }
+  } else {
+    //DOWN
+    if (songSelection < tracks.length - 1) {
+      let i = songSelection + 1;
+      while (tracks[i].type == 3) {
+        i++;
+        if (i == tracks.length - 1) return;
+      }
+      songSelected(i);
+    }
+  }
+  e.preventDefault();
+};
+
+document.getElementById("selectSongContainer").addEventListener("mousewheel", trackScroll);
+document.getElementById("selectSongContainer").addEventListener("DOMMouseScroll", trackScroll);
 window.addEventListener("resize", initialize);
 window.addEventListener("mousewheel", scrollEvent);
 window.addEventListener("DOMMouseScroll", scrollEvent);
