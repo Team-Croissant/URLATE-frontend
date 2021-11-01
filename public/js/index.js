@@ -3,12 +3,16 @@ const animContainer = document.getElementById("animContainer");
 let lottieAnim;
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (document.location.protocol == "http:") {
+    document.location.href = document.location.href.replace("http:", "https:");
+  }
+
   let UserAgent = navigator.userAgent;
   console.log(UserAgent);
   if (
     UserAgent.match(/iPhone|iPod|Android|Windows CE|BlackBerry|Symbian|Windows Phone|webOS|Opera Mini|Opera Mobi|POLARIS|IEMobile|lgtelecom|nokia|SonyEricsson/i) != null ||
     UserAgent.match(/LG|SAMSUNG|Samsung/) != null ||
-    (UserAgent.match(/Safari/i) != null && UserAgent.match(/Chrome/i) == null)
+    UserAgent.match(/Mac/) != null
   ) {
     document.getElementById("fullscreenRequired").style.display = "none";
   }
