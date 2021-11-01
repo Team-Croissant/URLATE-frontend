@@ -387,6 +387,18 @@ const drawCursor = () => {
     } else if (skin.cursor.type == "color") {
       cntCtx.fillStyle = `#${skin.cursor.color}`;
     }
+    if (skin.cursor.outline) {
+      cntCtx.lineWidth = skin.cursor.outline.width;
+      if (skin.cursor.outline.type == "gradient") {
+        let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
+        for (let i = 0; i < skin.cursor.outline.stops.length; i++) {
+          grd.addColorStop(skin.cursor.outline.stops[i].percentage / 100, `#${skin.cursor.outline.stops[i].color}`);
+        }
+        cntCtx.strokeStyle = grd;
+      } else if (skin.cursor.outline.type == "color") {
+        cntCtx.strokeStyle = `#${skin.cursor.outline.color}`;
+      }
+    }
   } else {
     let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
     grd.addColorStop(0, `rgb(174, 102, 237)`);
@@ -395,6 +407,7 @@ const drawCursor = () => {
   }
   cntCtx.arc(x, y, w, 0, 2 * Math.PI);
   cntCtx.fill();
+  if (skin.cursor.outline) cntCtx.stroke();
 };
 
 const drawNote = (p, x, y, s, n, d) => {
@@ -421,6 +434,17 @@ const drawNote = (p, x, y, s, n, d) => {
         cntCtx.strokeStyle = grd;
       } else if (skin.note[n].type == "color") {
         cntCtx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
+      }
+      if (skin.note[n].outline) {
+        if (skin.note[n].outline.type == "gradient") {
+          let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
+          for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
+            grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16)}`);
+          }
+          cntCtx.strokeStyle = grd;
+        } else if (skin.note[n].outline.type == "color") {
+          cntCtx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
+        }
       }
     } else {
       let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
@@ -498,6 +522,18 @@ const drawBullet = (n, x, y, a, s) => {
         cntCtx.fillStyle = `#${skin.bullet.color}`;
         cntCtx.strokeStyle = `#${skin.bullet.color}`;
       }
+      if (skin.bullet.outline) {
+        cntCtx.lineWidth = skin.bullet.outline.width;
+        if (skin.bullet.outline.type == "gradient") {
+          let grd = cntCtx.createLinearGradient(x - w, y - w, x + w, y + w);
+          for (let i = 0; i < skin.bullet.outline.stops.length; i++) {
+            grd.addColorStop(skin.bullet.outline.stops[i].percentage / 100, `#${skin.bullet.outline.stops[i].color}`);
+          }
+          cntCtx.strokeStyle = grd;
+        } else if (skin.bullet.outline.type == "color") {
+          cntCtx.strokeStyle = `#${skin.bullet.outline.color}`;
+        }
+      }
     } else {
       cntCtx.fillStyle = "#555";
       cntCtx.strokeStyle = "#555";
@@ -513,10 +549,12 @@ const drawBullet = (n, x, y, a, s) => {
       cntCtx.lineTo(x + w * 2 * Math.cos(a), y + w * 2 * Math.sin(a));
       cntCtx.lineTo(x + w * Math.sin(a), y - w * Math.cos(a));
       cntCtx.fill();
+      if (skin.bullet.outline) cntCtx.stroke();
       break;
     case 1:
       cntCtx.arc(x, y, w, 0, Math.PI * 2);
       cntCtx.fill();
+      if (skin.bullet.outline) cntCtx.stroke();
       break;
     default:
       cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis, Pretendard Variable`;

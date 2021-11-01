@@ -362,20 +362,35 @@ const drawParticle = (n, x, y, j, d) => {
     //Click Note
     const raf = (w, s, n) => {
       ctx.beginPath();
+      ctx.strokeWidth = 3;
       let width = canvas.width / 50;
       let p = 100 - (s + 500 - Date.now()) / 5;
       let opacity = parseInt(125 - p * 1.25);
       if (opacity <= 0) opacity = "00";
-      if (skin.note[n].type == "gradient") {
-        let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
-        for (let i = 0; i < skin.note[n].stops.length; i++) {
-          grd.addColorStop(skin.note[n].stops[i].percentage / 100, `#${skin.note[n].stops[i].color}${opacity.toString(16).padStart(2, "0")}`);
+      if (skin.note[n].outline) {
+        if (skin.note[n].outline.type == "gradient") {
+          let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
+          for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
+            grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16).padStart(2, "0")}`);
+          }
+          ctx.fillStyle = grd;
+          ctx.strokeStyle = grd;
+        } else if (skin.note[n].outline.type == "color") {
+          ctx.fillStyle = `#${skin.note[n].outline.color}${opacity.toString(16).padStart(2, "0")}`;
+          ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16).padStart(2, "0")}`;
         }
-        ctx.fillStyle = grd;
-        ctx.strokeStyle = grd;
-      } else if (skin.note[n].type == "color") {
-        ctx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
-        ctx.strokeStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
+      } else {
+        if (skin.note[n].type == "gradient") {
+          let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
+          for (let i = 0; i < skin.note[n].stops.length; i++) {
+            grd.addColorStop(skin.note[n].stops[i].percentage / 100, `#${skin.note[n].stops[i].color}${opacity.toString(16).padStart(2, "0")}`);
+          }
+          ctx.fillStyle = grd;
+          ctx.strokeStyle = grd;
+        } else if (skin.note[n].type == "color") {
+          ctx.fillStyle = `#${skin.note[n].color}${opacity.toString(16).padStart(2, "0")}`;
+          ctx.strokeStyle = `#${skin.note[n].color}${opacity.toString(16).padStart(2, "0")}`;
+        }
       }
       ctx.arc(cx, cy, w, 0, 2 * Math.PI);
       ctx.stroke();
@@ -391,6 +406,7 @@ const drawParticle = (n, x, y, j, d) => {
     //Click Default
     const raf = (w, s) => {
       ctx.beginPath();
+      ctx.strokeWidth = 3;
       let width = canvas.width / 60;
       let p = 100 - (s + 300 - Date.now()) / 3;
       let grd = ctx.createLinearGradient(cx - w, cy - w, cx + w, cy + w);
@@ -471,6 +487,17 @@ const drawNote = (p, x, y, n, d) => {
       ctx.fillStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
       ctx.strokeStyle = `#${skin.note[n].color}${opacity.toString(16)}`;
     }
+    if (skin.note[n].outline) {
+      if (skin.note[n].outline.type == "gradient") {
+        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
+        for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
+          grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16)}`);
+        }
+        ctx.strokeStyle = grd;
+      } else if (skin.note[n].outline.type == "color") {
+        ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
+      }
+    }
   } else {
     let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
     grd.addColorStop(0, `${["#fb4934", "#53cddb"][n]}${opacity}`);
@@ -540,6 +567,18 @@ const drawCursor = () => {
     } else if (skin.cursor.type == "color") {
       ctx.fillStyle = `#${skin.cursor.color}`;
     }
+    if (skin.cursor.outline) {
+      ctx.lineWidth = skin.cursor.outline.width;
+      if (skin.cursor.outline.type == "gradient") {
+        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
+        for (let i = 0; i < skin.cursor.outline.stops.length; i++) {
+          grd.addColorStop(skin.cursor.outline.stops[i].percentage / 100, `#${skin.cursor.outline.stops[i].color}`);
+        }
+        ctx.strokeStyle = grd;
+      } else if (skin.cursor.outline.type == "color") {
+        ctx.strokeStyle = `#${skin.cursor.outline.color}`;
+      }
+    }
   } else {
     let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
     grd.addColorStop(0, `rgb(174, 102, 237)`);
@@ -548,6 +587,7 @@ const drawCursor = () => {
   }
   ctx.arc(x, y, w, 0, 2 * Math.PI);
   ctx.fill();
+  if (skin.cursor.outline) ctx.stroke();
 };
 
 const drawBullet = (n, x, y, a) => {
@@ -566,6 +606,18 @@ const drawBullet = (n, x, y, a) => {
       ctx.fillStyle = `#${skin.bullet.color}`;
       ctx.strokeStyle = `#${skin.bullet.color}`;
     }
+    if (skin.bullet.outline) {
+      ctx.lineWidth = skin.bullet.outline.width;
+      if (skin.bullet.outline.type == "gradient") {
+        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
+        for (let i = 0; i < skin.bullet.outline.stops.length; i++) {
+          grd.addColorStop(skin.bullet.outline.stops[i].percentage / 100, `#${skin.bullet.outline.stops[i].color}`);
+        }
+        ctx.strokeStyle = grd;
+      } else if (skin.bullet.outline.type == "color") {
+        ctx.strokeStyle = `#${skin.bullet.outline.color}`;
+      }
+    }
   } else {
     ctx.fillStyle = "#555";
     ctx.strokeStyle = "#555";
@@ -580,10 +632,12 @@ const drawBullet = (n, x, y, a) => {
       ctx.lineTo(x + w * 2 * Math.cos(a), y + w * 2 * Math.sin(a));
       ctx.lineTo(x + w * Math.sin(a), y - w * Math.cos(a));
       ctx.fill();
+      if (skin.bullet.outline) ctx.stroke();
       break;
     case 1:
       ctx.arc(x, y, w, 0, Math.PI * 2);
       ctx.fill();
+      if (skin.bullet.outline) ctx.stroke();
       break;
     default:
       ctx.font = `500 ${canvas.height / 30}px Metropolis, Pretendard Variable`;
