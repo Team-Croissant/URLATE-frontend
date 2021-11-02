@@ -505,7 +505,7 @@ const drawNote = (p, x, y, n, d) => {
     ctx.fillStyle = grd;
     ctx.strokeStyle = grd;
   }
-  ctx.lineWidth = Math.round(canvas.width / 500);
+  ctx.lineWidth = Math.round(canvas.width / 300);
   if (n == 0) {
     ctx.beginPath();
     ctx.arc(x, y, w, 0, (p / 50) * Math.PI);
@@ -568,7 +568,7 @@ const drawCursor = () => {
       ctx.fillStyle = `#${skin.cursor.color}`;
     }
     if (skin.cursor.outline) {
-      ctx.lineWidth = skin.cursor.outline.width;
+      ctx.lineWidth = Math.round((canvas.width / 1000) * skin.cursor.outline.width);
       if (skin.cursor.outline.type == "gradient") {
         let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
         for (let i = 0; i < skin.cursor.outline.stops.length; i++) {
@@ -607,7 +607,7 @@ const drawBullet = (n, x, y, a) => {
       ctx.strokeStyle = `#${skin.bullet.color}`;
     }
     if (skin.bullet.outline) {
-      ctx.lineWidth = skin.bullet.outline.width;
+      ctx.lineWidth = Math.round((canvas.width / 1000) * skin.bullet.outline.width);
       if (skin.bullet.outline.type == "gradient") {
         let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
         for (let i = 0; i < skin.bullet.outline.stops.length; i++) {
