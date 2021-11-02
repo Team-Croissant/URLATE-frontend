@@ -599,7 +599,18 @@ const drawNote = (p, x, y, n, d) => {
     }
     ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
     ctx.fill();
-    ctx.stroke();
+    if (skin.note[n].outline) {
+      if (skin.note[n].outline.type == "gradient") {
+        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
+        for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
+          grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16)}`);
+        }
+        ctx.strokeStyle = grd;
+      } else if (skin.note[n].outline.type == "color") {
+        ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
+      }
+      ctx.stroke();
+    }
   } else if (n == 1) {
     w = w * 0.9;
     let parr = [p <= 20 ? p * 5 : 100, p >= 20 ? (p <= 80 ? (p - 20) * 1.66 : 100) : 0, p >= 80 ? (p <= 100 ? (p - 80) * 5 : 100) : 0];
@@ -633,7 +644,18 @@ const drawNote = (p, x, y, n, d) => {
     else ctx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
     ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
     ctx.fill();
-    ctx.stroke();
+    if (skin.note[n].outline) {
+      if (skin.note[n].outline.type == "gradient") {
+        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
+        for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
+          grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16)}`);
+        }
+        ctx.strokeStyle = grd;
+      } else if (skin.note[n].outline.type == "color") {
+        ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
+      }
+      ctx.stroke();
+    }
   }
 };
 
