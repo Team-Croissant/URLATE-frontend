@@ -642,7 +642,7 @@ const drawCursor = () => {
     ctx.fillStyle = `#${skin.cursor.color}`;
   }
   if (skin.cursor.outline) {
-    ctx.lineWidth = Math.round((canvas.width / 300) * skin.cursor.outline.width);
+    ctx.lineWidth = Math.round((canvas.width / 1000) * skin.cursor.outline.width);
     if (skin.cursor.outline.type == "gradient") {
       let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
       for (let i = 0; i < skin.cursor.outline.stops.length; i++) {
@@ -674,7 +674,7 @@ const drawBullet = (n, x, y, a) => {
     ctx.strokeStyle = `#${skin.bullet.color}`;
   }
   if (skin.bullet.outline) {
-    ctx.lineWidth = Math.round((canvas.width / 300) * skin.bullet.outline.width);
+    ctx.lineWidth = Math.round((canvas.width / 1000) * skin.bullet.outline.width);
     if (skin.bullet.outline.type == "gradient") {
       let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
       for (let i = 0; i < skin.bullet.outline.stops.length; i++) {
