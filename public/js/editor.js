@@ -472,6 +472,7 @@ const drawNote = (p, x, y, s, n, d) => {
       } else if (skin.note[n].outline.type == "color") {
         cntCtx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
       }
+      cntCtx.lineWidth = Math.round((cntCanvas.width / 1000) * skin.note[n].outline.width);
       cntCtx.stroke();
     }
   } else if (n == 1) {
@@ -506,6 +507,7 @@ const drawNote = (p, x, y, s, n, d) => {
       } else if (skin.note[n].outline.type == "color") {
         cntCtx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
       }
+      cntCtx.lineWidth = Math.round((cntCanvas.width / 1000) * skin.note[n].outline.width);
       cntCtx.stroke();
     }
   }
