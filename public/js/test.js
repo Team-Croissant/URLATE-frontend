@@ -511,6 +511,8 @@ const drawNote = (p, x, y, n, d) => {
     ctx.arc(x, y, w, 0, (p / 50) * Math.PI);
     ctx.stroke();
     ctx.beginPath();
+    ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
+    ctx.fill();
     if (skin.note[n].outline) {
       if (skin.note[n].outline.type == "gradient") {
         let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
@@ -521,10 +523,8 @@ const drawNote = (p, x, y, n, d) => {
       } else if (skin.note[n].outline.type == "color") {
         ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
       }
+      ctx.stroke();
     }
-    ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
-    ctx.fill();
-    ctx.stroke();
   } else if (n == 1) {
     w = w * 0.9;
     let parr = [p <= 20 ? p * 5 : 100, p >= 20 ? (p <= 80 ? (p - 20) * 1.66 : 100) : 0, p >= 80 ? (p <= 100 ? (p - 80) * 5 : 100) : 0];
@@ -542,6 +542,11 @@ const drawNote = (p, x, y, n, d) => {
     ctx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[2], y + originalValue[1] - (moveValue[1] / 100) * parr[2]);
     ctx.stroke();
     ctx.beginPath();
+    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    if (d == 1) ctx.arc(x, y, (w / 100) * p, -Math.PI / 5, (Math.PI / 5) * 6);
+    else ctx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
+    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    ctx.fill();
     if (skin.note[n].outline) {
       if (skin.note[n].outline.type == "gradient") {
         let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
@@ -552,13 +557,8 @@ const drawNote = (p, x, y, n, d) => {
       } else if (skin.note[n].outline.type == "color") {
         ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
       }
+      ctx.stroke();
     }
-    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
-    if (d == 1) ctx.arc(x, y, (w / 100) * p, -Math.PI / 5, (Math.PI / 5) * 6);
-    else ctx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
-    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
-    ctx.fill();
-    ctx.stroke();
   }
 };
 
