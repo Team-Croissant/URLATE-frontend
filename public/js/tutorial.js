@@ -477,17 +477,6 @@ const drawNote = (p, x, y, n, d) => {
     ctx.arc(x, y, w, 0, (p / 50) * Math.PI);
     ctx.stroke();
     ctx.beginPath();
-    if (skin.note[n].outline) {
-      if (skin.note[n].outline.type == "gradient") {
-        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
-        for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
-          grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16)}`);
-        }
-        ctx.strokeStyle = grd;
-      } else if (skin.note[n].outline.type == "color") {
-        ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
-      }
-    }
     ctx.arc(x, y, (w / 100) * p, 0, 2 * Math.PI);
     ctx.fill();
     if (skin.note[n].outline) {
@@ -500,6 +489,7 @@ const drawNote = (p, x, y, n, d) => {
       } else if (skin.note[n].outline.type == "color") {
         ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
       }
+      ctx.lineWidth = Math.round((canvas.width / 1000) * skin.note[n].outline.width);
       ctx.stroke();
     }
   } else if (n == 1) {
@@ -519,17 +509,6 @@ const drawNote = (p, x, y, n, d) => {
     ctx.lineTo(x + originalValue[0] - (moveValue[0] / 100) * parr[2], y + originalValue[1] - (moveValue[1] / 100) * parr[2]);
     ctx.stroke();
     ctx.beginPath();
-    if (skin.note[n].outline) {
-      if (skin.note[n].outline.type == "gradient") {
-        let grd = ctx.createLinearGradient(x - w, y - w, x + w, y + w);
-        for (let i = 0; i < skin.note[n].outline.stops.length; i++) {
-          grd.addColorStop(skin.note[n].outline.stops[i].percentage / 100, `#${skin.note[n].outline.stops[i].color}${opacity.toString(16)}`);
-        }
-        ctx.strokeStyle = grd;
-      } else if (skin.note[n].outline.type == "color") {
-        ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
-      }
-    }
     ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
     if (d == 1) ctx.arc(x, y, (w / 100) * p, -Math.PI / 5, (Math.PI / 5) * 6);
     else ctx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
@@ -545,6 +524,7 @@ const drawNote = (p, x, y, n, d) => {
       } else if (skin.note[n].outline.type == "color") {
         ctx.strokeStyle = `#${skin.note[n].outline.color}${opacity.toString(16)}`;
       }
+      ctx.lineWidth = Math.round((canvas.width / 1000) * skin.note[n].outline.width);
       ctx.stroke();
     }
   }
