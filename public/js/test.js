@@ -73,6 +73,7 @@ let lottieAnim = {
   setSpeed: () => {},
 };
 let overlayTime = 0;
+let advanced = false;
 
 let tick = new Howl({
   src: [`/sounds/tick.mp3`],
@@ -133,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
               data = data.user;
               settings = JSON.parse(data.settings);
               initialize(true);
+              advanced = data.advanced;
               if (data.advanced) {
                 document.getElementById("urlate").innerHTML = "<strong>URLATE</strong> Advanced";
               }
@@ -301,7 +303,7 @@ const getJudgeStyle = (j, p, x, y) => {
   p = parseInt(p);
   if (p <= 0) p = 0;
   p = `${p}`.padStart(2, "0");
-  if (denySkin || !judgeSkin) {
+  if (denySkin || !judgeSkin || !advanced) {
     if (j == "miss") {
       return `rgba(237, 78, 50, ${1 - p / 100})`;
     } else if (j == "perfect") {

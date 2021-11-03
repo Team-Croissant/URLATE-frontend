@@ -90,6 +90,7 @@ let pauseDate = 0;
 let isPaused = false;
 let rate = 1;
 let disableText = false;
+let advanced = false;
 
 const socketInitialize = () => {
   socket = io(game, {
@@ -188,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
               userid = data.userid;
               settings = JSON.parse(data.settings);
               initialize(true);
+              advanced = data.advanced;
               if (data.advanced) {
                 document.getElementById("urlate").innerHTML = "<strong>URLATE</strong> Advanced";
               }
@@ -383,7 +385,7 @@ const getJudgeStyle = (j, p, x, y) => {
   if (p <= 0) p = 0;
   p = `${p}`.padStart(2, "0");
   if (p <= 0) p = 0;
-  if (!judgeSkin) {
+  if (!judgeSkin || !advanced) {
     if (j == "miss") {
       return `rgba(237, 78, 50, ${1 - p / 100})`;
     } else if (j == "perfect") {
