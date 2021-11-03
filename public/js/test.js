@@ -546,7 +546,7 @@ const drawNote = (p, x, y, n, d) => {
     ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
     if (d == 1) ctx.arc(x, y, (w / 100) * p, -Math.PI / 5, (Math.PI / 5) * 6);
     else ctx.arc(x, y, (w / 100) * p, (-Math.PI / 5) * 6, Math.PI / 5);
-    ctx.moveTo(x, y - 1.5 * d * (w / 100) * p);
+    ctx.lineTo(x, y - 1.5 * d * (w / 100) * p);
     ctx.fill();
     if (skin.note[n].outline) {
       if (skin.note[n].outline.type == "gradient") {
