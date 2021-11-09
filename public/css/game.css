@@ -1056,11 +1056,14 @@ p {
   transform: scale(1.1);
 }
 
-#tracks {
+#selectContainerTopLeft {
   position: fixed;
   top: 4.5vh;
-  height: 5vh;
   left: 5vw;
+}
+
+#tracks {
+  height: 5vh;
 }
 
 #selectContainerLeft {
