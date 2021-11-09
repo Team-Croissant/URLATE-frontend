@@ -145,7 +145,12 @@
             </div>
             <div id="selectContainerAlbum">
                 <div id="selectContainerAlbumLeft">
-                    <img id="selectAlbum">
+                    <div id="selectAlbumContainer">
+                        <img id="selectAlbum">
+                        <div id="starContainer">
+                            <span id="selectStars">★★★★★☆☆☆☆☆</span>
+                        </div>
+                    </div>
                 </div>
                 <div id="selectContainerAlbumRight">
                     <span id="trackStats">TRACK STATISTICS</span>
@@ -191,11 +196,10 @@
                         <span class="key">TAB</span>
                     </div>
                     <div class="selectInfoContentsContainer">
-                        <span class="difficulty difficultySelected" onclick="difficultySelected(0)">EZ</span>
-                        <span class="difficulty" onclick="difficultySelected(1)">MID</span>
-                        <span class="difficulty nomargin" onclick="difficultySelected(2)">HARD</span>
+                        <div class="difficulty difficultySelected" onclick="difficultySelected(0)"><span class="difficultyNumber">1</span><span class="difficultyText">EZ</span></div>
+                        <div class="difficulty" onclick="difficultySelected(1)"><span class="difficultyNumber">3</span><span class="difficultyText">MID</span></div>
+                        <div class="difficulty" onclick="difficultySelected(2)"><span class="difficultyNumber">5</span><span class="difficultyText">HARD</span></div>
                     </div>
-                    <span id="selectStars">★★★★★☆☆☆☆☆</span>
                 </div>
                 <div class="selectInfo clickable" onclick="rankToggle()">
                     <div class="selectInfoTitleContainer">

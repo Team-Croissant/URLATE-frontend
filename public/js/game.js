@@ -777,6 +777,9 @@ const songSelected = (n, refreshed) => {
   }
   document.getElementById("selectArtist").textContent = tracks[n].producer;
   document.getElementById("selectAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
+  for (let i = 0; i <= 2; i++) {
+    document.getElementsByClassName("difficultyNumber")[i].textContent = JSON.parse(tracks[n].difficulty)[i];
+  }
   document.getElementById("selectBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png")`;
   setTimeout(
     () => {
