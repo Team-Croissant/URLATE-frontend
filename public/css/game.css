@@ -1052,14 +1052,48 @@ p {
   width: 100vw;
   height: 100vh;
   filter: blur(20px);
-  opacity: 0.5;
+  opacity: 0.6;
   transform: scale(1.1);
 }
 
 #selectContainerTopLeft {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
   position: fixed;
   top: 4.5vh;
   left: 5vw;
+}
+
+#tracksLine {
+  margin-bottom: 4px;
+  margin-left: 10px;
+  width: 2px;
+  height: 2vh;
+  background-color: white;
+}
+
+.tracksSelection {
+  display: none;
+  cursor: pointer;
+  margin-bottom: 3px;
+  margin-left: 10px;
+  color: white;
+  font-size: 2vh;
+}
+
+.tracksSelection.selected {
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: 3px;
+  margin-left: 10px;
+  color: white;
+  font-size: 2vh;
+}
+
+.bottomArrow {
+  vertical-align: middle;
+  font-size: 1vh;
 }
 
 #tracks {

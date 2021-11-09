@@ -2065,6 +2065,19 @@ const rankToggle = () => {
   }
 };
 
+const tracksToggle = () => {
+  const status = document.getElementsByClassName("tracksSelection")[0].classList.contains("selected");
+  if (status) {
+    //official -> community
+    document.getElementsByClassName("tracksSelection")[0].classList.remove("selected");
+    document.getElementsByClassName("tracksSelection")[1].classList.add("selected");
+  } else {
+    //community -> official
+    document.getElementsByClassName("tracksSelection")[0].classList.add("selected");
+    document.getElementsByClassName("tracksSelection")[1].classList.remove("selected");
+  }
+};
+
 const scrollEvent = (e) => {
   if (shiftDown) {
     e = window.event || e;
