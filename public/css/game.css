@@ -1343,12 +1343,15 @@ input[type="number"]::-webkit-inner-spin-button {
 .difficulty {
   display: flex;
   flex-direction: column;
-  width: 3vw;
-  font-size: 4vh;
+  width: 3.5vw;
+  font-size: 3.5vh;
   cursor: pointer;
-  margin-right: 1vw;
   opacity: 0.3;
   font-weight: 300;
+}
+
+.difficulty.right {
+  width: 5.5vw;
 }
 
 .difficultyText {
@@ -1428,7 +1431,13 @@ input[type="number"]::-webkit-inner-spin-button {
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  margin-right: 1vw;
+  margin-right: 1.5vw;
+  opacity: 1;
+}
+
+.songSelectionInfo.locked {
+  text-decoration: line-through;
+  opacity: 0.5;
 }
 
 .songSelectionTitle {
@@ -1443,10 +1452,11 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .songSelectionRank {
+  margin-right: 1.5vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 5vw;
+  width: 2vw;
 }
 
 .rankSS:before {

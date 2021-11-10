@@ -1,4 +1,4 @@
-/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2 */
+/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2, count, bulletDensity, noteDensity, speed */
 const animContainer = document.getElementById("animContainer");
 const langDetailSelector = document.getElementById("langDetailSelector");
 const canvasResSelector = document.getElementById("canvasResSelector");
@@ -69,6 +69,10 @@ let difficultySelection = 0;
 let difficulties = [1, 5, 10];
 let bulletDensities = [10, 50, 100];
 let noteDensities = [10, 50, 100];
+let ezCount = 0;
+let midCount = 0;
+let hardCount = 0;
+let maxCount = 0;
 let speeds = [1, 2, 3];
 let bpm = 130;
 let isRankOpened = false;
@@ -107,6 +111,8 @@ let iniMode = -1;
 
 let tracks;
 let trackRecords = [];
+
+let isOfficial = true;
 
 let themeSong;
 let songs = [];
@@ -611,9 +617,13 @@ const tracksUpdate = () => {
             <span class="songSelectionTitle"></span>
             <span class="songSelectionArtist"></span>
         </div>
-        <div class="songSelectionRank">
+        ${
+          isOfficial
+            ? `<div class="songSelectionRank">
             <span class="ranks rankQ"></span>
-        </div>
+        </div>`
+            : ``
+        }
       </div>`;
       continue;
     }
@@ -626,12 +636,16 @@ const tracksUpdate = () => {
     songList += `<div class="songSelectionContainer${tracks[i].type == 1 && !isAdvanced ? " advancedSelection" : tracks[i].type == 2 ? " dlcSelection" : ""}" onclick="songSelected(${i})">
               <div class="songSelectionLottie"></div>
               <div class="songSelectionInfo">
-                  <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
-                  <span class="songSelectionArtist">${tracks[i].producer}</span>
+                <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
+                <span class="songSelectionArtist">${tracks[i].producer}</span>
               </div>
-              <div class="songSelectionRank">
+              ${
+                isOfficial
+                  ? `<div class="songSelectionRank">
                   <span class="ranks rankQ"></span>
-              </div>
+              </div>`
+                  : ``
+              }
           </div>`;
     fetch(`${api}/record/${tracks[i].name}/${username}`, {
       method: "GET",
@@ -661,8 +675,10 @@ const tracksUpdate = () => {
           for (let j = 0; j < 3; j++) {
             if (data.results[j] != undefined) {
               let value = data.results[j];
-              document.getElementsByClassName("ranks")[i].className = "ranks";
-              document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
+              if (isOfficial) {
+                document.getElementsByClassName("ranks")[i].className = "ranks";
+                document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
+              }
               trackRecords[i][value.difficulty - 1] = {
                 rank: `rank${value.rank}`,
                 record: value.record,
@@ -674,8 +690,11 @@ const tracksUpdate = () => {
         } else {
           for (let j = 0; j < 3; j++) {
             if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
-              document.getElementsByClassName("ranks")[i].className = "ranks";
-              document.getElementsByClassName("ranks")[i].classList.add("rankL");
+              if (isOfficial) {
+                document.getElementsByClassName("ranks")[i].className = "ranks";
+                document.getElementsByClassName("ranks")[i].classList.add("rankL");
+              }
+              document.getElementsByClassName("songSelectionInfo")[i].classList.add("locked");
               trackRecords[i][j] = {
                 rank: "rankL",
                 record: 0,
@@ -777,8 +796,10 @@ const songSelected = (n, refreshed) => {
   }
   document.getElementById("selectArtist").textContent = tracks[n].producer;
   document.getElementById("selectAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
-  for (let i = 0; i <= 2; i++) {
-    document.getElementsByClassName("difficultyNumber")[i].textContent = JSON.parse(tracks[n].difficulty)[i];
+  if (isOfficial) {
+    for (let i = 0; i <= 2; i++) {
+      document.getElementsByClassName("difficultyNumber")[i].textContent = JSON.parse(tracks[n].difficulty)[i];
+    }
   }
   document.getElementById("selectBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png")`;
   setTimeout(
@@ -793,7 +814,7 @@ const songSelected = (n, refreshed) => {
     },
     songSelection != -1 ? 0 : 200
   );
-  if (songSelection != -1) {
+  if (songSelection != -1 && isOfficial) {
     document.getElementsByClassName("ranks")[songSelection].className = "ranks";
     if (trackRecords[songSelection][2].rank != "rankQ") {
       document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][2].rank);
@@ -803,20 +824,44 @@ const songSelected = (n, refreshed) => {
       document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][0].rank);
     }
   }
-  fetch(`${api}/trackInfo/${tracks[n].name}`, {
-    method: "GET",
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      data = data.info[0];
-      difficulties = JSON.parse(tracks[n].difficulty);
-      bulletDensities = JSON.parse(data.bullet_density);
-      noteDensities = JSON.parse(data.note_density);
-      speeds = JSON.parse(data.speed);
-      bpm = data.bpm;
-      updateDetails(n);
-    });
+  if (isOfficial) {
+    fetch(`${api}/trackInfo/${tracks[n].name}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        data = data.info[0];
+        difficulties = JSON.parse(tracks[n].difficulty);
+        bulletDensities = JSON.parse(data.bullet_density);
+        noteDensities = JSON.parse(data.note_density);
+        speeds = JSON.parse(data.speed);
+        bpm = data.bpm;
+        updateDetails(n);
+      });
+  } else {
+    fetch(`${api}/CPLtrackInfo/${tracks[n].name}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        data = data.info;
+        ezCount = 0;
+        midCount = 0;
+        hardCount = 0;
+        if (data) {
+          data.forEach((e) => {
+            if (e.analyzed <= 3) ezCount++;
+            else if (e.analyzed <= 7) midCount++;
+            else hardCount++;
+          });
+        }
+        maxCount = ezCount + midCount + hardCount;
+        bpm = tracks[songSelection].bpm;
+        updateDetails(n);
+      });
+  }
   songSelection = n;
   updateRanks();
 };
@@ -843,7 +888,7 @@ const rateChanged = (e) => {
 };
 
 const updateRanks = () => {
-  fetch(`${api}/records/${tracks[songSelection].name}/${difficultySelection + 1}/record/DESC/${username}`, {
+  fetch(`${api}/${isOfficial ? "records" : "CPLrecords"}/${tracks[songSelection].name}/${difficultySelection + 1}/record/DESC/${username}`, {
     method: "GET",
     credentials: "include",
   })
@@ -1825,39 +1870,50 @@ const showProfile = (name) => {
 };
 
 const updateDetails = (n) => {
-  document.getElementById("bulletDensity").textContent = bulletDensities[difficultySelection];
-  document.getElementById("bulletDensityValue").style.width = `${bulletDensities[difficultySelection]}%`;
-  document.getElementById("noteDensity").textContent = noteDensities[difficultySelection];
-  document.getElementById("noteDensityValue").style.width = `${noteDensities[difficultySelection]}%`;
-  document.getElementById("bpmText").textContent = bpm;
-  document.getElementById("bpmValue").style.width = `${bpm / 3}%`;
-  document.getElementById("speed").textContent = speeds[difficultySelection];
-  document.getElementById("speedValue").style.width = `${(speeds[difficultySelection] / 5) * 100}%`;
-  let starText = "";
-  for (let i = 0; i < difficulties[difficultySelection]; i++) {
-    starText += "★";
-  }
-  for (let i = difficulties[difficultySelection]; i < 10; i++) {
-    starText += "☆";
-  }
-  document.getElementById("selectStars").textContent = starText;
-  document.getElementById("selectScoreValue").textContent = numberWithCommas(`${trackRecords[n][difficultySelection].record}`.padStart(9, "0"));
-  document.getElementsByClassName("ranks")[n].className = "ranks";
-  document.getElementsByClassName("ranks")[n].classList.add(trackRecords[n][difficultySelection].rank);
-  let recordMedal = trackRecords[n][difficultySelection].medal;
-  goldMedal.style.opacity = "0.1";
-  silverMedal.style.opacity = "0.1";
-  checkMedal.style.opacity = "0.1";
-  if (recordMedal >= 4) {
-    goldMedal.style.opacity = "1";
-    recordMedal -= 4;
-  }
-  if (recordMedal >= 2) {
-    silverMedal.style.opacity = "1";
-    recordMedal -= 2;
-  }
-  if (recordMedal >= 1) {
-    checkMedal.style.opacity = "1";
+  if (isOfficial) {
+    document.getElementById("bulletDensity").textContent = bulletDensities[difficultySelection];
+    document.getElementById("bulletDensityValue").style.width = `${bulletDensities[difficultySelection]}%`;
+    document.getElementById("noteDensity").textContent = noteDensities[difficultySelection];
+    document.getElementById("noteDensityValue").style.width = `${noteDensities[difficultySelection]}%`;
+    document.getElementById("bpmText").textContent = bpm;
+    document.getElementById("bpmValue").style.width = `${bpm / 3}%`;
+    document.getElementById("speed").textContent = speeds[difficultySelection];
+    document.getElementById("speedValue").style.width = `${(speeds[difficultySelection] / 5) * 100}%`;
+    let starText = "";
+    for (let i = 0; i < difficulties[difficultySelection]; i++) {
+      starText += "★";
+    }
+    for (let i = difficulties[difficultySelection]; i < 10; i++) {
+      starText += "☆";
+    }
+    document.getElementById("selectStars").textContent = starText;
+    document.getElementById("selectScoreValue").textContent = numberWithCommas(`${trackRecords[n][difficultySelection].record}`.padStart(9, "0"));
+    document.getElementsByClassName("ranks")[n].className = "ranks";
+    document.getElementsByClassName("ranks")[n].classList.add(trackRecords[n][difficultySelection].rank);
+    let recordMedal = trackRecords[n][difficultySelection].medal;
+    goldMedal.style.opacity = "0.1";
+    silverMedal.style.opacity = "0.1";
+    checkMedal.style.opacity = "0.1";
+    if (recordMedal >= 4) {
+      goldMedal.style.opacity = "1";
+      recordMedal -= 4;
+    }
+    if (recordMedal >= 2) {
+      silverMedal.style.opacity = "1";
+      recordMedal -= 2;
+    }
+    if (recordMedal >= 1) {
+      checkMedal.style.opacity = "1";
+    }
+  } else {
+    document.getElementById("bulletDensity").textContent = ezCount;
+    document.getElementById("bulletDensityValue").style.width = `${ezCount == 0 ? 0 : (ezCount / maxCount) * 100}%`;
+    document.getElementById("noteDensity").textContent = midCount;
+    document.getElementById("noteDensityValue").style.width = `${midCount == 0 ? 0 : (midCount / maxCount) * 100}%`;
+    document.getElementById("bpmText").textContent = hardCount;
+    document.getElementById("bpmValue").style.width = `${hardCount == 0 ? 0 : (hardCount / maxCount) * 100}%`;
+    document.getElementById("speed").textContent = bpm;
+    document.getElementById("speedValue").style.width = `${bpm / 3}%`;
   }
 };
 
@@ -2069,15 +2125,46 @@ const rankToggle = () => {
 };
 
 const tracksToggle = () => {
-  const status = document.getElementsByClassName("tracksSelection")[0].classList.contains("selected");
-  if (status) {
+  isOfficial = !isOfficial;
+  if (!isOfficial) {
     //official -> community
     document.getElementsByClassName("tracksSelection")[0].classList.remove("selected");
     document.getElementsByClassName("tracksSelection")[1].classList.add("selected");
+    document.getElementById("selectScore").textContent = "MY BEST";
+    document.getElementsByClassName("trackStatContainer")[0].getElementsByTagName("span")[0].textContent = `EZ ${count}`;
+    document.getElementsByClassName("trackStatContainer")[1].getElementsByTagName("span")[0].textContent = `MID ${count}`;
+    document.getElementsByClassName("trackStatContainer")[2].getElementsByTagName("span")[0].textContent = `HARD ${count}`;
+    document.getElementsByClassName("trackStatContainer")[3].getElementsByTagName("span")[0].textContent = "BPM";
+    document.getElementById("modsTitleContainer").style.display = "none";
+    document.getElementById("starContainer").style.display = "none";
+    document.getElementsByClassName("trackStatContainer")[4].style.display = "none";
+    document.getElementsByClassName("trackStatContainer")[5].style.display = "none";
+    document.getElementsByClassName("selectInfo")[2].style.display = "none";
+    document.getElementsByClassName("difficultyNumber")[0].textContent = "1-3";
+    document.getElementsByClassName("difficultyNumber")[1].textContent = "4-7";
+    document.getElementsByClassName("difficultyNumber")[2].textContent = "8-10";
+    document.getElementsByClassName("difficulty")[0].style.width = "4.5vw";
+    document.getElementsByClassName("difficulty")[1].style.width = "4.5vw";
+    tracksUpdate();
+    songSelected(songSelection, true);
   } else {
     //community -> official
     document.getElementsByClassName("tracksSelection")[0].classList.add("selected");
     document.getElementsByClassName("tracksSelection")[1].classList.remove("selected");
+    document.getElementById("selectScore").textContent = "SCORE";
+    document.getElementsByClassName("trackStatContainer")[0].getElementsByTagName("span")[0].textContent = noteDensity;
+    document.getElementsByClassName("trackStatContainer")[1].getElementsByTagName("span")[0].textContent = bulletDensity;
+    document.getElementsByClassName("trackStatContainer")[2].getElementsByTagName("span")[0].textContent = "BPM";
+    document.getElementsByClassName("trackStatContainer")[3].getElementsByTagName("span")[0].textContent = speed;
+    document.getElementById("modsTitleContainer").style.display = "flex";
+    document.getElementById("starContainer").style.display = "flex";
+    document.getElementsByClassName("trackStatContainer")[4].style.display = "flex";
+    document.getElementsByClassName("trackStatContainer")[5].style.display = "flex";
+    document.getElementsByClassName("selectInfo")[2].style.display = "initial";
+    document.getElementsByClassName("difficulty")[0].style.width = "3.5vw";
+    document.getElementsByClassName("difficulty")[1].style.width = "3.5vw";
+    tracksUpdate();
+    songSelected(songSelection, true);
   }
 };
 

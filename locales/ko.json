@@ -231,5 +231,6 @@
   "sort_as_difficulty": "난이도순",
   "sort_as_bpm": "BPM순",
   "playback_rate": "재생속도",
-  "disable_text": "텍스트 비활성화"
+  "disable_text": "텍스트 비활성화",
+  "count": "채보 개수"
 }

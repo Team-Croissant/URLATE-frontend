@@ -198,7 +198,7 @@
                     <div class="selectInfoContentsContainer">
                         <div class="difficulty difficultySelected" onclick="difficultySelected(0)"><span class="difficultyNumber">1</span><span class="difficultyText">EZ</span></div>
                         <div class="difficulty" onclick="difficultySelected(1)"><span class="difficultyNumber">3</span><span class="difficultyText">MID</span></div>
-                        <div class="difficulty" onclick="difficultySelected(2)"><span class="difficultyNumber">5</span><span class="difficultyText">HARD</span></div>
+                        <div class="difficulty right" onclick="difficultySelected(2)"><span class="difficultyNumber">5</span><span class="difficultyText">HARD</span></div>
                     </div>
                 </div>
                 <div class="selectInfo clickable" onclick="rankToggle()">
@@ -1265,6 +1265,10 @@
         const confirmExit = "<%= __('confirm_exit_tutorial') %>";
         const medalDesc = "<%= __('medal_description') %>";
         const lang = "<%= __('lang') %>";
+        const count = "<%= __('count') %>";
+        const bulletDensity = "<%= __('bullet_density') %>";
+        const noteDensity = "<%= __('note_density') %>";
+        const speed = "<%= __('speed') %>";
         if(lang == "en") document.body.style.letterSpacing = "-0.3px";
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.5/lottie.js"></script>
