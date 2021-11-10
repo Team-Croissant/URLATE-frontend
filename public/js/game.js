@@ -50,8 +50,8 @@ const volumeOverlay = document.getElementById("volumeOverlay");
 const codeInput = document.getElementById("codeInput");
 const CPLTrack = document.getElementById("CPLTrack");
 
-const clientKey = "test_ck_dP9BRQmyarY9pb7Ejy7rJ07KzLNk";
-const billingKey = "test_ck_OAQ92ymxN34k59e5E0p8ajRKXvdk";
+const clientKey = "live_ck_4vZnjEJeQVx6xwKlOnP8PmOoBN0k";
+const billingKey = "live_ck_0Poxy1XQL8RB4gvZjwK87nO5Wmlg";
 const tossPayments = TossPayments(clientKey);
 const tossBilling = TossPayments(billingKey);
 
