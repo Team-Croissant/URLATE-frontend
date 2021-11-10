@@ -1,4 +1,4 @@
-/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2, count, bulletDensity, noteDensity, speed */
+/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2, count, bulletDensity, noteDensity, speed, advancedNeeded, DLCNeeded, notAvailable1, notAvailable2 */
 const animContainer = document.getElementById("animContainer");
 const langDetailSelector = document.getElementById("langDetailSelector");
 const canvasResSelector = document.getElementById("canvasResSelector");
@@ -742,24 +742,28 @@ const songSelected = (n, refreshed) => {
   loadingShow();
   if (songSelection == n && !refreshed) {
     //play
-    if ((tracks[n].type == 1 && !isAdvanced) || (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1))) {
-      alert("NOT ALLOWED TO PLAY"); //TODO
+    if (tracks[n].type == 1 && !isAdvanced) {
+      alert(advancedNeeded);
+    } else if (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1)) {
+      alert(DLCNeeded);
+    } else if (JSON.parse(tracks[songSelection].difficulty)[difficultySelection] == 0) {
+      alert(`${notAvailable1}\n${notAvailable2}`);
     } else {
       if (isOfficial) {
         localStorage.rate = rate;
         localStorage.disableText = disableText;
         localStorage.songNum = songSelection;
         localStorage.difficultySelection = difficultySelection;
-        localStorage.difficulty = JSON.parse(tracks[0].difficulty)[difficultySelection];
+        localStorage.difficulty = JSON.parse(tracks[songSelection].difficulty)[difficultySelection];
         localStorage.songName = tracks[songSelection].fileName;
         window.location.href = `${url}/play`;
       } else {
         display = 14;
         document.getElementById("CPLContainer").style.display = "flex";
         document.getElementById("CPLContainer").classList.add("fadeIn");
-        loadingHide();
       }
     }
+    loadingHide();
     return;
   }
   disableText = false;

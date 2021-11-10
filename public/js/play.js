@@ -294,7 +294,7 @@ const initialize = (isFirstCalled) => {
       })
       .catch(() => {
         alert(patternError);
-        // window.location.href = `${url}/game?initialize=1`;
+        window.location.href = `${url}/game?initialize=1`;
       });
   } else {
     if (pattern.background.type) {
