@@ -212,5 +212,8 @@
   "sort_as_name": "Name",
   "sort_as_producer": "Producer",
   "sort_as_difficulty": "Difficulty",
-  "sort_as_bpm": "BPM"
+  "sort_as_bpm": "BPM",
+  "playback_rate": "Playback Rate",
+  "disable_text": "Disable Text",
+  "count": "patterns"
 }
