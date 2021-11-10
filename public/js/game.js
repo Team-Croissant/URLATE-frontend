@@ -1749,6 +1749,8 @@ const menuSelected = (n) => {
     }
     document.getElementById("selectContainer").style.display = "flex";
     document.getElementById("selectContainer").classList.add("fadeIn");
+    document.getElementsByClassName("tracksSelection")[Number(!isOfficial)].classList.remove("selected");
+    document.getElementsByClassName("tracksSelection")[Number(isOfficial)].classList.add("selected");
   } else if (n == 1) {
     //editor
     window.location.href = `${url}/editor`;
