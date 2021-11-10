@@ -98,7 +98,7 @@ const socketInitialize = () => {
   });
 
   socket.on("connect", () => {
-    socket.emit("game init", localStorage.songName, localStorage.difficultySelection, localStorage.rate);
+    socket.emit("game init", localStorage.songName, localStorage.difficultySelection, localStorage.rate, localStorage.patternId);
 
     socket.on("game result", (perfect, great, good, bad, miss, bullet, score, accuracy, rank) => {
       resultEffect.play();
@@ -219,7 +219,7 @@ const initialize = (isFirstCalled) => {
   rate = localStorage.rate;
   disableText = localStorage.disableText;
   if (isFirstCalled) {
-    fetch(`${cdn}/URLATE-patterns/${localStorage.songName}/${localStorage.difficultySelection}.json`, {
+    fetch(`${cdn}${localStorage.patternId ? `/CPL/${localStorage.patternId}` : `/URLATE-patterns/${localStorage.songName}/${localStorage.difficultySelection}`}.json`, {
       method: "GET",
       credentials: "include",
     })
@@ -294,7 +294,7 @@ const initialize = (isFirstCalled) => {
       })
       .catch(() => {
         alert(patternError);
-        window.location.href = `${url}/game?initialize=1`;
+        // window.location.href = `${url}/game?initialize=1`;
       });
   } else {
     if (pattern.background.type) {

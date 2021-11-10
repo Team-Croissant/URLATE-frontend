@@ -116,6 +116,7 @@ let trackRecords = [];
 let isOfficial = true;
 const difficultyArray = ["EZ", "MID", "HARD"];
 let UPLprev = -1;
+let cplData;
 
 let themeSong;
 let songs = [];
@@ -943,6 +944,7 @@ const updatePatterns = () => {
     .then((res) => res.json())
     .then((data) => {
       data = data.data;
+      cplData = data;
       let elements = "";
       let i = 0;
       data.forEach((e) => {
@@ -962,7 +964,7 @@ const updatePatterns = () => {
                           </div>
                           <div class="CPLListRight">
                             <span class="CPLRankButton"><img class="CPLIcon" src="/images/parts/icons/charts.svg"></span>
-                            <span class="CPLPlayButton">PLAY <img class="CPLIcon margin" src="/images/parts/icons/play.svg"></span>
+                            <span class="CPLPlayButton" onclick="UPLPlay(${i})">PLAY <img class="CPLIcon margin" src="/images/parts/icons/play.svg"></span>
                           </div>
                         </div>
                       </div>`;
@@ -988,6 +990,17 @@ const UPLSelected = (n) => {
     document.getElementsByClassName("CPLListBottom")[n].classList.add("selected");
   }
   UPLprev = n;
+};
+
+const UPLPlay = (n) => {
+  localStorage.rate = 1;
+  localStorage.disableText = false;
+  localStorage.songNum = songSelection;
+  localStorage.difficultySelection = difficultySelection;
+  localStorage.difficulty = cplData[n].community;
+  localStorage.patternId = cplData[n].id;
+  localStorage.songName = tracks[songSelection].fileName;
+  window.location.href = `${url}/play`;
 };
 
 const medalDescription = () => {
