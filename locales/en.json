@@ -43,8 +43,8 @@
   "return_to_editor": "Go back to the editor.",
   "purchasing_1": "Please wait a moment,",
   "purchasing_2": "You are moving to the payment window..",
-  "advanced_description_1": "ADVANCED is a subscription service for those who want to",
-  "advanced_description_2": "play URLATE more enjoyably, and can be used for 4,900₩/mo.",
+  "advanced_description_1": "ADVANCED is a service for those who want to",
+  "advanced_description_2": "play URLATE more enjoyably.",
   "advanced_description_3": "You can cancel anytime!",
   "advanced_subtitle_1": "Help URLATE!",
   "advanced_description_4": "URLATE is a game that is operated with the expense prepared by Team Croissant, an indie development team.",
@@ -70,8 +70,9 @@
   "advanced_wicon_description_15": "Welcome to the development server!",
   "advanced_subtitle_3": "All right, I like it!",
   "advanced_description_8": "Click the Join button and enjoy all of the above benefits.",
-  "advanced_description_9": "The monthly payment of 4,900₩(About 4$) is automatically charged.",
-  "advanced_description_10": "You can cancel your subscription at any time!",
+  "advanced_description_9": "The monthly payment of ",
+  "advanced_description_10": " is automatically charged.",
+  "advanced_description_11": "You can cancel your subscription at any time!",
   "register": "Join",
   "registered": "Joined",
   "enabled": "Enabled",
@@ -212,5 +213,8 @@
   "sort_as_name": "Name",
   "sort_as_producer": "Producer",
   "sort_as_difficulty": "Difficulty",
-  "sort_as_bpm": "BPM"
+  "sort_as_bpm": "BPM",
+  "playback_rate": "Playback Rate",
+  "disable_text": "Disable Text",
+  "count": "patterns"
 }

@@ -1,4 +1,4 @@
-/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2 */
+/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2, count, bulletDensity, noteDensity, speed, advancedNeeded, DLCNeeded, notAvailable1, notAvailable2 */
 const animContainer = document.getElementById("animContainer");
 const langDetailSelector = document.getElementById("langDetailSelector");
 const canvasResSelector = document.getElementById("canvasResSelector");
@@ -48,9 +48,10 @@ const offsetOffsetCircle = document.getElementById("offsetOffsetCircle");
 const offsetSpeedText = document.getElementById("offsetSpeedText");
 const volumeOverlay = document.getElementById("volumeOverlay");
 const codeInput = document.getElementById("codeInput");
+const CPLTrack = document.getElementById("CPLTrack");
 
-const clientKey = "test_ck_dP9BRQmyarY9pb7Ejy7rJ07KzLNk";
-const billingKey = "test_ck_OAQ92ymxN34k59e5E0p8ajRKXvdk";
+const clientKey = "live_ck_4vZnjEJeQVx6xwKlOnP8PmOoBN0k";
+const billingKey = "live_ck_0Poxy1XQL8RB4gvZjwK87nO5Wmlg";
 const tossPayments = TossPayments(clientKey);
 const tossBilling = TossPayments(billingKey);
 
@@ -69,6 +70,10 @@ let difficultySelection = 0;
 let difficulties = [1, 5, 10];
 let bulletDensities = [10, 50, 100];
 let noteDensities = [10, 50, 100];
+let ezCount = 0;
+let midCount = 0;
+let hardCount = 0;
+let maxCount = 0;
 let speeds = [1, 2, 3];
 let bpm = 130;
 let isRankOpened = false;
@@ -107,6 +112,11 @@ let iniMode = -1;
 
 let tracks;
 let trackRecords = [];
+
+let isOfficial = true;
+const difficultyArray = ["EZ", "MID", "HARD"];
+let UPLprev = -1;
+let cplData;
 
 let themeSong;
 let songs = [];
@@ -611,9 +621,13 @@ const tracksUpdate = () => {
             <span class="songSelectionTitle"></span>
             <span class="songSelectionArtist"></span>
         </div>
-        <div class="songSelectionRank">
+        ${
+          isOfficial
+            ? `<div class="songSelectionRank">
             <span class="ranks rankQ"></span>
-        </div>
+        </div>`
+            : ``
+        }
       </div>`;
       continue;
     }
@@ -626,12 +640,16 @@ const tracksUpdate = () => {
     songList += `<div class="songSelectionContainer${tracks[i].type == 1 && !isAdvanced ? " advancedSelection" : tracks[i].type == 2 ? " dlcSelection" : ""}" onclick="songSelected(${i})">
               <div class="songSelectionLottie"></div>
               <div class="songSelectionInfo">
-                  <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
-                  <span class="songSelectionArtist">${tracks[i].producer}</span>
+                <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
+                <span class="songSelectionArtist">${tracks[i].producer}</span>
               </div>
-              <div class="songSelectionRank">
+              ${
+                isOfficial
+                  ? `<div class="songSelectionRank">
                   <span class="ranks rankQ"></span>
-              </div>
+              </div>`
+                  : ``
+              }
           </div>`;
     fetch(`${api}/record/${tracks[i].name}/${username}`, {
       method: "GET",
@@ -661,8 +679,10 @@ const tracksUpdate = () => {
           for (let j = 0; j < 3; j++) {
             if (data.results[j] != undefined) {
               let value = data.results[j];
-              document.getElementsByClassName("ranks")[i].className = "ranks";
-              document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
+              if (isOfficial) {
+                document.getElementsByClassName("ranks")[i].className = "ranks";
+                document.getElementsByClassName("ranks")[i].classList.add(`rank${value.rank}`);
+              }
               trackRecords[i][value.difficulty - 1] = {
                 rank: `rank${value.rank}`,
                 record: value.record,
@@ -674,8 +694,11 @@ const tracksUpdate = () => {
         } else {
           for (let j = 0; j < 3; j++) {
             if ((tracks[i].type == 1 && !isAdvanced) || (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1))) {
-              document.getElementsByClassName("ranks")[i].className = "ranks";
-              document.getElementsByClassName("ranks")[i].classList.add("rankL");
+              if (isOfficial) {
+                document.getElementsByClassName("ranks")[i].className = "ranks";
+                document.getElementsByClassName("ranks")[i].classList.add("rankL");
+              }
+              document.getElementsByClassName("songSelectionInfo")[i].classList.add("locked");
               trackRecords[i][j] = {
                 rank: "rankL",
                 record: 0,
@@ -719,17 +742,28 @@ const songSelected = (n, refreshed) => {
   loadingShow();
   if (songSelection == n && !refreshed) {
     //play
-    if ((tracks[n].type == 1 && !isAdvanced) || (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1))) {
-      alert("NOT ALLOWED TO PLAY"); //TODO
+    if (tracks[n].type == 1 && !isAdvanced) {
+      alert(advancedNeeded);
+    } else if (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1)) {
+      alert(DLCNeeded);
+    } else if (JSON.parse(tracks[songSelection].difficulty)[difficultySelection] == 0) {
+      alert(`${notAvailable1}\n${notAvailable2}`);
     } else {
-      localStorage.rate = rate;
-      localStorage.disableText = disableText;
-      localStorage.songNum = songSelection;
-      localStorage.difficultySelection = difficultySelection;
-      localStorage.difficulty = JSON.parse(tracks[0].difficulty)[difficultySelection];
-      localStorage.songName = tracks[songSelection].fileName;
-      window.location.href = `${url}/play`;
+      if (isOfficial) {
+        localStorage.rate = rate;
+        localStorage.disableText = disableText;
+        localStorage.songNum = songSelection;
+        localStorage.difficultySelection = difficultySelection;
+        localStorage.difficulty = JSON.parse(tracks[songSelection].difficulty)[difficultySelection];
+        localStorage.songName = tracks[songSelection].fileName;
+        window.location.href = `${url}/play`;
+      } else {
+        display = 14;
+        document.getElementById("CPLContainer").style.display = "flex";
+        document.getElementById("CPLContainer").classList.add("fadeIn");
+      }
     }
+    loadingHide();
     return;
   }
   disableText = false;
@@ -770,6 +804,7 @@ const songSelected = (n, refreshed) => {
   });
   document.getElementsByClassName("songSelectionContainer")[n].classList.add("songSelected");
   selectTitle.textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
+  CPLTrack.textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
   if (selectTitle.offsetWidth > window.innerWidth / 4) {
     selectTitle.style.fontSize = "4vh";
   } else {
@@ -777,8 +812,11 @@ const songSelected = (n, refreshed) => {
   }
   document.getElementById("selectArtist").textContent = tracks[n].producer;
   document.getElementById("selectAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
-  for (let i = 0; i <= 2; i++) {
-    document.getElementsByClassName("difficultyNumber")[i].textContent = JSON.parse(tracks[n].difficulty)[i];
+  document.getElementById("CPLAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
+  if (isOfficial) {
+    for (let i = 0; i <= 2; i++) {
+      document.getElementsByClassName("difficultyNumber")[i].textContent = JSON.parse(tracks[n].difficulty)[i];
+    }
   }
   document.getElementById("selectBackground").style.backgroundImage = `url("${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png")`;
   setTimeout(
@@ -793,7 +831,7 @@ const songSelected = (n, refreshed) => {
     },
     songSelection != -1 ? 0 : 200
   );
-  if (songSelection != -1) {
+  if (songSelection != -1 && isOfficial) {
     document.getElementsByClassName("ranks")[songSelection].className = "ranks";
     if (trackRecords[songSelection][2].rank != "rankQ") {
       document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][2].rank);
@@ -803,20 +841,44 @@ const songSelected = (n, refreshed) => {
       document.getElementsByClassName("ranks")[songSelection].classList.add(trackRecords[songSelection][0].rank);
     }
   }
-  fetch(`${api}/trackInfo/${tracks[n].name}`, {
-    method: "GET",
-    credentials: "include",
-  })
-    .then((res) => res.json())
-    .then((data) => {
-      data = data.info[0];
-      difficulties = JSON.parse(tracks[n].difficulty);
-      bulletDensities = JSON.parse(data.bullet_density);
-      noteDensities = JSON.parse(data.note_density);
-      speeds = JSON.parse(data.speed);
-      bpm = data.bpm;
-      updateDetails(n);
-    });
+  if (isOfficial) {
+    fetch(`${api}/trackInfo/${tracks[n].name}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        data = data.info[0];
+        difficulties = JSON.parse(tracks[n].difficulty);
+        bulletDensities = JSON.parse(data.bullet_density);
+        noteDensities = JSON.parse(data.note_density);
+        speeds = JSON.parse(data.speed);
+        bpm = data.bpm;
+        updateDetails(n);
+      });
+  } else {
+    fetch(`${api}/CPLtrackInfo/${tracks[n].name}`, {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        data = data.info;
+        ezCount = 0;
+        midCount = 0;
+        hardCount = 0;
+        if (data) {
+          data.forEach((e) => {
+            if (e.difficulty == 0) ezCount++;
+            else if (e.analyzed == 1) midCount++;
+            else hardCount++;
+          });
+        }
+        maxCount = ezCount + midCount + hardCount;
+        bpm = tracks[songSelection].bpm;
+        updateDetails(n);
+      });
+  }
   songSelection = n;
   updateRanks();
 };
@@ -843,7 +905,7 @@ const rateChanged = (e) => {
 };
 
 const updateRanks = () => {
-  fetch(`${api}/records/${tracks[songSelection].name}/${difficultySelection + 1}/record/DESC/${username}`, {
+  fetch(`${api}/${isOfficial ? "records" : "CPLrecords"}/${tracks[songSelection].name}/${difficultySelection + 1}/record/DESC/${username}`, {
     method: "GET",
     credentials: "include",
   })
@@ -875,6 +937,74 @@ const updateRanks = () => {
       loadingHide();
       document.getElementById("selectRankScoreContainer").innerHTML = innerContent;
     });
+};
+
+const updatePatterns = () => {
+  loadingShow();
+  fetch(`${api}/CPLpatternList/${tracks[songSelection].name}/${difficultySelection}`, {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      data = data.data;
+      cplData = data;
+      let elements = "";
+      let i = 0;
+      data.forEach((e) => {
+        elements += `<div class="CPLList" onclick="UPLSelected(${i})">
+                        <div class="CPLListTop">
+                          <div class="CPLListLeft">${e.patternName}<span class="CPLAuthor"> - ${e.author}</span></div>
+                          <div class="CPLListRight">
+                            <div class="CPLListRightDifficulty">${difficultyArray[e.difficulty]}<span class="CPLDifficulty">${e.analyzed}</span></div>
+                            <div class="CPLListRightDifficulty">${difficultyArray[e.difficulty]}<span class="CPLDifficulty">${e.community}</span></div>
+                            <div class="CPLListRightStar">★${e.star}</div>
+                          </div>
+                        </div>
+                        <div class="CPLListBottom">
+                          <div class="CPLListLeft">
+                            <img src="https://img.icons8.com/material-rounded/96/000000/quote-left.png" class="CPLQuoteIcon">
+                            <span class="CPLQuote">${e.description}</span>
+                          </div>
+                          <div class="CPLListRight">
+                            <span class="CPLRankButton"><img class="CPLIcon" src="/images/parts/icons/charts.svg"></span>
+                            <span class="CPLPlayButton" onclick="UPLPlay(${i})">PLAY <img class="CPLIcon margin" src="/images/parts/icons/play.svg"></span>
+                          </div>
+                        </div>
+                      </div>`;
+        i++;
+      });
+      document.getElementById("CPLListContainer").innerHTML = elements;
+      loadingHide();
+    });
+};
+
+const UPLSelected = (n) => {
+  if (UPLprev == n) {
+    document.getElementsByClassName("CPLList")[n].classList.remove("selected");
+    document.getElementsByClassName("CPLListBottom")[n].classList.remove("selected");
+    UPLprev = -1;
+    return;
+  } else {
+    if (document.getElementsByClassName("CPLList")[UPLprev]) {
+      document.getElementsByClassName("CPLList")[UPLprev].classList.remove("selected");
+      document.getElementsByClassName("CPLListBottom")[UPLprev].classList.remove("selected");
+    }
+    document.getElementsByClassName("CPLList")[n].classList.add("selected");
+    document.getElementsByClassName("CPLListBottom")[n].classList.add("selected");
+  }
+  UPLprev = n;
+};
+
+const UPLPlay = (n) => {
+  localStorage.rate = 1;
+  localStorage.disableText = false;
+  localStorage.songNum = songSelection;
+  localStorage.difficultySelection = difficultySelection;
+  localStorage.difficulty = cplData[n].community;
+  localStorage.patternId = cplData[n].id;
+  localStorage.songName = tracks[songSelection].fileName;
+  window.location.href = `${url}/play`;
 };
 
 const medalDescription = () => {
@@ -1165,6 +1295,15 @@ const displayClose = () => {
           alert(`Error occured.\n${error}`);
           console.error(`Error occured.\n${error}`);
         });
+      return;
+    } else if (display == 14) {
+      display = 1;
+      document.getElementById("CPLContainer").classList.remove("fadeIn");
+      document.getElementById("CPLContainer").classList.add("fadeOut");
+      setTimeout(() => {
+        document.getElementById("CPLContainer").classList.remove("fadeOut");
+        document.getElementById("CPLContainer").style.display = "none";
+      }, 500);
       return;
     }
     lottieAnim.play();
@@ -1614,6 +1753,8 @@ const menuSelected = (n) => {
     }
     document.getElementById("selectContainer").style.display = "flex";
     document.getElementById("selectContainer").classList.add("fadeIn");
+    document.getElementsByClassName("tracksSelection")[Number(isOfficial)].classList.remove("selected");
+    document.getElementsByClassName("tracksSelection")[Number(!isOfficial)].classList.add("selected");
   } else if (n == 1) {
     //editor
     window.location.href = `${url}/editor`;
@@ -1825,39 +1966,51 @@ const showProfile = (name) => {
 };
 
 const updateDetails = (n) => {
-  document.getElementById("bulletDensity").textContent = bulletDensities[difficultySelection];
-  document.getElementById("bulletDensityValue").style.width = `${bulletDensities[difficultySelection]}%`;
-  document.getElementById("noteDensity").textContent = noteDensities[difficultySelection];
-  document.getElementById("noteDensityValue").style.width = `${noteDensities[difficultySelection]}%`;
-  document.getElementById("bpmText").textContent = bpm;
-  document.getElementById("bpmValue").style.width = `${bpm / 3}%`;
-  document.getElementById("speed").textContent = speeds[difficultySelection];
-  document.getElementById("speedValue").style.width = `${(speeds[difficultySelection] / 5) * 100}%`;
-  let starText = "";
-  for (let i = 0; i < difficulties[difficultySelection]; i++) {
-    starText += "★";
-  }
-  for (let i = difficulties[difficultySelection]; i < 10; i++) {
-    starText += "☆";
-  }
-  document.getElementById("selectStars").textContent = starText;
-  document.getElementById("selectScoreValue").textContent = numberWithCommas(`${trackRecords[n][difficultySelection].record}`.padStart(9, "0"));
-  document.getElementsByClassName("ranks")[n].className = "ranks";
-  document.getElementsByClassName("ranks")[n].classList.add(trackRecords[n][difficultySelection].rank);
-  let recordMedal = trackRecords[n][difficultySelection].medal;
-  goldMedal.style.opacity = "0.1";
-  silverMedal.style.opacity = "0.1";
-  checkMedal.style.opacity = "0.1";
-  if (recordMedal >= 4) {
-    goldMedal.style.opacity = "1";
-    recordMedal -= 4;
-  }
-  if (recordMedal >= 2) {
-    silverMedal.style.opacity = "1";
-    recordMedal -= 2;
-  }
-  if (recordMedal >= 1) {
-    checkMedal.style.opacity = "1";
+  if (isOfficial) {
+    document.getElementById("bulletDensity").textContent = bulletDensities[difficultySelection];
+    document.getElementById("bulletDensityValue").style.width = `${bulletDensities[difficultySelection]}%`;
+    document.getElementById("noteDensity").textContent = noteDensities[difficultySelection];
+    document.getElementById("noteDensityValue").style.width = `${noteDensities[difficultySelection]}%`;
+    document.getElementById("bpmText").textContent = bpm;
+    document.getElementById("bpmValue").style.width = `${bpm / 3}%`;
+    document.getElementById("speed").textContent = speeds[difficultySelection];
+    document.getElementById("speedValue").style.width = `${(speeds[difficultySelection] / 5) * 100}%`;
+    let starText = "";
+    for (let i = 0; i < difficulties[difficultySelection]; i++) {
+      starText += "★";
+    }
+    for (let i = difficulties[difficultySelection]; i < 10; i++) {
+      starText += "☆";
+    }
+    document.getElementById("selectStars").textContent = starText;
+    document.getElementById("selectScoreValue").textContent = numberWithCommas(`${trackRecords[n][difficultySelection].record}`.padStart(9, "0"));
+    document.getElementsByClassName("ranks")[n].className = "ranks";
+    document.getElementsByClassName("ranks")[n].classList.add(trackRecords[n][difficultySelection].rank);
+    let recordMedal = trackRecords[n][difficultySelection].medal;
+    goldMedal.style.opacity = "0.1";
+    silverMedal.style.opacity = "0.1";
+    checkMedal.style.opacity = "0.1";
+    if (recordMedal >= 4) {
+      goldMedal.style.opacity = "1";
+      recordMedal -= 4;
+    }
+    if (recordMedal >= 2) {
+      silverMedal.style.opacity = "1";
+      recordMedal -= 2;
+    }
+    if (recordMedal >= 1) {
+      checkMedal.style.opacity = "1";
+    }
+  } else {
+    updatePatterns();
+    document.getElementById("bulletDensity").textContent = ezCount;
+    document.getElementById("bulletDensityValue").style.width = `${ezCount == 0 ? 0 : (ezCount / maxCount) * 100}%`;
+    document.getElementById("noteDensity").textContent = midCount;
+    document.getElementById("noteDensityValue").style.width = `${midCount == 0 ? 0 : (midCount / maxCount) * 100}%`;
+    document.getElementById("bpmText").textContent = hardCount;
+    document.getElementById("bpmValue").style.width = `${hardCount == 0 ? 0 : (hardCount / maxCount) * 100}%`;
+    document.getElementById("speed").textContent = bpm;
+    document.getElementById("speedValue").style.width = `${bpm / 3}%`;
   }
 };
 
@@ -2069,15 +2222,46 @@ const rankToggle = () => {
 };
 
 const tracksToggle = () => {
-  const status = document.getElementsByClassName("tracksSelection")[0].classList.contains("selected");
-  if (status) {
+  isOfficial = !isOfficial;
+  if (!isOfficial) {
     //official -> community
     document.getElementsByClassName("tracksSelection")[0].classList.remove("selected");
     document.getElementsByClassName("tracksSelection")[1].classList.add("selected");
+    document.getElementById("selectScore").textContent = "MY BEST";
+    document.getElementsByClassName("trackStatContainer")[0].getElementsByTagName("span")[0].textContent = `EZ ${count}`;
+    document.getElementsByClassName("trackStatContainer")[1].getElementsByTagName("span")[0].textContent = `MID ${count}`;
+    document.getElementsByClassName("trackStatContainer")[2].getElementsByTagName("span")[0].textContent = `HARD ${count}`;
+    document.getElementsByClassName("trackStatContainer")[3].getElementsByTagName("span")[0].textContent = "BPM";
+    document.getElementById("modsTitleContainer").style.display = "none";
+    document.getElementById("starContainer").style.display = "none";
+    document.getElementsByClassName("trackStatContainer")[4].style.display = "none";
+    document.getElementsByClassName("trackStatContainer")[5].style.display = "none";
+    document.getElementsByClassName("selectInfo")[2].style.display = "none";
+    document.getElementsByClassName("difficultyNumber")[0].textContent = "1-3";
+    document.getElementsByClassName("difficultyNumber")[1].textContent = "4-7";
+    document.getElementsByClassName("difficultyNumber")[2].textContent = "8-10";
+    document.getElementsByClassName("difficulty")[0].style.width = "4.5vw";
+    document.getElementsByClassName("difficulty")[1].style.width = "4.5vw";
+    tracksUpdate();
+    songSelected(songSelection, true);
   } else {
     //community -> official
     document.getElementsByClassName("tracksSelection")[0].classList.add("selected");
     document.getElementsByClassName("tracksSelection")[1].classList.remove("selected");
+    document.getElementById("selectScore").textContent = "SCORE";
+    document.getElementsByClassName("trackStatContainer")[0].getElementsByTagName("span")[0].textContent = noteDensity;
+    document.getElementsByClassName("trackStatContainer")[1].getElementsByTagName("span")[0].textContent = bulletDensity;
+    document.getElementsByClassName("trackStatContainer")[2].getElementsByTagName("span")[0].textContent = "BPM";
+    document.getElementsByClassName("trackStatContainer")[3].getElementsByTagName("span")[0].textContent = speed;
+    document.getElementById("modsTitleContainer").style.display = "flex";
+    document.getElementById("starContainer").style.display = "flex";
+    document.getElementsByClassName("trackStatContainer")[4].style.display = "flex";
+    document.getElementsByClassName("trackStatContainer")[5].style.display = "flex";
+    document.getElementsByClassName("selectInfo")[2].style.display = "initial";
+    document.getElementsByClassName("difficulty")[0].style.width = "3.5vw";
+    document.getElementsByClassName("difficulty")[1].style.width = "3.5vw";
+    tracksUpdate();
+    songSelected(songSelection, true);
   }
 };
 

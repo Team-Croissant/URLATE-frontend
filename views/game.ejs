@@ -198,7 +198,7 @@
                     <div class="selectInfoContentsContainer">
                         <div class="difficulty difficultySelected" onclick="difficultySelected(0)"><span class="difficultyNumber">1</span><span class="difficultyText">EZ</span></div>
                         <div class="difficulty" onclick="difficultySelected(1)"><span class="difficultyNumber">3</span><span class="difficultyText">MID</span></div>
-                        <div class="difficulty" onclick="difficultySelected(2)"><span class="difficultyNumber">5</span><span class="difficultyText">HARD</span></div>
+                        <div class="difficulty right" onclick="difficultySelected(2)"><span class="difficultyNumber">5</span><span class="difficultyText">HARD</span></div>
                     </div>
                 </div>
                 <div class="selectInfo clickable" onclick="rankToggle()">
@@ -252,6 +252,34 @@
                 <div id="selectRankScoreContainer"></div>
             </div>
         </div>
+        <div id="CPLContainer">
+            <div id="CPLInnerContainer">
+                <div id="CPLTopContainer">
+                    <div id="CPLTopLeftContainer">
+                        <div id="CPLAlbumContainer">
+                            <img id="CPLAlbum">
+                        </div>
+                        <div id="CPLTopLeftVerticalContainer">
+                            <span id="CPLTitle">Community Pattern Library</span>
+                            <span id="CPLTrack">Track Name</span>
+                        </div>
+                    </div>
+                    <div id="CPLTopRightContainer">
+                        <img src="https://img.icons8.com/windows/32/000000/macos-close.png" class="icon clickable rankCloseBtn" onclick="displayClose()">
+                    </div>
+                </div>
+                <div id="CPLListIndex">
+                    <div class="CPLListLeft">이름 - 제작자</div>
+                    <div class="CPLListRight">
+                        <div class="CPLListRightDifficulty">측정된 난이도</div>
+                        <div class="CPLListRightDifficulty">커뮤니티 난이도</div>
+                        <div class="CPLListRightStar noMargin">평가</div>
+                    </div>
+                </div>
+                <div id="CPLListContainer">
+                </div>
+            </div>
+        </div>
     </div>
     <div id="advancedContainer" class="containers">
         <img src="https://img.icons8.com/windows/32/000000/macos-close.png" class="icon clickable closeBtn" onclick="displayClose()">
@@ -300,7 +328,7 @@
             </div>
         </div>
         <p class="advancedSubtitle"><%= __('advanced_subtitle_3') %></p>
-        <p class="advancedDescription"><%= __('advanced_description_8') %><br><%= __('advanced_description_9') %><br><strong><%= __('advanced_description_10') %></strong></p>
+        <p class="advancedDescription"><%= __('advanced_description_8') %><br><%= __('advanced_description_9') %><del>4,900₩</del> 1,100₩<%= __('advanced_description_10') %><br><strong><%= __('advanced_description_11') %></strong></p>
         <br>
         <input type="button" id="registerBtn" class="clickable metropolis" value="<%= __('register') %>" onclick="getAdvanced()">
     </div>
@@ -1265,6 +1293,14 @@
         const confirmExit = "<%= __('confirm_exit_tutorial') %>";
         const medalDesc = "<%= __('medal_description') %>";
         const lang = "<%= __('lang') %>";
+        const count = "<%= __('count') %>";
+        const bulletDensity = "<%= __('bullet_density') %>";
+        const noteDensity = "<%= __('note_density') %>";
+        const speed = "<%= __('speed') %>";
+        const advancedNeeded = "<%= __('advanced_needed') %>";
+        const DLCNeeded = "<%= __('DLC_needed') %>";
+        const notAvailable1 = "<%= __('not_available_1') %>";
+        const notAvailable2 = "<%= __('not_available_2') %>";
         if(lang == "en") document.body.style.letterSpacing = "-0.3px";
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.5/lottie.js"></script>
