@@ -48,6 +48,7 @@ const offsetOffsetCircle = document.getElementById("offsetOffsetCircle");
 const offsetSpeedText = document.getElementById("offsetSpeedText");
 const volumeOverlay = document.getElementById("volumeOverlay");
 const codeInput = document.getElementById("codeInput");
+const CPLTrack = document.getElementById("CPLTrack");
 
 const clientKey = "test_ck_dP9BRQmyarY9pb7Ejy7rJ07KzLNk";
 const billingKey = "test_ck_OAQ92ymxN34k59e5E0p8ajRKXvdk";
@@ -113,6 +114,8 @@ let tracks;
 let trackRecords = [];
 
 let isOfficial = true;
+const difficultyArray = ["EZ", "MID", "HARD"];
+let UPLprev = -1;
 
 let themeSong;
 let songs = [];
@@ -741,13 +744,20 @@ const songSelected = (n, refreshed) => {
     if ((tracks[n].type == 1 && !isAdvanced) || (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1))) {
       alert("NOT ALLOWED TO PLAY"); //TODO
     } else {
-      localStorage.rate = rate;
-      localStorage.disableText = disableText;
-      localStorage.songNum = songSelection;
-      localStorage.difficultySelection = difficultySelection;
-      localStorage.difficulty = JSON.parse(tracks[0].difficulty)[difficultySelection];
-      localStorage.songName = tracks[songSelection].fileName;
-      window.location.href = `${url}/play`;
+      if (isOfficial) {
+        localStorage.rate = rate;
+        localStorage.disableText = disableText;
+        localStorage.songNum = songSelection;
+        localStorage.difficultySelection = difficultySelection;
+        localStorage.difficulty = JSON.parse(tracks[0].difficulty)[difficultySelection];
+        localStorage.songName = tracks[songSelection].fileName;
+        window.location.href = `${url}/play`;
+      } else {
+        display = 14;
+        document.getElementById("CPLContainer").style.display = "flex";
+        document.getElementById("CPLContainer").classList.add("fadeIn");
+        loadingHide();
+      }
     }
     return;
   }
@@ -789,6 +799,7 @@ const songSelected = (n, refreshed) => {
   });
   document.getElementsByClassName("songSelectionContainer")[n].classList.add("songSelected");
   selectTitle.textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
+  CPLTrack.textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
   if (selectTitle.offsetWidth > window.innerWidth / 4) {
     selectTitle.style.fontSize = "4vh";
   } else {
@@ -796,6 +807,7 @@ const songSelected = (n, refreshed) => {
   }
   document.getElementById("selectArtist").textContent = tracks[n].producer;
   document.getElementById("selectAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
+  document.getElementById("CPLAlbum").src = `${cdn}/albums/${settings.display.albumRes}/${tracks[n].fileName} (Custom).png`;
   if (isOfficial) {
     for (let i = 0; i <= 2; i++) {
       document.getElementsByClassName("difficultyNumber")[i].textContent = JSON.parse(tracks[n].difficulty)[i];
@@ -852,8 +864,8 @@ const songSelected = (n, refreshed) => {
         hardCount = 0;
         if (data) {
           data.forEach((e) => {
-            if (e.analyzed <= 3) ezCount++;
-            else if (e.analyzed <= 7) midCount++;
+            if (e.difficulty == 0) ezCount++;
+            else if (e.analyzed == 1) midCount++;
             else hardCount++;
           });
         }
@@ -920,6 +932,62 @@ const updateRanks = () => {
       loadingHide();
       document.getElementById("selectRankScoreContainer").innerHTML = innerContent;
     });
+};
+
+const updatePatterns = () => {
+  loadingShow();
+  fetch(`${api}/CPLpatternList/${tracks[songSelection].name}/${difficultySelection}`, {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      data = data.data;
+      let elements = "";
+      let i = 0;
+      data.forEach((e) => {
+        elements += `<div class="CPLList" onclick="UPLSelected(${i})">
+                        <div class="CPLListTop">
+                          <div class="CPLListLeft">${e.patternName}<span class="CPLAuthor"> - ${e.author}</span></div>
+                          <div class="CPLListRight">
+                            <div class="CPLListRightDifficulty">${difficultyArray[e.difficulty]}<span class="CPLDifficulty">${e.analyzed}</span></div>
+                            <div class="CPLListRightDifficulty">${difficultyArray[e.difficulty]}<span class="CPLDifficulty">${e.community}</span></div>
+                            <div class="CPLListRightStar">★${e.star}</div>
+                          </div>
+                        </div>
+                        <div class="CPLListBottom">
+                          <div class="CPLListLeft">
+                            <img src="https://img.icons8.com/material-rounded/96/000000/quote-left.png" class="CPLQuoteIcon">
+                            <span class="CPLQuote">${e.description}</span>
+                          </div>
+                          <div class="CPLListRight">
+                            <span class="CPLRankButton"><img class="CPLIcon" src="/images/parts/icons/charts.svg"></span>
+                            <span class="CPLPlayButton">PLAY <img class="CPLIcon margin" src="/images/parts/icons/play.svg"></span>
+                          </div>
+                        </div>
+                      </div>`;
+        i++;
+      });
+      document.getElementById("CPLListContainer").innerHTML = elements;
+      loadingHide();
+    });
+};
+
+const UPLSelected = (n) => {
+  if (UPLprev == n) {
+    document.getElementsByClassName("CPLList")[n].classList.remove("selected");
+    document.getElementsByClassName("CPLListBottom")[n].classList.remove("selected");
+    UPLprev = -1;
+    return;
+  } else {
+    if (document.getElementsByClassName("CPLList")[UPLprev]) {
+      document.getElementsByClassName("CPLList")[UPLprev].classList.remove("selected");
+      document.getElementsByClassName("CPLListBottom")[UPLprev].classList.remove("selected");
+    }
+    document.getElementsByClassName("CPLList")[n].classList.add("selected");
+    document.getElementsByClassName("CPLListBottom")[n].classList.add("selected");
+  }
+  UPLprev = n;
 };
 
 const medalDescription = () => {
@@ -1210,6 +1278,15 @@ const displayClose = () => {
           alert(`Error occured.\n${error}`);
           console.error(`Error occured.\n${error}`);
         });
+      return;
+    } else if (display == 14) {
+      display = 1;
+      document.getElementById("CPLContainer").classList.remove("fadeIn");
+      document.getElementById("CPLContainer").classList.add("fadeOut");
+      setTimeout(() => {
+        document.getElementById("CPLContainer").classList.remove("fadeOut");
+        document.getElementById("CPLContainer").style.display = "none";
+      }, 500);
       return;
     }
     lottieAnim.play();
@@ -1906,6 +1983,7 @@ const updateDetails = (n) => {
       checkMedal.style.opacity = "1";
     }
   } else {
+    updatePatterns();
     document.getElementById("bulletDensity").textContent = ezCount;
     document.getElementById("bulletDensityValue").style.width = `${ezCount == 0 ? 0 : (ezCount / maxCount) * 100}%`;
     document.getElementById("noteDensity").textContent = midCount;
