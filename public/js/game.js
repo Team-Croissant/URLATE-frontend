@@ -2244,6 +2244,7 @@ const tracksToggle = () => {
     document.getElementsByClassName("difficultyNumber")[2].textContent = "8-10";
     document.getElementsByClassName("difficulty")[0].style.width = "4.5vw";
     document.getElementsByClassName("difficulty")[1].style.width = "4.5vw";
+    if (songs[songSelection]) songs[songSelection].stop();
     tracksUpdate();
     songSelected(songSelection, true);
   } else {
@@ -2262,6 +2263,7 @@ const tracksToggle = () => {
     document.getElementsByClassName("selectInfo")[2].style.display = "initial";
     document.getElementsByClassName("difficulty")[0].style.width = "3.5vw";
     document.getElementsByClassName("difficulty")[1].style.width = "3.5vw";
+    if (songs[songSelection]) songs[songSelection].stop();
     tracksUpdate();
     songSelected(songSelection, true);
   }
