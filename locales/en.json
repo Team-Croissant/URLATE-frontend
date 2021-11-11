@@ -216,5 +216,9 @@
   "sort_as_bpm": "BPM",
   "playback_rate": "Playback Rate",
   "disable_text": "Disable Text",
-  "count": "patterns"
+  "count": "patterns",
+  "advanced_needed": "You must be subscribed to ADVANCED to play this song.",
+  "DLC_needed": "You must purchase DLC to play this song.",
+  "not_available_1": "There is no pattern for this difficulty yet :(",
+  "not_available_2": "We are trying to develop a chaebo as soon as possible, so please wait a little bit!"
 }
