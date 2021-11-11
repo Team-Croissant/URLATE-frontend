@@ -748,7 +748,7 @@ const songSelected = (n, refreshed) => {
       alert(advancedNeeded);
     } else if (tracks[n].type == 2 && !(songData.indexOf(tracks[n].name) != -1)) {
       alert(DLCNeeded);
-    } else if (JSON.parse(tracks[songSelection].difficulty)[difficultySelection] == 0) {
+    } else if (JSON.parse(tracks[songSelection].difficulty)[difficultySelection] == 0 && isOfficial) {
       alert(`${notAvailable1}\n${notAvailable2}`);
     } else {
       if (isOfficial) {
