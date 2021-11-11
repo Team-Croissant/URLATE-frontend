@@ -1029,11 +1029,11 @@ const gameLoaded = () => {
     menuSelected(0);
   } else if (display == 0 && songSelection == -1) {
     themeSong.play();
-    setTimeout(() => {
-      storeSong.rate(1.5818181818);
-      storeSong.play();
-    }, 1400);
   }
+  setTimeout(() => {
+    storeSong.rate(1.5818181818);
+    storeSong.play();
+  }, 1400);
   document.getElementById("menuContainer").style.display = "flex";
   document.getElementById("loadingContainer").classList.add("fadeOut");
   localStorage.clear("songName");
