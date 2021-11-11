@@ -726,7 +726,9 @@ const tracksUpdate = () => {
 
 const sortSelected = (n, isInitializing) => {
   localStorage.sort = n;
-  document.getElementsByClassName("selected")[0].classList.remove("selected");
+  document.getElementsByClassName("sortText").forEach((e) => {
+    if (e.classList.contains("selected")) e.classList.remove("selected");
+  });
   document.getElementsByClassName("sortText")[n].classList.add("selected");
   const sortArray = [sortAsName, sortAsProducer, sortAsDifficulty, sortAsBPM];
   if (songs[songSelection]) songs[songSelection].stop();
