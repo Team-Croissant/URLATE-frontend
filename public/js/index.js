@@ -5,6 +5,7 @@ let lottieAnim;
 document.addEventListener("DOMContentLoaded", () => {
   if (document.location.protocol == "http:") {
     document.location.href = document.location.href.replace("http:", "https:");
+    return;
   }
 
   let UserAgent = navigator.userAgent;
