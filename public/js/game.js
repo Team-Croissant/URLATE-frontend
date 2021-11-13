@@ -726,7 +726,7 @@ const tracksUpdate = () => {
 
 const sortSelected = (n, isInitializing) => {
   localStorage.sort = n;
-  document.getElementsByClassName("sortText").forEach((e) => {
+  Array.prototype.forEach.call(document.getElementsByClassName("sortText"), (e) => {
     if (e.classList.contains("selected")) e.classList.remove("selected");
   });
   document.getElementsByClassName("sortText")[n].classList.add("selected");
