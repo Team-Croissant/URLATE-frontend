@@ -775,7 +775,7 @@ const songSelected = (n, refreshed) => {
   trackModsText.classList.remove("enabled");
   if (!(songSelection == -1 && tracks[n].name == "URLATE Theme")) {
     document.getElementById("songNameText").textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
-    songs[n].volume(1);
+    if (songs[n]) songs[n].volume(1);
     if (songSelection != -1 && !refreshed) {
       let i = songSelection;
       songs[i].fade(1, 0, 200);
