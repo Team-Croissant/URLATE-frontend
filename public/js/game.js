@@ -1665,7 +1665,7 @@ const updateStore = () => {
                         </div>
                       </div>`;
           } else {
-            elements += `<div class="storeSongsContainer"></div>`;
+            elements += `<div class="storeSongsContainer hide"></div>`;
           }
         }
         elements += "</div>";
@@ -1703,7 +1703,7 @@ const updateStore = () => {
                         </div>
                       </div>`;
           } else {
-            elements += `<div class="storeSkinsContainer"></div>`;
+            elements += `<div class="storeSkinsContainer hide"></div>`;
           }
         }
         elements += "</div>";
