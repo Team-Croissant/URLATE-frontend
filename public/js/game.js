@@ -1264,7 +1264,6 @@ const displayClose = () => {
       //Store purchase method selection
       overlayPaymentContainer.style.pointerEvents = "none";
       overlayPaymentContainer.style.opacity = "0";
-      overlayCodeContainer;
       display = 8;
       return;
     } else if (display == 12) {
