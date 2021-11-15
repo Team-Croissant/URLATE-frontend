@@ -1570,7 +1570,7 @@ const storePurchase = (method) => {
       tossPayments.requestPayment(method, {
         amount: data.amount,
         orderId: data.orderId,
-        orderName: "URLATE 상점 결제",
+        orderName: `URLATE 상점 ${cartArray[0].item}${cartArray.length == 1 ? "" : `외 ${cartArray.length - 1}건`}`,
         customerName: username,
         customerEmail: data.email,
         successUrl: `${api}/store/success`,
