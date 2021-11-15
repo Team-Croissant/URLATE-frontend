@@ -637,10 +637,19 @@ const tracksUpdate = () => {
       autoplay: false,
       loop: true,
     });
-    songList += `<div class="songSelectionContainer${tracks[i].type == 1 && !isAdvanced ? " advancedSelection" : tracks[i].type == 2 ? " dlcSelection" : ""}" onclick="songSelected(${i})">
+    songList += `<div class="songSelectionContainer" onclick="songSelected(${i})">
               <div class="songSelectionLottie"></div>
               <div class="songSelectionInfo">
-                <span class="songSelectionTitle">${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}</span>
+                <div class="songSelectionTitle">
+                  ${settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name}
+                  ${
+                    tracks[i].type == 1
+                      ? "<img src='/images/parts/graphicIcons/track_advanced.png' class='songSelectionIcon'>"
+                      : tracks[i].type == 2
+                      ? "<img src='/images/parts/graphicIcons/track_dlc.png' class='songSelectionIcon'>"
+                      : ""
+                  }
+                </div>
                 <span class="songSelectionArtist">${tracks[i].producer}</span>
               </div>
               ${
