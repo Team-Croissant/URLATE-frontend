@@ -784,6 +784,7 @@ const songSelected = (n, refreshed) => {
   trackModsText.classList.remove("enabled");
   if (!(songSelection == -1 && tracks[n].name == "URLATE Theme")) {
     document.getElementById("songNameText").textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
+    console.log(n);
     if (songs[n]) songs[n].volume(1);
     if (songSelection != -1 && !refreshed) {
       let i = songSelection;
@@ -796,7 +797,7 @@ const songSelected = (n, refreshed) => {
     setTimeout(() => {
       themeSong.stop();
     }, 500);
-    songs[n].play();
+    if (songs[n]) songs[n].play();
     if (tracks[n].name == "URLATE Theme") {
       setTimeout(() => {
         storeSong.seek(0);
