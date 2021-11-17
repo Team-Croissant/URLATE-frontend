@@ -784,7 +784,6 @@ const songSelected = (n, refreshed) => {
   trackModsText.classList.remove("enabled");
   if (!(songSelection == -1 && tracks[n].name == "URLATE Theme")) {
     document.getElementById("songNameText").textContent = settings.general.detailLang == "original" ? tracks[n].originalName : tracks[n].name;
-    console.log(n);
     if (songs[n]) songs[n].volume(1);
     if (songSelection != -1 && !refreshed) {
       let i = songSelection;
@@ -1758,9 +1757,16 @@ const menuSelected = (n) => {
     //play
     display = 1;
     if (songSelection == -1) {
-      let min = Math.ceil(0);
-      let max = Math.floor(tracks.length);
-      songSelected(Math.floor(Math.random() * (max - min)) + min);
+      // eslint-disable-next-line no-constant-condition
+      while (1) {
+        let min = Math.ceil(0);
+        let max = Math.floor(tracks.length);
+        let result = Math.floor(Math.random() * (max - min)) + min;
+        if (songs[result]) {
+          songSelected(Math.floor(Math.random() * (max - min)) + min);
+          break;
+        }
+      }
     }
     document.getElementById("selectContainer").style.display = "flex";
     document.getElementById("selectContainer").classList.add("fadeIn");
