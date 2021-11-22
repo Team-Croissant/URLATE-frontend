@@ -277,7 +277,8 @@ const analyze = () => {
     const gap = ((q.ms - p.ms) * (r.ms - q.ms)) / 10000;
     let cos = analyzeTools.VectorInnerProduct(a, b) / length;
     cos = isNaN(cos) ? 0 : cos;
-    result.weight += ((1 - Math.abs(cos)) * Math.sqrt(length)) / gap;
+    const calc = ((1 - Math.abs(cos)) * Math.sqrt(length)) / gap;
+    result.weight += isNaN(calc) ? 0 : calc;
   }
   result.weight = result.weight / duration;
   result.bulletWeight = Math.sqrt(bulletLength) / duration;
