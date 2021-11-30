@@ -1104,7 +1104,7 @@ const cntRender = () => {
         bpm = renderTriggers[i].bpm;
       } else if (renderTriggers[i].value == 3) {
         opacityCount++;
-        cntCanvas.style.opacity = renderTriggers[i].opacity;
+        cntCanvas.style.filter = `opacity(${renderTriggers[i].opacity * 100}%)`;
       } else if (renderTriggers[i].value == 4) {
         speedCount++;
         speed = renderTriggers[i].speed;
@@ -1144,7 +1144,7 @@ const cntRender = () => {
       speed = pattern.information.speed;
     }
     if (!opacityCount) {
-      cntCanvas.style.opacity = 1;
+      cntCanvas.style.filter = `opacity(100%)`;
     }
     prevDestroyedBullets = new Set(destroyedBullets);
     for (let i of destroyedSeeks) {
