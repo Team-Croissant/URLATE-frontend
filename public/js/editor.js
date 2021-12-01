@@ -2168,17 +2168,19 @@ const changeSplit = () => {
 };
 
 const deleteElement = () => {
-  if (selectedCntElement.v1 == 0) {
-    pattern.patterns.splice(selectedCntElement.i, 1);
-  } else if (selectedCntElement.v1 == 1) {
-    pattern.bullets.splice(selectedCntElement.i, 1);
-  } else if (selectedCntElement.v1 == 2) {
-    pattern.triggers.splice(selectedCntElement.i, 1);
+  if (selectedCntElement.v1 === "") {
+    if (selectedCntElement.v1 == 0) {
+      pattern.patterns.splice(selectedCntElement.i, 1);
+    } else if (selectedCntElement.v1 == 1) {
+      pattern.bullets.splice(selectedCntElement.i, 1);
+    } else if (selectedCntElement.v1 == 2) {
+      pattern.triggers.splice(selectedCntElement.i, 1);
+    }
+    patternChanged();
+    changeSettingsMode(-1);
+    selectedCntElement = { v1: "", v2: "", i: "" };
+    if (isSettingsOpened) toggleSettings();
   }
-  patternChanged();
-  changeSettingsMode(-1);
-  selectedCntElement = { v1: "", v2: "", i: "" };
-  if (isSettingsOpened) toggleSettings();
 };
 
 const patternChanged = () => {
