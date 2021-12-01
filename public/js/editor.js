@@ -2168,7 +2168,7 @@ const changeSplit = () => {
 };
 
 const deleteElement = () => {
-  if (selectedCntElement.v1 === "") {
+  if (selectedCntElement.v1 !== "") {
     if (selectedCntElement.v1 == 0) {
       pattern.patterns.splice(selectedCntElement.i, 1);
     } else if (selectedCntElement.v1 == 1) {
