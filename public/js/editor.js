@@ -433,8 +433,8 @@ const drawNote = (p, x, y, s, n, d) => {
       cntCtx.strokeStyle = "#fff";
       cntCtx.textAlign = "center";
       cntCtx.textBaseline = "bottom";
-      cntCtx.strokeText(`(X: ${originX}, Y: ${originY})`, x, y - w);
-      cntCtx.fillText(`(X: ${originX}, Y: ${originY})`, x, y - w);
+      cntCtx.strokeText(`(X: ${originX}, Y: ${originY})`, x, y - 1.5 * w);
+      cntCtx.fillText(`(X: ${originX}, Y: ${originY})`, x, y - 1.5 * w);
     }
     cntCtx.fillStyle = `#ebd534${opacity.toString(16)}`;
     cntCtx.strokeStyle = `#ebd534${opacity.toString(16)}`;
@@ -556,10 +556,10 @@ const drawBullet = (n, x, y, a, s, l, d) => {
       cntCtx.textAlign = d == "L" ? "left" : "right";
       cntCtx.textBaseline = "bottom";
       cntCtx.lineWidth = Math.round(cntCanvas.width / 300);
-      cntCtx.strokeText(`(Loc: ${l})`, x, y - w - window.innerHeight / 40);
-      cntCtx.strokeText(`(Angle: ${a})`, x, y - w);
-      cntCtx.fillText(`(Loc: ${l})`, x, y - w - window.innerHeight / 40);
-      cntCtx.fillText(`(Angle: ${a})`, x, y - w);
+      cntCtx.strokeText(`(Loc: ${l})`, x, y - 1.5 * w - window.innerHeight / 40);
+      cntCtx.strokeText(`(Angle: ${a})`, x, y - 1.5 * w);
+      cntCtx.fillText(`(Loc: ${l})`, x, y - 1.5 * w - window.innerHeight / 40);
+      cntCtx.fillText(`(Angle: ${a})`, x, y - 1.5 * w);
     }
     cntCtx.fillStyle = `#ebd534`;
     cntCtx.strokeStyle = `#ebd534`;
@@ -2168,17 +2168,19 @@ const changeSplit = () => {
 };
 
 const deleteElement = () => {
-  if (selectedCntElement.v1 == 0) {
-    pattern.patterns.splice(selectedCntElement.i, 1);
-  } else if (selectedCntElement.v1 == 1) {
-    pattern.bullets.splice(selectedCntElement.i, 1);
-  } else if (selectedCntElement.v1 == 2) {
-    pattern.triggers.splice(selectedCntElement.i, 1);
+  if (selectedCntElement.v1 === "") {
+    if (selectedCntElement.v1 == 0) {
+      pattern.patterns.splice(selectedCntElement.i, 1);
+    } else if (selectedCntElement.v1 == 1) {
+      pattern.bullets.splice(selectedCntElement.i, 1);
+    } else if (selectedCntElement.v1 == 2) {
+      pattern.triggers.splice(selectedCntElement.i, 1);
+    }
+    patternChanged();
+    changeSettingsMode(-1);
+    selectedCntElement = { v1: "", v2: "", i: "" };
+    if (isSettingsOpened) toggleSettings();
   }
-  patternChanged();
-  changeSettingsMode(-1);
-  selectedCntElement = { v1: "", v2: "", i: "" };
-  if (isSettingsOpened) toggleSettings();
 };
 
 const patternChanged = () => {
