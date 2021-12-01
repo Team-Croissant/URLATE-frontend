@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-/* global api, url, Howl, cdn, bodymovin, getTan, calcAngleDegrees, lowerBound, upperBound, Howler, rusure, syncAlert, zoomAlert, copiedText, timeAlert, deleteSure, moveToAlert, need2Save */
+/* global api, url, Howl, cdn, bodymovin, getTan, calcAngleDegrees, lowerBound, upperBound, Howler, rusure, syncAlert, copiedText, timeAlert, deleteSure, moveToAlert, need2Save */
 const songSelectBox = document.getElementById("songSelectBox");
 const trackSettings = document.getElementById("trackSettings");
 const lottieInitBox = document.getElementById("lottieInitBox");
@@ -998,8 +998,6 @@ const tmlRender = () => {
   if (tmlCanvas.width / tmlCanvas.height >= 4.9) {
     if (sync >= 50 || sync <= -50) {
       tmlCtx.fillText(syncAlert, endX, endY + 5);
-    } else if (pixelRatio != 1) {
-      tmlCtx.fillText(`${zoomAlert} ${(100 * pixelRatio).toFixed()}%`, endX, endY + 5);
     }
   }
   tmlCtx.textAlign = "left";
