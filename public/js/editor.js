@@ -65,7 +65,8 @@ let dragMouseX, dragMouseY, originX, originY;
 let copied = false,
   copiedTime = 0;
 let gridToggle = false,
-  magnetToggle = true;
+  magnetToggle = true,
+  explainToggle = true;
 
 let lottieAnim = {
   play: () => {},
@@ -413,6 +414,8 @@ const drawCursor = () => {
 
 const drawNote = (p, x, y, s, n, d) => {
   p = Math.max(p, 0);
+  let originX = x;
+  let originY = y;
   x = (cntCanvas.width / 200) * (x + 100);
   y = (cntCanvas.height / 200) * (y + 100);
   n = n == undefined ? 0 : n;
@@ -422,6 +425,17 @@ const drawNote = (p, x, y, s, n, d) => {
     opacity = `${parseInt((130 - p) * 3.333)}`.padStart(2, "0");
   }
   if (s == true) {
+    cntCtx.lineWidth = Math.round(cntCanvas.width / 300);
+    if (explainToggle) {
+      cntCtx.beginPath();
+      cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis, Pretendard Variable`;
+      cntCtx.fillStyle = "#000";
+      cntCtx.strokeStyle = "#fff";
+      cntCtx.textAlign = "center";
+      cntCtx.textBaseline = "bottom";
+      cntCtx.strokeText(`(X: ${originX}, Y: ${originY})`, x, y - w);
+      cntCtx.fillText(`(X: ${originX}, Y: ${originY})`, x, y - w);
+    }
     cntCtx.fillStyle = `#ebd534${opacity.toString(16)}`;
     cntCtx.strokeStyle = `#ebd534${opacity.toString(16)}`;
   } else {
@@ -529,11 +543,24 @@ const changeBullet = () => {
   changeSettingsMode(selectedCntElement.v1, selectedCntElement.v2, selectedCntElement.i);
 };
 
-const drawBullet = (n, x, y, a, s) => {
+const drawBullet = (n, x, y, a, s, l, d) => {
   x = (cntCanvas.width / 200) * (x + 100);
   y = (cntCanvas.height / 200) * (y + 100);
   let w = cntCanvas.width / 80;
   if (s == true) {
+    if (explainToggle) {
+      cntCtx.beginPath();
+      cntCtx.font = `500 ${window.innerHeight / 40}px Metropolis, Pretendard Variable`;
+      cntCtx.fillStyle = "#000";
+      cntCtx.strokeStyle = "#fff";
+      cntCtx.textAlign = d == "L" ? "left" : "right";
+      cntCtx.textBaseline = "bottom";
+      cntCtx.lineWidth = Math.round(cntCanvas.width / 300);
+      cntCtx.strokeText(`(Loc: ${l})`, x, y - w - window.innerHeight / 40);
+      cntCtx.strokeText(`(Angle: ${a})`, x, y - w);
+      cntCtx.fillText(`(Loc: ${l})`, x, y - w - window.innerHeight / 40);
+      cntCtx.fillText(`(Angle: ${a})`, x, y - w);
+    }
     cntCtx.fillStyle = `#ebd534`;
     cntCtx.strokeStyle = `#ebd534`;
   } else {
@@ -1164,9 +1191,9 @@ const cntRender = () => {
         drawNote(100, magnetToggle ? mouseX - (mouseX % 5) : mouseX, magnetToggle ? mouseY - (mouseY % 5) : mouseY, true, selectedValue, 1);
       } else {
         if (p[1] == 0) {
-          drawBullet(selectedValue, -100, magnetToggle ? mouseY - (mouseY % 5) : mouseY, 0, true);
+          drawBullet(selectedValue, -100, magnetToggle ? mouseY - (mouseY % 5) : mouseY, 0, true, mouseY - (mouseY % 5), "L");
         } else {
-          drawBullet(selectedValue, 100, magnetToggle ? mouseY - (mouseY % 5) : mouseY, 180, true);
+          drawBullet(selectedValue, 100, magnetToggle ? mouseY - (mouseY % 5) : mouseY, 180, true, mouseY - (mouseY % 5), "R");
         }
       }
     }
@@ -1189,7 +1216,7 @@ const cntRender = () => {
         if (renderBullets[i].value == 0) {
           y = renderBullets[i].location + p * getTan(renderBullets[i].angle) * (left ? 1 : -1);
           if (mouseMode == 0) trackMouseSelection(start + i, 1, renderBullets[i].value, x, y);
-          drawBullet(renderBullets[i].value, x, y, renderBullets[i].angle + (left ? 0 : 180), selectedCheck(1, start + i));
+          drawBullet(renderBullets[i].value, x, y, renderBullets[i].angle + (left ? 0 : 180), selectedCheck(1, start + i), renderBullets[i].location, renderBullets[i].direction);
         } else {
           if (!circleBulletAngles[start + i]) circleBulletAngles[start + i] = calcAngleDegrees((left ? -100 : 100) - mouseX, renderBullets[i].location - mouseY);
           if (left) {
@@ -1201,7 +1228,7 @@ const cntRender = () => {
           }
           y = renderBullets[i].location + p * getTan(circleBulletAngles[start + i]) * (left ? 1 : -1);
           if (mouseMode == 0) trackMouseSelection(start + i, 1, renderBullets[i].value, x, y);
-          drawBullet(renderBullets[i].value, x, y, "", selectedCheck(1, start + i));
+          drawBullet(renderBullets[i].value, x, y, "", selectedCheck(1, start + i), renderBullets[i].location, renderBullets[i].direction);
         }
       }
     }
@@ -2227,12 +2254,12 @@ const elementPaste = () => {
 };
 
 const showHelp = () => {
-  document.getElementsByClassName("menuIcon")[11].classList.add("menuSelected");
+  document.getElementsByClassName("menuIcon")[12].classList.add("menuSelected");
   document.getElementById("helpContainer").style.display = "flex";
 };
 
 const hideHelp = () => {
-  document.getElementsByClassName("menuIcon")[11].classList.remove("menuSelected");
+  document.getElementsByClassName("menuIcon")[12].classList.remove("menuSelected");
   document.getElementById("helpContainer").style.display = "none";
 };
 
@@ -2474,6 +2501,12 @@ const toggleMagnet = () => {
   if (magnetToggle) document.getElementsByClassName("menuIcon")[9].classList.remove("menuSelected");
   else document.getElementsByClassName("menuIcon")[9].classList.add("menuSelected");
   magnetToggle = !magnetToggle;
+};
+
+const toggleExplain = () => {
+  if (explainToggle) document.getElementsByClassName("menuIcon")[10].classList.remove("menuSelected");
+  else document.getElementsByClassName("menuIcon")[10].classList.add("menuSelected");
+  explainToggle = !explainToggle;
 };
 
 document.getElementById("timelineContainer").addEventListener("mousewheel", scrollEvent);
