@@ -1,4 +1,4 @@
-/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2, count, bulletDensity, noteDensity, speed, advancedNeeded, DLCNeeded, notAvailable1, notAvailable2 */
+/* global intro1load:writable, api, url, Howl, cdn, bodymovin, Howler, TossPayments, confirmExit, pressAnywhere, enabled, registered, cancelSubscription, currency, purchased, addToBag, addedToBag, nothingHere, couponApplySuccess, couponUsed, inputEmpty, alreadySubscribed1, alreadySubscribed2, medalDesc, lang, Pace, lottie, couponInvalid1, couponInvalid2, count, bulletDensity, noteDensity, speed, advancedNeeded, DLCNeeded, notAvailable1, notAvailable2, advancedPreview1, advancedPreview2 */
 const animContainer = document.getElementById("animContainer");
 const langDetailSelector = document.getElementById("langDetailSelector");
 const canvasResSelector = document.getElementById("canvasResSelector");
@@ -759,6 +759,9 @@ const songSelected = (n, refreshed) => {
       alert(DLCNeeded);
     } else if (JSON.parse(tracks[songSelection].difficulty)[difficultySelection] == 0 && isOfficial) {
       alert(`${notAvailable1}\n${notAvailable2}`);
+    } else if (JSON.parse(tracks[n].isPreview)[difficultySelection] && !isAdvanced) {
+      alert(`${advancedPreview1}\n${advancedPreview2}`);
+      return;
     } else {
       if (isOfficial) {
         localStorage.rate = rate;
