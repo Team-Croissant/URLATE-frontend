@@ -91,6 +91,7 @@ let isPaused = false;
 let rate = 1;
 let disableText = false;
 let advanced = false;
+let songData = [];
 
 const socketInitialize = () => {
   socket = io(game, {
@@ -182,17 +183,41 @@ document.addEventListener("DOMContentLoaded", () => {
           credentials: "include",
         })
           .then((res) => res.json())
-          .then((data) => {
+          .then(async (data) => {
             if (data.result == "success") {
               data = data.user;
               userName = data.nickname;
               userid = data.userid;
               settings = JSON.parse(data.settings);
-              initialize(true);
+              const DLCs = JSON.parse(data.DLCs);
+              for (let i = 0; i < DLCs.length; i++) {
+                await fetch(`${api}/store/DLC/${DLCs[i]}`, {
+                  method: "GET",
+                  credentials: "include",
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    if (data.result == "success") {
+                      data = data.data;
+                      data.songs = JSON.parse(data.songs);
+                      for (let j = 0; j < data.songs.length; j++) {
+                        songData.push(data.songs[j]);
+                      }
+                    } else {
+                      alert("Failed to load DLC list.");
+                      console.error("Failed to load DLC list.");
+                    }
+                  })
+                  .catch((error) => {
+                    alert(`Error occured.\n${error}`);
+                    console.error(`Error occured.\n${error}`);
+                  });
+              }
               advanced = data.advanced;
-              if (data.advanced) {
+              if (advanced) {
                 document.getElementById("urlate").innerHTML = "<strong>URLATE</strong> Advanced";
               }
+              initialize(true);
               settingApply();
             } else {
               alert(`Error occured.\n${data.description}`);
@@ -241,6 +266,19 @@ const initialize = (isFirstCalled) => {
         speed = pattern.information.speed;
         for (let i = 0; i < tracks.length; i++) {
           if (tracks[i].name == pattern.information.track) {
+            if (tracks[i].type == 1 && !advanced) {
+              alert("Wrong Access");
+              window.location.href = `${url}/game?initialize=1`;
+              return;
+            } else if (tracks[i].type == 2 && !(songData.indexOf(tracks[i].name) != -1)) {
+              alert("Wrong Access");
+              window.location.href = `${url}/game?initialize=1`;
+              return;
+            } else if (JSON.parse(tracks[i].isPreview)[localStorage.difficultySelection] && !advanced) {
+              alert("Wrong Access");
+              window.location.href = `${url}/game?initialize=1`;
+              return;
+            }
             document.getElementById("scoreTitle").textContent = settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name;
             document.getElementById("title").textContent = settings.general.detailLang == "original" ? tracks[i].originalName : tracks[i].name;
             fileName = tracks[i].fileName;
