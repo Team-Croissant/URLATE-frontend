@@ -236,6 +236,8 @@
   "count": "채보 개수",
   "advanced_needed": "이 곡을 플레이하려면 ADVANCED에 가입되어야합니다.",
   "DLC_needed": "이 곡을 플레이하려면 DLC를 구매해야합니다.",
-  "not_available_1": "이 난이도는 아직 채보가 없습니다 :(",
-  "not_available_2": "빠른 시일 내에 채보를 개발하려 노력중이니 조금만 기다려주세요..!"
+  "not_available_1": "이 난이도는 아직 패턴이 없습니다 :(",
+  "not_available_2": "빠른 시일 내에 패턴을 개발하려 노력중이니 조금만 기다려주세요..!",
+  "advanced_preview_1": "이 패턴은 ADVANCED에 먼저 공개중입니다!",
+  "advanced_preview_2": "ADVANCED에 가입하면 모든 신규 패턴을 일주일 먼저 플레이할 수 있습니다."
 }
