@@ -556,6 +556,7 @@ const drawBullet = (n, x, y, a, s, l, d) => {
       cntCtx.textAlign = d == "L" ? "left" : "right";
       cntCtx.textBaseline = "bottom";
       cntCtx.lineWidth = Math.round(cntCanvas.width / 300);
+      a = d == "L" ? a : a - 180;
       cntCtx.strokeText(`(Loc: ${l})`, x, y - 1.5 * w - window.innerHeight / 40);
       cntCtx.strokeText(`(Angle: ${a})`, x, y - 1.5 * w);
       cntCtx.fillText(`(Loc: ${l})`, x, y - 1.5 * w - window.innerHeight / 40);
