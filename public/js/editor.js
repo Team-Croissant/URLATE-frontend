@@ -1687,7 +1687,7 @@ const elementFollowMouse = (v1, v2, i) => {
       if (dragMouseX == undefined) {
         dragMouseX = mouseX;
         dragMouseY = mouseY;
-        originX = pattern.patterns[i].x;
+        originX = v1 == 0 ? pattern.patterns[i].x : 0;
         originY = v1 == 0 ? pattern.patterns[i].y : pattern.bullets[i].location;
       }
       let newX, newY;
