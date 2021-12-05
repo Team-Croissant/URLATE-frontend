@@ -1389,7 +1389,8 @@ input[type="number"]::-webkit-inner-spin-button {
   padding-top: 5vh;
   margin-top: 10vh;
   height: 80vh;
-  width: 40vw;
+  width: 35vw;
+  margin-left: 5vw;
   float: left;
 }
 
