@@ -1413,6 +1413,9 @@ input[type="number"]::-webkit-inner-spin-button {
 }
 
 .songSelectionContainer {
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 65%, rgba(255, 255, 255, 0.1));
+  background-size: 200% 100%;
+  background-position-x: 0%;
   height: 6vh;
   --artist-display: initial;
   --title-weight: 300;
@@ -1424,6 +1427,11 @@ input[type="number"]::-webkit-inner-spin-button {
   align-items: center;
   justify-content: flex-end;
   transition-duration: 0.2s;
+}
+
+.songSelectionContainer:hover {
+  background-position-x: 100%;
+  height: 7vh;
 }
 
 .songSelectionInfo {
