@@ -1248,11 +1248,11 @@ p {
 }
 
 .trackModsValue {
+  background-color: rgba(255, 255, 255, 0.1);
   transition-duration: 0.3s;
   font-size: 2vh;
   text-align: center;
   width: 20%;
-  background: none;
   cursor: pointer;
   color: white;
   font-weight: 700;
@@ -1348,6 +1348,10 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   opacity: 0.3;
   font-weight: 300;
+}
+
+.difficulty:hover {
+  opacity: 0.5;
 }
 
 .difficulty.right {
