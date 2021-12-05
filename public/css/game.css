@@ -1348,6 +1348,7 @@ input[type="number"]::-webkit-inner-spin-button {
   cursor: pointer;
   opacity: 0.3;
   font-weight: 300;
+  transition-duration: 0.3s;
 }
 
 .difficulty:not(.difficultySelected):hover {
