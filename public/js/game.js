@@ -1766,7 +1766,7 @@ const menuSelected = (n) => {
         let max = Math.floor(tracks.length);
         let result = Math.floor(Math.random() * (max - min)) + min;
         if (songs[result]) {
-          songSelected(Math.floor(Math.random() * (max - min)) + min);
+          songSelected(result);
           break;
         }
       }
