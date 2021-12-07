@@ -696,7 +696,7 @@ const gotoMain = (isCalledByMain) => {
       },
       background: {
         lottie: {},
-        type: 1,
+        type: 0,
         boxColor: "FFFFFF",
         grayscale: 30,
         opacity: 20,
@@ -1324,7 +1324,7 @@ const deleteAll = () => {
       },
       background: {
         lottie: {},
-        type: 1,
+        type: 0,
         boxColor: "FFFFFF",
         grayscale: 30,
         opacity: 20,
