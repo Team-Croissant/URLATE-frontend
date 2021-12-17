@@ -310,8 +310,8 @@ const initialize = (isFirstCalled) => {
             console.error(`Error occured.\n${error}`);
           });
         song = new Howl({
-          src: `${cdn}/tracks/${settings.sound.res}/${fileName}.mp3`,
-          format: ["mp3"],
+          src: `${cdn}/tracks/${settings.sound.res}/${fileName}.ogg`,
+          format: ["ogg"],
           autoplay: false,
           loop: false,
           onend: () => {
