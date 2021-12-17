@@ -121,8 +121,8 @@ let cplData;
 let themeSong;
 let songs = [];
 let offsetSong = new Howl({
-  src: [`${cdn}/tracks/offset.mp3`],
-  format: ["mp3"],
+  src: [`${cdn}/tracks/offset.ogg`],
+  format: ["ogg"],
   autoplay: false,
   loop: true,
 });
@@ -253,8 +253,8 @@ const settingApply = () => {
   }
   initialize();
   storeSong = new Howl({
-    src: [`${cdn}/tracks/128kbps/store.mp3`],
-    format: ["mp3"],
+    src: [`${cdn}/tracks/128kbps/store.ogg`],
+    format: ["ogg"],
     autoplay: false,
     loop: true,
     onload: () => {
@@ -270,8 +270,8 @@ const settingApply = () => {
     },
   });
   themeSong = new Howl({
-    src: [`${cdn}/tracks/${settings.sound.res}/urlate_theme.mp3`],
-    format: ["mp3"],
+    src: [`${cdn}/tracks/${settings.sound.res}/urlate_theme.ogg`],
+    format: ["ogg"],
     autoplay: false,
     loop: true,
     onload: () => {
@@ -632,8 +632,8 @@ const tracksUpdate = () => {
       continue;
     }
     songs[i] = new Howl({
-      src: [`${cdn}/tracks/preview/${tracks[i].fileName}.mp3`],
-      format: ["mp3"],
+      src: [`${cdn}/tracks/preview/${tracks[i].fileName}.ogg`],
+      format: ["ogg"],
       autoplay: false,
       loop: true,
     });

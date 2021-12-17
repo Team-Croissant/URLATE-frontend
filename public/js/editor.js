@@ -292,8 +292,8 @@ const analyze = () => {
 const songSelected = (isLoaded, withoutSong) => {
   if (!withoutSong) {
     song = new Howl({
-      src: `${cdn}/tracks/${settings.sound.res}/${tracks[songSelectBox.selectedIndex].fileName}.mp3`,
-      format: ["mp3"],
+      src: `${cdn}/tracks/${settings.sound.res}/${tracks[songSelectBox.selectedIndex].fileName}.ogg`,
+      format: ["ogg"],
       autoplay: false,
       loop: false,
       onload: () => {
@@ -696,7 +696,7 @@ const gotoMain = (isCalledByMain) => {
       },
       background: {
         lottie: {},
-        type: 1,
+        type: 0,
         boxColor: "FFFFFF",
         grayscale: 30,
         opacity: 20,
@@ -1324,7 +1324,7 @@ const deleteAll = () => {
       },
       background: {
         lottie: {},
-        type: 1,
+        type: 0,
         boxColor: "FFFFFF",
         grayscale: 30,
         opacity: 20,

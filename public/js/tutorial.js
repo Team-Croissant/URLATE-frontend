@@ -242,8 +242,8 @@ const settingApply = () => {
       console.error(`Error occured.\n${error}`);
     });
   song = new Howl({
-    src: `${cdn}/tracks/192kbps/tutorial.mp3`,
-    format: ["mp3"],
+    src: `${cdn}/tracks/192kbps/tutorial.ogg`,
+    format: ["ogg"],
     autoplay: false,
     loop: false,
     onend: () => {
