@@ -316,13 +316,13 @@ const animationLooper = () => {
 };
 
 const sortAsName = (a, b) => {
-  if (a.name == b.name) return 0;
-  return a.name > b.name ? 1 : -1;
+  if (a.name.toLowerCase() == b.name.toLowerCase()) return 0;
+  return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
 };
 
 const sortAsProducer = (a, b) => {
-  if (a.producer == b.producer) return 0;
-  return a.producer > b.producer ? 1 : -1;
+  if (a.producer.toLowerCase() == b.producer.toLowerCase()) return 0;
+  return a.producer.toLowerCase() > b.producer.toLowerCase() ? 1 : -1;
 };
 
 const sortAsDifficulty = (a, b) => {
