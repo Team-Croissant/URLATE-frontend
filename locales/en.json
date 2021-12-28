@@ -222,5 +222,8 @@
   "not_available_1": "There is no pattern for this difficulty yet :(",
   "not_available_2": "We are trying to develop a pattern as soon as possible, so please wait a little bit!",
   "advanced_preview_1": "This pattern is being released first on ADVANCED!",
-  "advanced_preview_2": "By joining ADVANCED, you can play all new patterns a week in advance."
+  "advanced_preview_2": "By joining ADVANCED, you can play all new patterns a week in advance.",
+  "wheel": "Wheel direction",
+  "wheel_forward": "Default",
+  "wheel_reverse": "Reversed"
 }

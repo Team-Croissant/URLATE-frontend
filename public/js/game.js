@@ -1902,6 +1902,8 @@ const settingChanged = (e, v) => {
   } else if (v == "sensitive") {
     settings.input.sens = e.value / 100;
     sensitiveValue.textContent = e.value / 100 + "x";
+  } else if (v == "wheel") {
+    settings.input.wheelReverse = Number(e.value);
   } else if (v == "inputKey") {
     settings.input.keys = Number(e.value);
   } else if (v == "inputMouse") {
