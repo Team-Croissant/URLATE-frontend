@@ -1187,6 +1187,7 @@ const globalScrollEvent = (e) => {
   if (shiftDown) {
     e = window.event || e;
     let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+    if (settings.input.wheelReverse) delta > 0 ? (delta = -1) : (delta = 1);
     if (delta == 1) {
       //UP
       if (settings.sound.volume.master <= 0.95) {
@@ -1235,6 +1236,7 @@ const globalScrollEvent = (e) => {
   } else {
     e = window.event || e;
     let delta = Math.max(-1, Math.min(1, e.wheelDelta || -e.detail));
+    if (settings.input.wheelReverse) delta > 0 ? (delta = -1) : (delta = 1);
     if (delta == 1) {
       //UP
       compClicked(false, 1, true);

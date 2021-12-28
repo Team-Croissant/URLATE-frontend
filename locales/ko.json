@@ -239,5 +239,8 @@
   "not_available_1": "이 난이도는 아직 패턴이 없습니다 :(",
   "not_available_2": "빠른 시일 내에 패턴을 개발하려 노력중이니 조금만 기다려주세요..!",
   "advanced_preview_1": "이 패턴은 ADVANCED에 먼저 공개중입니다!",
-  "advanced_preview_2": "ADVANCED에 가입하면 모든 신규 패턴을 일주일 먼저 플레이할 수 있습니다."
+  "advanced_preview_2": "ADVANCED에 가입하면 모든 신규 패턴을 일주일 먼저 플레이할 수 있습니다.",
+  "wheel": "휠 방향",
+  "wheel_forward": "정방향",
+  "wheel_reverse": "역방향"
 }
