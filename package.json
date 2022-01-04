@@ -10,7 +10,8 @@
   "scripts": {
     "build": "tsc",
     "auto-build": "tsc-watch",
-    "start": "supervisor dist/index.js"
+    "start": "supervisor dist/index.js",
+    "obfuscate": "javascript-obfuscator public/js/ --output ./"
   },
   "author": "Team Croissant",
   "license": "MIT",
