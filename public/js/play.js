@@ -93,8 +93,6 @@ let disableText = false;
 let advanced = false;
 let songData = [];
 
-let replay = [];
-
 const socketInitialize = () => {
   socket = io(game, {
     query: `id=${userid}&name=${userName}`,
@@ -138,14 +136,8 @@ const socketInitialize = () => {
   });
 };
 
-const recordUpdate = (type, seek, width, w, h) => {
-  let newData = { type: type, seek: seek };
-  if (width) {
-    newData.width = width;
-    newData.w = w;
-    newData.h = h;
-  }
-  replay.push(newData);
+const socketUpdate = (d) => {
+  socket.emit("game update", mouseX, mouseY, offset + sync, d);
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -346,9 +338,8 @@ const initialize = (isFirstCalled) => {
     if (pattern.background.type) {
       lottieLoad(true);
     }
-    recordUpdate(
-      "resize",
-      song.seek() * 1000 - (offset + sync),
+    socket.emit(
+      "game resized",
       canvas.width,
       ((window.innerWidth / 200) * pixelRatio * settings.display.canvasRes) / 100,
       ((window.innerHeight / 200) * pixelRatio * settings.display.canvasRes) / 100
@@ -374,7 +365,7 @@ const lottieLoad = (needToSeek) => {
   lottieAnim.addEventListener("DOMLoaded", () => {
     if (needToSeek) {
       if (song.playing()) {
-        lottieAnim.goToAndPlay(song.seek() * 1000 - sync);
+        lottieAnim.goToAndPlay(song.seek() * 1000);
       }
     }
     lottieSet();
@@ -788,7 +779,8 @@ const drawBullet = (n, x, y, a) => {
 };
 
 const callBulletDestroy = (j) => {
-  const seek = song.seek() * 1000 - (offset + sync);
+  let date = new Date().getTime();
+  const seek = (date - startDate - (offset + sync)) * rate;
   const p = ((seek - pattern.bullets[j].ms) / ((bpm * 40) / speed / pattern.bullets[j].speed)) * 100;
   const left = pattern.bullets[j].direction == "L";
   let x = (left ? -1 : 1) * (100 - p);
@@ -836,7 +828,6 @@ const cntRender = () => {
   }
   if (resultMs != 0 && resultMs + 500 <= Date.now()) return;
   try {
-    const seek = song.seek() * 1000 - (offset + sync);
     if (comboAlert) {
       let comboOpacity = 0;
       let fontSize = 20;
@@ -868,8 +859,15 @@ const cntRender = () => {
     ctx.strokeRect(rectX, rectY, rectWidth, rectHeight);
     ctx.fillRect(rectX, rectY, rectWidth * percentage, rectHeight);
     pointingCntElement = [{ v1: "", v2: "", i: "" }];
+    let date = new Date().getTime();
+    let seek = 0;
+    if (isPaused || startDate == 0) {
+      seek = song.seek() * 1000 - (offset + sync);
+    } else {
+      seek = (date - startDate - (offset + sync)) * rate;
+    }
     if (song.playing()) {
-      recordUpdate("update", seek);
+      socketUpdate(date);
     }
     let start = lowerBound(pattern.triggers, 0);
     let end = upperBound(pattern.triggers, seek + 0.002); //for floating point miss
@@ -1093,12 +1091,14 @@ const trackMouseSelection = (i, v1, v2, x, y) => {
 };
 
 const compClicked = (isTyped, key, isWheel) => {
-  const seek = song.seek() * 1000 - (offset + sync);
   if ((!isTyped && !settings.input.mouse && !isWheel) || isMenuOpened || !menuAllowed || mouseClicked == key) {
     return;
   }
+  let d = new Date().getTime();
   if (!song.playing() && isPaused) {
     isPaused = false;
+    startDate = startDate + d - pauseDate;
+    socket.emit("game resume", d);
     floatingResumeContainer.style.opacity = 0;
     setTimeout(() => {
       floatingResumeContainer.style.display = "none";
@@ -1106,7 +1106,7 @@ const compClicked = (isTyped, key, isWheel) => {
     song.play();
     lottieAnim.play();
   } else {
-    recordUpdate("click", seek);
+    socket.emit("game click", mouseX, mouseY, offset + sync, d, key, isWheel);
   }
   if (key && !isWheel) mouseClicked = key;
   else if (!isWheel) mouseClicked = true;
@@ -1115,6 +1115,8 @@ const compClicked = (isTyped, key, isWheel) => {
     if (pointingCntElement[i].v1 === 0 && !destroyedNotes.has(pointingCntElement[i].i) && (pointingCntElement[i].v2 === 0) == !isWheel) {
       if (pointingCntElement[i].v2 == 1 && pattern.patterns[pointingCntElement[i].i].direction != key) return;
       drawParticle(1, mouseX, mouseY, 0, pointingCntElement[i].v2);
+      let date = d;
+      const seek = (date - startDate - (offset + sync)) * rate;
       let ms = pattern.patterns[pointingCntElement[i].i].ms;
       let perfectJudge = (60000 / bpm / 8) * rate;
       let greatJudge = (60000 / bpm / 5) * rate;
@@ -1212,12 +1214,13 @@ const doneLoading = () => {
       song.play();
       lottieAnim.play();
       menuAllowed = true;
-      recordUpdate(
-        "resize",
-        0,
+      startDate = new Date().getTime();
+      socket.emit(
+        "game start",
+        startDate,
         canvas.width,
-        ((window.innerWidth / 200) * pixelRatio * settings.display.canvasRes) / 100,
-        ((window.innerHeight / 200) * pixelRatio * settings.display.canvasRes) / 100
+        ((canvas.offsetWidth / 200) * pixelRatio * settings.display.canvasRes) / 100,
+        ((canvas.offsetHeight / 200) * pixelRatio * settings.display.canvasRes) / 100
       );
     }, 4000);
   }, 1000);
@@ -1363,6 +1366,7 @@ document.onkeydown = (e) => {
           lottieAnim.pause();
           let d = new Date().getTime();
           pauseDate = d;
+          socket.emit("game pause", d);
         } else {
           resume();
         }
