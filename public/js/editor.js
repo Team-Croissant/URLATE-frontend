@@ -66,7 +66,8 @@ let copied = false,
   copiedTime = 0;
 let gridToggle = false,
   magnetToggle = true,
-  explainToggle = true;
+  explainToggle = true,
+  metronomeToggle = true;
 
 let lottieAnim = {
   play: () => {},
@@ -106,6 +107,25 @@ let destroyedBullets = new Set([]);
 let prevDestroyedBullets = new Set([]);
 let destroyedSeeks = new Set([]);
 let prevDestroyedSeeks = new Set([]);
+
+let metronome = 1;
+let metronomeLimit = 4;
+const beep = [
+  new Howl({
+    src: `/sounds/beep1.ogg`,
+    format: ["ogg"],
+    volume: 0.5,
+    autoplay: false,
+    loop: false,
+  }),
+  new Howl({
+    src: `/sounds/beep2.ogg`,
+    format: ["ogg"],
+    volume: 0.5,
+    autoplay: false,
+    loop: false,
+  }),
+];
 
 const sortAsTiming = (a, b) => {
   if (a.ms == b.ms) return 0;
@@ -325,14 +345,16 @@ const songSelected = (isLoaded, withoutSong) => {
   settingsPropertiesTextbox[0].value = pattern.information.track;
   settingsPropertiesTextbox[1].value = pattern.information.producer;
   settingsPropertiesTextbox[2].value = pattern.information.author;
-  settingsPropertiesTextbox[3].value = pattern.information.bpm;
-  settingsPropertiesTextbox[4].value = pattern.information.speed;
-  settingsPropertiesTextbox[5].value = pattern.information.offset;
-  settingsPropertiesTextbox[6].value = pattern.background.boxColor;
-  settingsPropertiesTextbox[7].value = pattern.background.grayscale;
-  settingsPropertiesTextbox[8].value = pattern.background.opacity;
+  settingsPropertiesTextbox[3].value = pattern.information.tempo ? pattern.information.tempo : 4;
+  settingsPropertiesTextbox[4].value = pattern.information.bpm;
+  settingsPropertiesTextbox[5].value = pattern.information.speed;
+  settingsPropertiesTextbox[6].value = pattern.information.offset;
+  settingsPropertiesTextbox[7].value = pattern.background.boxColor;
+  settingsPropertiesTextbox[8].value = pattern.background.grayscale;
+  settingsPropertiesTextbox[9].value = pattern.background.opacity;
   lottieInitBox.value = pattern.background.type;
   canvasBackground.style.filter = `grayscale(${pattern.background.grayscale}%) opacity(${pattern.background.opacity}%)`;
+  metronomeLimit = pattern.information.tempo ? pattern.information.tempo : 4;
   bpm = pattern.information.bpm;
   offset = pattern.information.offset;
   speed = pattern.information.speed;
@@ -1073,6 +1095,19 @@ const cntRender = () => {
   if (window.devicePixelRatio != pixelRatio) {
     pixelRatio = window.devicePixelRatio;
     initialize();
+  }
+  if (metronomeToggle) {
+    if (song.playing()) {
+      if (Math.ceil(((song.seek() * 1000) / (60000 / bpm)) % metronomeLimit) == metronome) {
+        if (metronome == 1) beep[0].play();
+        else beep[1].play();
+        if (metronome == metronomeLimit) metronome = 1;
+        else metronome++;
+      }
+    } else {
+      metronome = Math.ceil(((song.seek() * 1000) / (60000 / bpm)) % metronomeLimit) + 1;
+      if (metronome == 0 || metronome >= metronomeLimit) metronome = 1;
+    }
   }
   try {
     pointingCntElement = { v1: "", v2: "", i: "" };
@@ -2254,12 +2289,12 @@ const elementPaste = () => {
 };
 
 const showHelp = () => {
-  document.getElementsByClassName("menuIcon")[12].classList.add("menuSelected");
+  document.getElementsByClassName("menuIcon")[13].classList.add("menuSelected");
   document.getElementById("helpContainer").style.display = "flex";
 };
 
 const hideHelp = () => {
-  document.getElementsByClassName("menuIcon")[12].classList.remove("menuSelected");
+  document.getElementsByClassName("menuIcon")[13].classList.remove("menuSelected");
   document.getElementById("helpContainer").style.display = "none";
 };
 
@@ -2491,21 +2526,40 @@ const changeOpacity = (e) => {
   pattern.background.opacity = Number(e.value);
 };
 
-const toggleGrid = () => {
-  if (gridToggle) document.getElementsByClassName("menuIcon")[8].classList.remove("menuSelected");
+const changeTempo = (e) => {
+  if (isNaN(Number(e.value))) {
+    alert("Input value is not number.");
+    e.value = metronomeLimit;
+  } else if (Number(e.value) < 2) {
+    alert("Input value is too low");
+    e.value = metronomeLimit;
+  } else {
+    metronomeLimit = Number(e.value);
+  }
+  pattern.information.tempo = Number(e.value);
+};
+
+const toggleMetronome = () => {
+  if (metronomeToggle) document.getElementsByClassName("menuIcon")[8].classList.remove("menuSelected");
   else document.getElementsByClassName("menuIcon")[8].classList.add("menuSelected");
+  metronomeToggle = !metronomeToggle;
+};
+
+const toggleGrid = () => {
+  if (gridToggle) document.getElementsByClassName("menuIcon")[9].classList.remove("menuSelected");
+  else document.getElementsByClassName("menuIcon")[9].classList.add("menuSelected");
   gridToggle = !gridToggle;
 };
 
 const toggleMagnet = () => {
-  if (magnetToggle) document.getElementsByClassName("menuIcon")[9].classList.remove("menuSelected");
-  else document.getElementsByClassName("menuIcon")[9].classList.add("menuSelected");
+  if (magnetToggle) document.getElementsByClassName("menuIcon")[10].classList.remove("menuSelected");
+  else document.getElementsByClassName("menuIcon")[10].classList.add("menuSelected");
   magnetToggle = !magnetToggle;
 };
 
 const toggleExplain = () => {
-  if (explainToggle) document.getElementsByClassName("menuIcon")[10].classList.remove("menuSelected");
-  else document.getElementsByClassName("menuIcon")[10].classList.add("menuSelected");
+  if (explainToggle) document.getElementsByClassName("menuIcon")[11].classList.remove("menuSelected");
+  else document.getElementsByClassName("menuIcon")[11].classList.add("menuSelected");
   explainToggle = !explainToggle;
 };
 

@@ -1,1 +1,107 @@
-function a7_0x134d(){const _0x36e40b=['success','565239mHzwkE','then','style','/auth/logout?redirect=true&shutdowned=true','display','classList','POST','1802104ibeVET','json','location','join\x20failed.','17090QxEOPX','Not\x20authenticated(adult)','Not\x20authorized','Exist\x20Name','href','Error\x20occured.\x0a','stringify','value','2978110nSeLXN','add','GET','catch','114aDvVJB','status','getElementById','/auth/join','remove','Not\x20logined','keydown','result','/authorize','198737zRblHx','test','error','/authentication?adult=1','blur','password','1791snZOUn','Shutdowned','/game','initial','show','Logined','log','nickname','6CjJncv','name','1465378QLZcgR','addEventListener','nameExist','application/json','1046712TMyIAl','tempName','include','/authentication'];a7_0x134d=function(){return _0x36e40b;};return a7_0x134d();}const a7_0x2fb062=a7_0x32da;(function(_0x4a88a6,_0x2b50d7){const _0x5daca8=a7_0x32da,_0x29b64e=_0x4a88a6();while(!![]){try{const _0x485bed=parseInt(_0x5daca8(0xa2))/0x1+parseInt(_0x5daca8(0x99))/0x2+parseInt(_0x5daca8(0x97))/0x3*(-parseInt(_0x5daca8(0x9d))/0x4)+-parseInt(_0x5daca8(0x7c))/0x5+parseInt(_0x5daca8(0x80))/0x6*(parseInt(_0x5daca8(0x89))/0x7)+parseInt(_0x5daca8(0xa9))/0x8+-parseInt(_0x5daca8(0x8f))/0x9*(parseInt(_0x5daca8(0xad))/0xa);if(_0x485bed===_0x2b50d7)break;else _0x29b64e['push'](_0x29b64e['shift']());}catch(_0x242a75){_0x29b64e['push'](_0x29b64e['shift']());}}}(a7_0x134d,0x9359f),document['addEventListener']('DOMContentLoaded',()=>{const _0x1c1263=a7_0x32da;fetch(api+'/auth/status',{'method':_0x1c1263(0x7e),'credentials':'include'})[_0x1c1263(0xa3)](_0x5bfa39=>_0x5bfa39[_0x1c1263(0xaa)]())[_0x1c1263(0xa3)](_0x31ff14=>{const _0x5c0f6f=_0x1c1263;if(_0x31ff14[_0x5c0f6f(0x81)]==_0x5c0f6f(0x94))window[_0x5c0f6f(0xab)][_0x5c0f6f(0xb1)]=projectUrl+_0x5c0f6f(0x91);else{if(_0x31ff14[_0x5c0f6f(0x81)]==_0x5c0f6f(0xaf))window['location'][_0x5c0f6f(0xb1)]=projectUrl+_0x5c0f6f(0x88);else{if(_0x31ff14[_0x5c0f6f(0x81)]=='Not\x20authenticated')window[_0x5c0f6f(0xab)][_0x5c0f6f(0xb1)]=projectUrl+_0x5c0f6f(0xa0);else{if(_0x31ff14[_0x5c0f6f(0x81)]==_0x5c0f6f(0xae))window[_0x5c0f6f(0xab)]['href']=projectUrl+_0x5c0f6f(0x8c);else{if(_0x31ff14[_0x5c0f6f(0x81)]==_0x5c0f6f(0x85))window[_0x5c0f6f(0xab)][_0x5c0f6f(0xb1)]=projectUrl;else _0x31ff14['status']==_0x5c0f6f(0x90)&&(window['location'][_0x5c0f6f(0xb1)]=api+_0x5c0f6f(0xa5));}}}}nameReg[_0x5c0f6f(0x8a)](_0x31ff14[_0x5c0f6f(0x9e)])&&(document['getElementById'](_0x5c0f6f(0x96))[_0x5c0f6f(0x7b)]=_0x31ff14[_0x5c0f6f(0x9e)]);})[_0x1c1263(0x7f)](_0x170b81=>{const _0x137277=_0x1c1263;alert(_0x137277(0x79)+_0x170b81);});}));const nameReg=/^[a-zA-Z0-9_-]{5,12}$/,passReg=/^[0-9]{4,6}$/;document[a7_0x2fb062(0x82)]('nickname')[a7_0x2fb062(0x9a)](a7_0x2fb062(0x8d),()=>{requestAnimationFrame(()=>{const _0x4aa125=a7_0x32da;!nameReg[_0x4aa125(0x8a)](document[_0x4aa125(0x82)](_0x4aa125(0x96))['value'])?document['getElementById'](_0x4aa125(0x98))['classList'][_0x4aa125(0x7d)](_0x4aa125(0x93)):document[_0x4aa125(0x82)]('name')['classList']['remove'](_0x4aa125(0x93));});},!![]),document['getElementById'](a7_0x2fb062(0x8e))['addEventListener'](a7_0x2fb062(0x8d),()=>{requestAnimationFrame(()=>{const _0x49c2e1=a7_0x32da;!passReg[_0x49c2e1(0x8a)](document['getElementById'](_0x49c2e1(0x8e))[_0x49c2e1(0x7b)])?document[_0x49c2e1(0x82)]('pw')['classList'][_0x49c2e1(0x7d)](_0x49c2e1(0x93)):document[_0x49c2e1(0x82)]('pw')['classList'][_0x49c2e1(0x84)](_0x49c2e1(0x93));});},!![]);function a7_0x32da(_0x505993,_0x4ddc4b){const _0x134d70=a7_0x134d();return a7_0x32da=function(_0x32dacf,_0x2033b6){_0x32dacf=_0x32dacf-0x79;let _0x2914ab=_0x134d70[_0x32dacf];return _0x2914ab;},a7_0x32da(_0x505993,_0x4ddc4b);}const check=()=>{const _0x25d90a=a7_0x2fb062;!nameReg[_0x25d90a(0x8a)](document[_0x25d90a(0x82)](_0x25d90a(0x96))['value'])?document['getElementById'](_0x25d90a(0x98))[_0x25d90a(0xa7)][_0x25d90a(0x7d)](_0x25d90a(0x93)):(document[_0x25d90a(0x82)]('name')[_0x25d90a(0xa7)][_0x25d90a(0x84)]('show'),!passReg['test'](document[_0x25d90a(0x82)](_0x25d90a(0x8e))[_0x25d90a(0x7b)])?document[_0x25d90a(0x82)]('pw')[_0x25d90a(0xa7)][_0x25d90a(0x7d)]('show'):(document[_0x25d90a(0x82)]('pw')[_0x25d90a(0xa7)][_0x25d90a(0x84)]('show'),fetch(api+_0x25d90a(0x83),{'method':_0x25d90a(0xa8),'credentials':_0x25d90a(0x9f),'body':JSON[_0x25d90a(0x7a)]({'displayName':document['getElementById']('nickname')[_0x25d90a(0x7b)],'secondaryPassword':document[_0x25d90a(0x82)](_0x25d90a(0x8e))['value']}),'headers':{'Content-Type':_0x25d90a(0x9c)}})[_0x25d90a(0xa3)](_0x1e4063=>_0x1e4063[_0x25d90a(0xaa)]())['then'](_0x485139=>{const _0x3e363a=_0x25d90a;if(_0x485139[_0x3e363a(0x87)]==_0x3e363a(0xa1))window[_0x3e363a(0xab)][_0x3e363a(0xb1)]=projectUrl+'/authentication';else _0x485139[_0x3e363a(0x87)]=='failed'&&(_0x485139[_0x3e363a(0x8b)]==_0x3e363a(0xb0)?(document[_0x3e363a(0x82)](_0x3e363a(0x9b))[_0x3e363a(0xa4)][_0x3e363a(0xa6)]=_0x3e363a(0x92),document[_0x3e363a(0x82)](_0x3e363a(0x9b))[_0x3e363a(0xa7)][_0x3e363a(0x7d)](_0x3e363a(0x93))):(alert(_0x3e363a(0xac)),console[_0x3e363a(0x95)](_0x485139)));})[_0x25d90a(0x7f)](_0x19268a=>{const _0x279bbe=_0x25d90a;alert(_0x279bbe(0x79)+_0x19268a);})));};document[a7_0x2fb062(0x9a)](a7_0x2fb062(0x86),_0x488609=>{_0x488609['code']=='Enter'&&check();});
+/*global api, projectUrl*/
+document.addEventListener("DOMContentLoaded", () => {
+  fetch(`${api}/auth/status`, {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      if (data.status == "Logined") {
+        window.location.href = `${projectUrl}/game`;
+      } else if (data.status == "Not authorized") {
+        window.location.href = `${projectUrl}/authorize`;
+      } else if (data.status == "Not authenticated") {
+        window.location.href = `${projectUrl}/authentication`;
+      } else if (data.status == "Not authenticated(adult)") {
+        window.location.href = `${projectUrl}/authentication?adult=1`;
+      } else if (data.status == "Not logined") {
+        window.location.href = projectUrl;
+      } else if (data.status == "Shutdowned") {
+        window.location.href = `${api}/auth/logout?redirect=true&shutdowned=true`;
+      }
+      if (nameReg.test(data.tempName)) {
+        document.getElementById("nickname").value = data.tempName;
+      }
+    })
+    .catch((error) => {
+      alert(`Error occured.\n${error}`);
+    });
+});
+
+const nameReg = /^[a-zA-Z0-9_-]{5,12}$/;
+const passReg = /^[0-9]{4,6}$/;
+
+document.getElementById("nickname").addEventListener(
+  "blur",
+  () => {
+    requestAnimationFrame(() => {
+      if (!nameReg.test(document.getElementById("nickname").value)) {
+        document.getElementById("name").classList.add("show");
+      } else {
+        document.getElementById("name").classList.remove("show");
+      }
+    });
+  },
+  true
+);
+
+document.getElementById("password").addEventListener(
+  "blur",
+  () => {
+    requestAnimationFrame(() => {
+      if (!passReg.test(document.getElementById("password").value)) {
+        document.getElementById("pw").classList.add("show");
+      } else {
+        document.getElementById("pw").classList.remove("show");
+      }
+    });
+  },
+  true
+);
+
+const check = () => {
+  if (!nameReg.test(document.getElementById("nickname").value)) {
+    document.getElementById("name").classList.add("show");
+  } else {
+    document.getElementById("name").classList.remove("show");
+    if (!passReg.test(document.getElementById("password").value)) {
+      document.getElementById("pw").classList.add("show");
+    } else {
+      document.getElementById("pw").classList.remove("show");
+      fetch(`${api}/auth/join`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({
+          displayName: document.getElementById("nickname").value,
+          secondaryPassword: document.getElementById("password").value,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.result == "success") {
+            window.location.href = `${projectUrl}/authentication`;
+          } else if (data.result == "failed") {
+            if (data.error == "Exist Name") {
+              document.getElementById("nameExist").style.display = "initial";
+              document.getElementById("nameExist").classList.add("show");
+            } else {
+              alert("join failed.");
+              console.log(data);
+            }
+          }
+        })
+        .catch((error) => {
+          alert(`Error occured.\n${error}`);
+        });
+    }
+  }
+};
+
+document.addEventListener("keydown", (event) => {
+  if (event.code == "Enter") {
+    check();
+  }
+});
