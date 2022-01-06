@@ -155,9 +155,11 @@
           <img src="https://img.icons8.com/ios-glyphs/48/000000/save.png" class="menuIcon clickable" onclick="save()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/delete.png" class="menuIcon clickable" onclick="deleteAll()">
           <div id="horizontalLine" class="menuIcon">&nbsp;</div>
+          <img src="https://img.icons8.com/ios-glyphs/48/000000/metronome.png" class="menuIcon clickable menuSelected" onclick="toggleMetronome()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/grid.png" class="menuIcon clickable" onclick="toggleGrid()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/magnet.png" class="menuIcon clickable menuSelected" onclick="toggleMagnet()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/coordinate-system.png" class="menuIcon clickable menuSelected" onclick="toggleExplain()">
+          <div id="horizontalLine" class="menuIcon">&nbsp;</div>
           <img src="https://img.icons8.com/ios-glyphs/48/000000/arrow.png" class="menuIcon clickable" onclick="moveTo()">
           <img src="https://img.icons8.com/ios-glyphs/48/000000/question-mark.png" class="menuIcon clickable" onmouseover="showHelp()" onmouseout="hideHelp()">
         </div>
@@ -414,6 +416,10 @@
             </div>
             <div class="settingsPropertiesContainer">
               <p class="settingsSemiTitle">PROPERTY</p>
+              <div class="settingsPropertiesIndividual">
+                <span class="settingsPropertiesTitle">TEMPO</span>
+                <input type="text" class="settingsPropertiesTextbox metropolis" onfocus="textFocused()" onblur="textBlurred()" onkeyup="changeTempo(this)">
+              </div>
               <div class="settingsPropertiesIndividual">
                 <span class="settingsPropertiesTitle">BPM</span>
               <input type="text" class="settingsPropertiesTextbox metropolis" onfocus="textFocused()" onblur="textBlurred()" onkeyup="changeBPM(this)">
