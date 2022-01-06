@@ -107,6 +107,25 @@ let prevDestroyedBullets = new Set([]);
 let destroyedSeeks = new Set([]);
 let prevDestroyedSeeks = new Set([]);
 
+let metronome = 1;
+let metronomeLimit = 4;
+const beep = [
+  new Howl({
+    src: `/sounds/beep1.ogg`,
+    format: ["ogg"],
+    volume: 0.5,
+    autoplay: false,
+    loop: false,
+  }),
+  new Howl({
+    src: `/sounds/beep2.ogg`,
+    format: ["ogg"],
+    volume: 0.5,
+    autoplay: false,
+    loop: false,
+  }),
+];
+
 const sortAsTiming = (a, b) => {
   if (a.ms == b.ms) return 0;
   return a.ms > b.ms ? 1 : -1;
@@ -1073,6 +1092,17 @@ const cntRender = () => {
   if (window.devicePixelRatio != pixelRatio) {
     pixelRatio = window.devicePixelRatio;
     initialize();
+  }
+  if (song.playing()) {
+    if (Math.ceil(((song.seek() * 1000) / (60000 / bpm)) % metronomeLimit) == metronome) {
+      if (metronome == 1) beep[0].play();
+      else beep[1].play();
+      if (metronome == metronomeLimit) metronome = 1;
+      else metronome++;
+    }
+  } else {
+    metronome = Math.ceil(((song.seek() * 1000) / (60000 / bpm)) % metronomeLimit) + 1;
+    if (metronome == 0 || metronome >= metronomeLimit) metronome = 1;
   }
   try {
     pointingCntElement = { v1: "", v2: "", i: "" };
