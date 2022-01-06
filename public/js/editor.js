@@ -2489,7 +2489,7 @@ const lottieSet = () => {
     case "2": //BGA
       canvasBackground.getElementsByTagName("svg")[0].style.display = "initial";
       canvasBackground.style.backgroundImage = "none";
-      canvasBackground.style.backgroundColor = `#${settingsPropertiesTextbox[6].value}`;
+      canvasBackground.style.backgroundColor = `#${settingsPropertiesTextbox[7].value}`;
       break;
   }
   pattern.background.type = Number(lottieInitBox.value);
@@ -2511,7 +2511,7 @@ const changeGrayscale = (e) => {
     alert("Input value is not number.");
     e.value = "30";
   } else {
-    canvasBackground.style.filter = `grayscale(${e.value}%) opacity(${settingsPropertiesTextbox[8].value}%)`;
+    canvasBackground.style.filter = `grayscale(${e.value}%) opacity(${settingsPropertiesTextbox[9].value}%)`;
   }
   pattern.background.grayscale = Number(e.value);
 };
@@ -2521,7 +2521,7 @@ const changeOpacity = (e) => {
     alert("Input value is not number.");
     e.value = "20";
   } else {
-    canvasBackground.style.filter = `grayscale(${settingsPropertiesTextbox[7].value}%) opacity(${e.value}%)`;
+    canvasBackground.style.filter = `grayscale(${settingsPropertiesTextbox[8].value}%) opacity(${e.value}%)`;
   }
   pattern.background.opacity = Number(e.value);
 };
